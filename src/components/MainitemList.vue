@@ -24,7 +24,7 @@
 
           
           <!-- button increment -->
-          <button class="button bg-gray-200 z-50">ken</button>
+          <button class="button bg-gray-200 z-50" @click="add(product)">ken</button>
         </div>
       </div>
     </div>
@@ -34,6 +34,9 @@
 <script>
 export default {
   name: 'MainitemList',
+  props:{
+    add:Function
+  },
   data(){
     return{
       amount: 1,
