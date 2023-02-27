@@ -24,7 +24,7 @@
 
           
           <!-- button increment -->
-          <button class="button bg-gray-200">ken</button>
+          <button class="button bg-gray-200 z-50">ken</button>
         </div>
       </div>
     </div>
