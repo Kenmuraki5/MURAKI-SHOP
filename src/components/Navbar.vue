@@ -206,8 +206,8 @@ export default {
     cart: Array,
     add: Function,
     remove: Function,
-    totalPrice: Function,
-    totalCart:Function
+    totalPrice: Number,
+    totalCart:Number
   },
 
 };
