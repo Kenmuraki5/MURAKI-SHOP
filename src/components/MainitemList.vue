@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white">
-    <div class="mx-auto max-w-2xl py-16 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8">
+    <div class="mx-auto max-w-2xl my-5 rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
       <h2 class="text-2xl font-bold tracking-tight text-gray-900">New release</h2>
 
       <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
@@ -24,7 +24,9 @@
 
           
           <!-- button increment -->
-          <button class="button bg-gray-200 z-40" @click="add(product)">ken</button>
+          <button class="bg-indigo-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-40" @click="add(product)">
+            Button
+          </button>
         </div>
       </div>
     </div>
