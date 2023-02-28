@@ -43,62 +43,136 @@
         <div
           class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
         >
-          <button @click="isOpen = true" data-modal-target="top-right-modal" data-modal-toggle="top-right-modal" class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800" type="button">
+          <button
+            @click="isOpen = true"
+            data-modal-target="top-right-modal"
+            data-modal-toggle="top-right-modal"
+            class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            type="button"
+          >
             <span class="sr-only">View notifications</span>
-            <ShoppingCartIcon class="h-6 w-6" aria-hidden="true" />{{ amount.length }}
-          </button> 
-          
-        <TransitionRoot as="template" :show="isOpen">
-          <Dialog as="div" class="relative z-50" @close="isOpen = false">
-            <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
-              <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
-            </TransitionChild>
+            <ShoppingCartIcon class="h-6 w-6" aria-hidden="true" />{{
+              cart.length
+            }}
+          </button>
 
-            <div class="fixed inset-0 overflow-hidden">
-              <div class="absolute inset-0 overflow-hidden">
-                <div class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10">
-                  <TransitionChild as="template" enter="transform transition ease-in-out duration-500 sm:duration-700" enter-from="translate-x-full" enter-to="translate-x-0" leave="transform transition ease-in-out duration-500 sm:duration-700" leave-from="translate-x-0" leave-to="translate-x-full">
-                    <DialogPanel class="pointer-events-auto relative w-screen max-w-md">
-                      <TransitionChild as="template" enter="ease-in-out duration-500" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-500" leave-from="opacity-100" leave-to="opacity-0">
-                        <div class="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 sm:-ml-10 sm:pr-4">
-                          <button type="button" class="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white" @click="isOpen = false">
-                            <span class="sr-only">Close panel</span>
-                            <XMarkIcon class="h-6 w-6" aria-hidden="true" />
-                          </button>
-                        </div>
-                      </TransitionChild>
-                      <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                        <div class="px-4 sm:px-6">
-                          <DialogTitle class="text-base font-semibold leading-6 text-gray-900">Shopping Cart</DialogTitle>
-                        </div>
-                        <div class="relative mt-6 flex-1 px-4 sm:px-6" v-for="item in amount" :key="item.id">
-                          <!-- Your content -->
-                          <div class="max-w-sm w-full lg:max-w-full lg:flex">
-                              <div class="h-48 lg:h-auto lg:w-48 flex-none bg-cover rounded-t lg:rounded-t-none lg:rounded-l text-center overflow-hidden">
-                                <img :src="item.imageSrc" alt="item.imageAlt">
-                              </div>
-                              <div class="border-r border-b border-l border-gray-400 lg:border-l-0 lg:border-t lg:border-gray-400 bg-white rounded-b lg:rounded-b-none lg:rounded-r p-4 flex flex-col justify-between leading-normal">
-                                <div class="mb-8">
-                                  <div class="text-gray-900 font-bold text-xl mb-2">{{item.name}}</div>
+          <TransitionRoot as="template" :show="isOpen">
+            <Dialog as="div" class="relative z-50" @close="isOpen = false">
+              <TransitionChild
+                as="template"
+                enter="ease-in-out duration-500"
+                enter-from="opacity-0"
+                enter-to="opacity-100"
+                leave="ease-in-out duration-500"
+                leave-from="opacity-100"
+                leave-to="opacity-0"
+              >
+                <div
+                  class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                />
+              </TransitionChild>
 
-                                </div>
-                                <div class="flex items-center">
-                                  
-                                  <div class="text-sm">
-                                    <p class="text-gray-900 leading-none">{{ item.price }}</p>
+              <div class="fixed inset-0 overflow-hidden">
+                <div class="absolute inset-0 overflow-hidden">
+                  <div
+                    class="pointer-events-none fixed inset-y-0 right-0 flex max-w-full pl-10"
+                  >
+                    <TransitionChild
+                      as="template"
+                      enter="transform transition ease-in-out duration-500 sm:duration-700"
+                      enter-from="translate-x-full"
+                      enter-to="translate-x-0"
+                      leave="transform transition ease-in-out duration-500 sm:duration-700"
+                      leave-from="translate-x-0"
+                      leave-to="translate-x-full"
+                    >
+                      <DialogPanel
+                        class="pointer-events-auto relative w-screen max-w-md"
+                      >
+                        <TransitionChild
+                          as="template"
+                          enter="ease-in-out duration-500"
+                          enter-from="opacity-0"
+                          enter-to="opacity-100"
+                          leave="ease-in-out duration-500"
+                          leave-from="opacity-100"
+                          leave-to="opacity-0"
+                        >
+                          <div
+                            class="absolute top-0 left-0 -ml-8 flex pt-4 pr-2 sm:-ml-10 sm:pr-4"
+                          >
+                            <button
+                              type="button"
+                              class="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                              @click="isOpen = false"
+                            >
+                              <span class="sr-only">Close panel</span>
+                              <XMarkIcon class="h-6 w-6" aria-hidden="true" />
+                            </button>
+                          </div>
+                        </TransitionChild>
+                        <div
+                          class="flex h-full flex-col overflow-y-scroll bg-white py-2 shadow-xl"
+                        >
+                          <div class="px-4 sm:px-6">
+                            <DialogTitle
+                              class="text-base font-semibold leading-6 text-gray-900"
+                              >Shopping Cart</DialogTitle
+                            >
+                          </div>
+                          <div class="relative mt-2 flex-initial px-4 sm:px-6"
+                            v-for="item in cart"
+                            :key="item.id">
+                            <!-- Your content -->
+                            <div class="py-6 ">
+                              <div
+                                class="flex  max-w-md bg-white shadow-lg rounded-lg overflow-hidden"
+                              >
+                                <div
+                                  class="w-1/3 bg-cover"
+                                  :style="{ 'background-image': 'url(' + item.imageSrc + ')' }"></div>
+                                <div class="w-2/3 p-4">
+                                  <h1 class="text-gray-900 font-bold text-2xl">
+                                    {{item.name}}
+                                  </h1>
+                                  <p class="mt-2 text-gray-600 text-sm">
+                                    Lorem ipsum dolor sit amet consectetur
+                                    adipisicing elit In odit exercitationem fuga
+                                    id nam quia
+                                  </p>
+                                  <div
+                                    class="flex item-center justify-between mt-3"
+                                  >
+                                    
+                                    <button @click="remove(item)"
+                                      class="px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded"
+                                    >
+                                      -
+                                    </button>
+                                    <h1 class="text-gray-700 font-bold text-xl">
+                                      {{ item.price }} x{{ item.quantity }}
+                                    </h1>
+                                    <button @click="add(item)"
+                                      class="px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded"
+                                    >
+                                      +
+                                    </button>
                                   </div>
                                 </div>
                               </div>
                             </div>
+                          </div>
+                          <button class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded">
+                              Checkout {{ total }}
+                          </button>
                         </div>
-                      </div>
-                    </DialogPanel>
-                  </TransitionChild>
+                      </DialogPanel>
+                    </TransitionChild>
+                  </div>
                 </div>
               </div>
-            </div>
-          </Dialog>
-        </TransitionRoot>
+            </Dialog>
+          </TransitionRoot>
           <!-- Profile dropdown -->
           <Menu as="div" class="relative ml-3">
             <div>
@@ -183,7 +257,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from "vue";
 import {
   Dialog,
   DialogPanel,
@@ -197,10 +271,12 @@ import {
   MenuButton,
   MenuItem,
   MenuItems,
-  
 } from "@headlessui/vue";
-import { Bars3Icon, XMarkIcon, ShoppingCartIcon } from "@heroicons/vue/24/outline";
-
+import {
+  Bars3Icon,
+  XMarkIcon,
+  ShoppingCartIcon,
+} from "@heroicons/vue/24/outline";
 
 const navigation = [
   { name: "New", href: "#", current: true },
@@ -216,7 +292,11 @@ const isOpen = ref(false);
 export default {
   name: "MainNavbar",
   props: {
-    amount: Array,
+    cart: Array,
+    add:Function,
+    remove:Function,
+    total:Function 
   },
+  
 };
 </script>

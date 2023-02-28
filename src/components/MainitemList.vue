@@ -49,33 +49,42 @@ export default {
           imageAlt: "Front of men's Basic Tee in black.",
           price: '$90',
           color: 'MANGA',
+          quantity:0
+
+          
         },
         {
-          id: 1,
+          id: 2,
           name: 'Lust Guess vol 6',
           href: '#',
           imageSrc: 'https://kbimages1-a.akamaihd.net/7ea5a327-af04-4e18-bfb3-635dbab0ed37/1200/1200/False/lust-geass-vol-6.jpg',
           imageAlt: "Front of men's Basic Tee in black.",
           price: '$90',
           color: 'MANGA',
+          quantity:0
+
         },
         {
-          id: 1,
+          id: 3,
           name: 'OSHI NO KO vol 10',
           href: '#',
           imageSrc: 'https://cdn.discordapp.com/attachments/880831085431390301/1079329874747076638/Kubo-san_Volume_11.webp',
           imageAlt: "Front of men's Basic Tee in MANGA.",
           price: '$90',
           color: 'MANGA',
+          quantity:0
+
         },
         {
-          id: 1,
+          id: 4,
           name: 'KAIJYU NO.8 vol 10',
           href: '#',
           imageSrc: 'https://pbs.twimg.com/media/FoAs23dXgAEzYqC?format=jpg&name=4096x4096',
           imageAlt: "Front of men's Basic Tee in MANGA.",
           price: '$90',
           color: 'MANGA',
+          quantity:0
+
         },
       ]
     }
