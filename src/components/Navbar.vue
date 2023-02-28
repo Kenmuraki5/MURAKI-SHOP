@@ -31,9 +31,8 @@
             class="rounded-full bg-gray-800 p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             type="button">
             <span class="sr-only">View notifications</span>
-            <ShoppingCartIcon class="h-6 w-6" aria-hidden="true" />{{
-              cart.length
-            }}
+            <ShoppingCartIcon class="h-6 w-6" aria-hidden="true" />
+            {{totalCart}}
           </button>
 
           <TransitionRoot as="template" :show="isOpen">
@@ -63,9 +62,9 @@
                             </button>
                           </div>
                         </TransitionChild>
-                        <div class="flex h-full flex-col overflow-y-scroll bg-white py-2 shadow-xl">
+                        <div class="flex h-full flex-col overflow-y-scroll bg-white py-4 shadow-xl">
                           <div class="px-4 sm:px-6">
-                            <DialogTitle class="text-base font-semibold leading-6 text-gray-900">Shopping Cart
+                            <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart
                             </DialogTitle>
                           </div>
                           <div class="relative mt-2 flex-initial px-4 sm:px-6" v-for="item in cart" :key="item.id">
@@ -103,7 +102,7 @@
                           </div>
                           <button
                             class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded">
-                            Checkout {{ total }}
+                            Checkout {{ totalPrice }}
                           </button>
                         </div>
                       </DialogPanel>
@@ -207,7 +206,8 @@ export default {
     cart: Array,
     add: Function,
     remove: Function,
-    total: Function
+    totalPrice: Function,
+    totalCart:Function
   },
 
 };

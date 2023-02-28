@@ -1,5 +1,5 @@
 <template>
-  <MainNavbar :add="addtoCart" :total="totalPrice" :remove="removefromCart" :cart="cart"/>
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
   <EventBar></EventBar>
   <MainitemList :add="addtoCart"/>
   <MainFooter />
@@ -42,6 +42,9 @@ export default {
   computed:{
     totalPrice(){
       return this.cart.reduce((total, item) => total+(parseInt(item.price.slice(1)))*item.quantity, 0)
+    },
+    totalCart(){
+      return this.cart.reduce((total, item) => total+item.quantity, 0)
     }
   }
 } 
