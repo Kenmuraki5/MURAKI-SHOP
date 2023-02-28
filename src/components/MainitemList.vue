@@ -24,7 +24,7 @@
 
           
           <!-- button increment -->
-          <button class="button bg-gray-200 z-50" @click="add(product)">ken</button>
+          <button class="button bg-gray-200 z-40" @click="add(product)">ken</button>
         </div>
       </div>
     </div>
