@@ -1,5 +1,5 @@
 <template>
-  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :addstorage="addlocalstorage"/>
   <EventBar></EventBar>
   <MainitemList :add="addtoCart"/>
   <MainFooter />
@@ -33,10 +33,13 @@ export default {
       }
     value.quantity = 1
     this.cart.push(value)
-  },
+    },
     removefromCart(value){
       this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
       // this.cart.splice(this.cart.indexOf(value), 1)
+    },
+    addlocalstorage(){
+      localStorage.setItem("cart", JSON.stringify(this.cart))
     }
   },
   computed:{
@@ -46,6 +49,9 @@ export default {
     totalCart(){
       return this.cart.reduce((total, item) => total+item.quantity, 0)
     }
+  },
+  created(){
+    this.cart = JSON.parse(localStorage.cart)
   }
 } 
 </script>
