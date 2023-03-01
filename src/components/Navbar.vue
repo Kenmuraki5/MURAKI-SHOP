@@ -156,12 +156,12 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="space-y-1 px-2 pt-2 pb-3">
-        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" @click="addlocal()" :class="[
+        <a v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[
           item.current
             ? 'bg-gray-900 text-white'
             : 'text-gray-300 hover:bg-gray-700 hover:text-white',
           'block px-3 py-2 rounded-md text-base font-medium',
-        ]" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</DisclosureButton>
+        ]" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
       </div>
     </DisclosurePanel>
   </Disclosure>
@@ -203,13 +203,12 @@ const isOpen = ref(false);
 export default {
   name: "MainNavbar",
   props: {
-    cart: Array,
+    cart:Array,
     add: Function,
     remove: Function,
     totalPrice: Number,
     totalCart:Number,
     addlocal:Function
-  },
-
+  }
 };
 </script>
