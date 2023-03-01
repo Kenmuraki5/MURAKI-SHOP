@@ -7,8 +7,8 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in black.",
       price: '$100',
       color: 'MANGA',
-      quantity:0
-
+      quantity:0,
+      release_date:"new"
       
     },
     {
@@ -19,8 +19,8 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in black.",
       price: '$600',
       color: 'MANGA',
-      quantity:0
-
+      quantity:0,
+      release_date:"new"
     },
     {
       id: 3,
@@ -30,8 +30,8 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in MANGA.",
       price: '$91',
       color: 'MANGA',
-      quantity:0
-
+      quantity:0,
+      release_date:"new"
     },
     {
       id: 4,
@@ -41,8 +41,30 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in MANGA.",
       price: '$91',
       color: 'MANGA',
-      quantity:0
-
+      quantity:0,
+      release_date:"new"
+    },
+    {
+      id: 5,
+      name: 'MY HERO ACADEMIA vol 35',
+      href: '#',
+      imageSrc: 'https://du.lnwfile.com/015vj6.jpg',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '$75',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"old"
+    },
+    {
+      id: 6,
+      name: 'Goddess Cafe terrace vol 7',
+      href: '#',
+      imageSrc: 'https://pbs.twimg.com/media/Fac4QgFVsAEkv_m?format=jpg&name=medium',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '$91',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"old"
     },
   ]
   export default Manga
