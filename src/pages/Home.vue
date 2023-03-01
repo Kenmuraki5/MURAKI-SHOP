@@ -1,5 +1,5 @@
 <template>
-  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :addstorage="addlocalstorage"/>
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :addlocal="addlocal"/>
   <EventBar></EventBar>
   <MainitemList :add="addtoCart"/>
   <MainFooter />
@@ -38,7 +38,7 @@ export default {
       this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
       // this.cart.splice(this.cart.indexOf(value), 1)
     },
-    addlocalstorage(){
+    addlocal(){
       localStorage.setItem("cart", JSON.stringify(this.cart))
     }
   },

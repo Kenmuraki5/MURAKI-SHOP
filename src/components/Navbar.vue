@@ -12,7 +12,7 @@
           </DisclosureButton>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <a class="flex flex-shrink-0 items-center" href="/">
+          <a class="flex flex-shrink-0 items-center" href="/" @click="addlocal()">
             <span class="block h-auto w-auto font-black text-white lg:block" alt="Your Company">MURAKI COMIC</span>
           </a>
           <div class="hidden sm:ml-6 sm:block">
@@ -156,7 +156,7 @@
 
     <DisclosurePanel class="sm:hidden">
       <div class="space-y-1 px-2 pt-2 pb-3">
-        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" :class="[
+        <DisclosureButton v-for="item in navigation" :key="item.name" as="a" :href="item.href" @click="addlocal()" :class="[
           item.current
             ? 'bg-gray-900 text-white'
             : 'text-gray-300 hover:bg-gray-700 hover:text-white',
@@ -207,7 +207,8 @@ export default {
     add: Function,
     remove: Function,
     totalPrice: Number,
-    totalCart:Number
+    totalCart:Number,
+    addlocal:Function
   },
 
 };

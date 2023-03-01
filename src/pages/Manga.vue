@@ -1,15 +1,50 @@
 <template>
-    <MainNavbar/>
-    <MainitemList/>
+    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :addlocal="addlocal"/>
+    <MangaList :add="addtoCart"/>
 </template>
 <script>
 import MainNavbar from '../components/Navbar.vue'
-import MainitemList from '../components/MainitemList.vue'
+import MangaList from '../components/MangaList.vue'
 export default {
-    name: 'HomePages',
-    components: {
-        MainitemList,
-        MainNavbar,
+  name: 'HomePages',
+  components: {
+    MainNavbar,
+    MangaList
+  },
+  data(){
+    return{
+      cart:[]
+    }
+  },
+  methods:{
+    addtoCart(value){
+      for(let i = 0 ;i<this.cart.length;i++){
+          if(this.cart[i].id == value.id){
+            this.cart[i].quantity++
+              return
+          }
+      }
+    value.quantity = 1
+    this.cart.push(value)
     },
-}
+    removefromCart(value){
+      this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
+      // this.cart.splice(this.cart.indexOf(value), 1)
+    },
+    addlocal(){
+      localStorage.setItem("cart", JSON.stringify(this.cart))
+    }
+  },
+  computed:{
+    totalPrice(){
+      return this.cart.reduce((total, item) => total+(parseInt(item.price.slice(1)))*item.quantity, 0)
+    },
+    totalCart(){
+      return this.cart.reduce((total, item) => total+item.quantity, 0)
+    }
+  },
+  created(){
+    this.cart = JSON.parse(localStorage.cart)
+  }
+} 
 </script>
