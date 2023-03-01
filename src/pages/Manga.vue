@@ -1,15 +1,18 @@
 <template>
     <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :addlocal="addlocal"/>
     <MangaList :add="addtoCart"/>
+    <MainFooter />
 </template>
 <script>
 import MainNavbar from '../components/Navbar.vue'
 import MangaList from '../components/MangaList.vue'
+import MainFooter from '../components/MainFooter.vue'
 export default {
   name: 'HomePages',
   components: {
     MainNavbar,
-    MangaList
+    MangaList,
+    MainFooter
   },
   data(){
     return{
