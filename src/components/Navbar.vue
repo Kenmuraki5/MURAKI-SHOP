@@ -12,9 +12,9 @@
           </DisclosureButton>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <div class="flex flex-shrink-0 items-center">
+          <a class="flex flex-shrink-0 items-center" href="/">
             <span class="block h-auto w-auto font-black text-white lg:block" alt="Your Company">MURAKI COMIC</span>
-          </div>
+          </a>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
               <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[
@@ -190,9 +190,9 @@ import {
 } from "@heroicons/vue/24/outline";
 
 const navigation = [
-  { name: "New", href: "#", current: true },
-  { name: "Allseries", href: "#", current: false },
-  { name: "Manga", href: "#", current: false },
+  { name: "New", href: "/", current: true },
+  { name: "Allseries", href: "", current: false },
+  { name: "Manga", href: "/Manga", current: false },
   { name: "Light novel", href: "#", current: false },
 ];
 const isOpen = ref(false);
