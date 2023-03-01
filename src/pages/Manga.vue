@@ -1,5 +1,5 @@
 <template>
-    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :addlocal="addlocal"/>
+    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
     <MangaList :add="addtoCart"/>
     <MainFooter />
 </template>
@@ -24,17 +24,16 @@ export default {
       for(let i = 0 ;i<this.cart.length;i++){
           if(this.cart[i].id == value.id){
             this.cart[i].quantity++
-              return
+            return localStorage.setItem("cart", JSON.stringify(this.cart))
           }
       }
-    value.quantity = 1
-    this.cart.push(value)
+      value.quantity = 1
+      this.cart.push(value)
+      localStorage.setItem("cart", JSON.stringify(this.cart))
     },
     removefromCart(value){
       this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
       // this.cart.splice(this.cart.indexOf(value), 1)
-    },
-    addlocal(){
       localStorage.setItem("cart", JSON.stringify(this.cart))
     }
   },
