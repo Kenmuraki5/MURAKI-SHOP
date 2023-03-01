@@ -7,8 +7,9 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in black.",
       price: '$100',
       color: 'MANGA',
-      quantity:0,
-      new:"new"
+      quantity:0
+
+      
     },
     {
       id: 2,
@@ -18,8 +19,8 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in black.",
       price: '$600',
       color: 'MANGA',
-      quantity:0,
-      new:"new"
+      quantity:0
+
     },
     {
       id: 3,
@@ -29,8 +30,8 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in MANGA.",
       price: '$91',
       color: 'MANGA',
-      quantity:0,
-      new:"new"
+      quantity:0
+
     },
     {
       id: 4,
@@ -40,31 +41,8 @@ const Manga = [
       imageAlt: "Front of men's Basic Tee in MANGA.",
       price: '$91',
       color: 'MANGA',
-      quantity:0,
-      new:"new"
-    },
-    {
-      id: 5,
-      name: 'MY HERO ACADEMIA',
-      href: '#',
-      imageSrc: 'https://du.lnwfile.com/015vj6.jpg',
-      imageAlt: "Front of men's Basic Tee in MANGA.",
-      price: '$95',
-      color: 'MANGA',
-      quantity:0,
-      new:"old"
-    },
-    {
-      id: 6,
-      name: 'KAIJYU NO.8 vol 10',
-      href: '#',
-      imageSrc: 'https://pbs.twimg.com/media/FoAs23dXgAEzYqC?format=jpg&name=4096x4096',
-      imageAlt: "Front of men's Basic Tee in MANGA.",
-      price: '$91',
-      color: 'MANGA',
-      quantity:0,
-      new:"old"
-    },
+      quantity:0
 
+    },
   ]
   export default Manga
