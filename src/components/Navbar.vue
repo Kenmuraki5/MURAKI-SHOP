@@ -119,8 +119,8 @@
                 class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="sr-only">Open user menu</span>
                 <img class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="" />
+                  src="https://cdn.discordapp.com/attachments/399896332187336704/1059387118486573086/image.png"
+                  alt="Profile Image" />
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100"
