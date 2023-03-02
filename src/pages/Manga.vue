@@ -46,7 +46,7 @@ export default {
     }
   },
   created(){
-    this.cart = JSON.parse(localStorage.cart)
+    this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
   }
 } 
 </script>
