@@ -94,7 +94,7 @@
 
       <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900">MANGA</h1>
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{Name}}</h1>
 
           <div class="flex items-center">
             <Menu as="div" class="relative inline-block text-left">
@@ -306,22 +306,23 @@ const mobileFiltersOpen = ref(false)
 </script>
 
 <script>
-import Manga from "../data/book.js"
 
 export default {
   name: 'MainitemList',
   props: {
-    add: Function
+    add: Function,
+    typebook: Array,
+    Name:String
   },
   data() {
     return {
       amount: 1,
-      products: Manga,
+      products: this.typebook,
       priceRange: 0,
       categoryChecked:[],
       sortSel:null,
       subcat:'All Series',
-      sub:Manga
+      sub:this.typebook
     }
   },
   computed: {

@@ -191,9 +191,9 @@ import {
 
 const navigation = [
   { name: "New", href: "/", current: true },
-  { name: "Allseries", href: "", current: false },
+  { name: "Allseries", href: "/AllBook", current: false },
   { name: "Manga", href: "/Manga", current: false },
-  { name: "Light novel", href: "#", current: false },
+  { name: "Light novel", href: "/Novel", current: false },
 ];
 const isOpen = ref(false);
 </script>

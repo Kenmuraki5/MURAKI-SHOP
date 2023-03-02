@@ -22,7 +22,7 @@ export default {
     return{
       cart:[],
       typeBook:Book,
-      name:"MANGA"
+      name:"LIGHT NOVEL"
     }
   },
   methods:{
@@ -51,7 +51,7 @@ export default {
       return this.cart.reduce((total, item) => total+item.quantity, 0)
     },
     filtertypebook(){
-      return this.typeBook.filter((val) => val.color.includes("MANGA"))
+      return this.typeBook.filter((val) => val.color.includes("Novel"))
     }
   },
   created(){

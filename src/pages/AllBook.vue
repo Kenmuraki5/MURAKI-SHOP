@@ -1,6 +1,6 @@
 <template>
     <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
-    <BookList :add="addtoCart" :typebook="filtertypebook" :Name="name"/>
+    <BookList :add="addtoCart" :typebook="typeBook" :Name="name"/>
     <MainFooter />
 </template>
 <script>
@@ -22,7 +22,7 @@ export default {
     return{
       cart:[],
       typeBook:Book,
-      name:"MANGA"
+      name:"ALL BOOK"
     }
   },
   methods:{
@@ -49,9 +49,6 @@ export default {
     },
     totalCart(){
       return this.cart.reduce((total, item) => total+item.quantity, 0)
-    },
-    filtertypebook(){
-      return this.typeBook.filter((val) => val.color.includes("MANGA"))
     }
   },
   created(){
