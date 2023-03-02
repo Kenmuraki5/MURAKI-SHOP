@@ -51,7 +51,7 @@
                       <div class="space-y-6">
                         <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                           <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]`"
-                            :value="option.value" type="radio" v-model="checkedNames"
+                            :value="option.value" type="radio" v-model="priceRange"
                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                           <label :for="`filter-mobile-${section.id}-${optionIdx}`"
                             class="ml-3 min-w-0 flex-1 text-gray-500">{{ option.label }}</label>
@@ -111,11 +111,11 @@
                 enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
                 leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
                 leave-to-class="transform opacity-0 scale-95">
-                <MenuItems
+                <MenuItems 
                   class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div class="py-1">
-                    <MenuItem v-for="option in sortOptions" :key="option.name" v-slot="{ active }">
-                    <a @click="sorting(option.value)"
+                    <MenuItem v-for="option in sortOptions"  :key="option.name" v-slot="{ active }" >
+                    <a  @click="sortSel = option.value"
                       :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
                         option.name }}</a>
                     </MenuItem>
@@ -165,7 +165,7 @@
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                       <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
-                        type="radio" :checked="option.checked" v-model="checkedNames"
+                        type="radio" :checked="option.checked" v-model="priceRange"
                         class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
                       <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">{{ option.label
                       }}</label>
@@ -173,7 +173,7 @@
                   </div>
                 </DisclosurePanel>
               </Disclosure>
-              {{ newFilteredManga }}
+            
 
               <Disclosure as="div" v-for="section in category" :key="section.id"  class="border-b border-gray-200 py-6"
                 v-slot="{ open }">
@@ -224,7 +224,6 @@
                           <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
                         </div>
                         <p class="text-sm font-medium text-gray-900">{{ product.price }}</p>
-                        {{ categoryChecked }}
                         
                       </div>
 
@@ -265,7 +264,6 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
-
 const sortOptions = [
   { name: 'Update release', value: '0', current: false },
   { name: 'Price: Low to High', value: '1', current: false },
@@ -318,48 +316,67 @@ export default {
     return {
       amount: 1,
       products: Manga,
-      checkedNames: 0,
+      priceRange: 0,
       categoryChecked:[],
+      sortSel:null,
       sort: Manga,
       reversesort: Manga
     }
   },
   computed: {
     newFilteredManga() {
-      if (this.checkedNames == "1") {
-        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) < 100))
+      let array = this.products // สร้าง array 
+      //  Sorting array
+      if (this.sortSel == "0") {
+        array.sort((a, b) => a.id >= b.id ? 1 : -1);
       }
-      else if (this.checkedNames == "2") {
-        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500))
+      else if (this.sortSel == "1") {  
+        array.sort((a, b) => (parseInt((a.price).slice(1)) >= parseInt((b.price).slice(1)) ? 1 : -1));
       }
-      else if (this.checkedNames == "3") {
-        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000))
+      else if (this.sortSel == "2") {
+        array.sort((a, b) => (parseInt((a.price).slice(1)) <= parseInt((b.price).slice(1)) ? 1 : -1))
+      // Filter array (range price and genres)
       }
-      else if (this.checkedNames == "4") {
-        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) > 1000))
+      if (this.priceRange == "1") {
+        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) < 100))
       }
-      // JSON.stringify(this.categoryChecked.filter(val=> this.products.includes(val))) == JSON.stringify(this.categoryChecked)
-      
-      return this.categoryFilter(this.products)
-    }
+      else if (this.priceRange == "2") {
+        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500))
+      }
+      else if (this.priceRange == "3") {
+        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000))
+      }
+      else if (this.priceRange == "4") {
+        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000))
+      }
+      // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
+     
+      return this.categoryFilter(array)
+    },
+    
+    
   },
   methods: {
     categoryFilter(array){
-      return array.filter(product =>(JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked)));
+  
+      return array.filter(product => JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked));
       
     },
-    sorting(check) {
-      if (check == "0") {
-        this.newFilteredManga = this.newFilteredManga.sort((a, b) => a.id >= b.id ? 1 : -1);
-      }
-      else if (check == "1") {  
-      
-        this.newFilteredManga = this.newFilteredManga.sort((a, b) => (parseInt((a.price).slice(1)) >= parseInt((b.price).slice(1)) ? 1 : -1));
-      }
-      else if (check == "2") {
-        this.newFilteredManga = this.newFilteredManga.sort((a, b) => (parseInt((a.price).slice(1)) <= parseInt((b.price).slice(1)) ? 1 : -1))
-      }
-    }
+    // sorting(check) {
+    //   let array = this.newFilteredManga
+    //   if (check == "0") {
+    //     array.sort((a, b) => a.id >= b.id ? 1 : -1);
+    //   }
+    //   else if (check == "1") {  
+    //     array.sort((a, b) => (parseInt((a.price).slice(1)) >= parseInt((b.price).slice(1)) ? 1 : -1));
+    //   }
+    //   else if (check == "2") {
+    //     array.sort((a, b) => (parseInt((a.price).slice(1)) <= parseInt((b.price).slice(1)) ? 1 : -1))
+        
+    //   }
+    //   return array
+    
+    
   }
     // array1 = [1,2], array2 = [1,2,3]
 //   inter  = array1.filter(value => array2.includes(value)) 
