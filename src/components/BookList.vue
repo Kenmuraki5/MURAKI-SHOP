@@ -25,7 +25,7 @@
                     <XMarkIcon class="h-6 w-6" aria-hidden="true" />
                   </button>
                 </div>
-
+                <!-- small -->
                 <!-- Filters -->
                 <form class="mt-4 border-t border-gray-200">
                   <h3 class="sr-only">Categories</h3>
@@ -136,6 +136,7 @@
           <h2 id="products-heading" class="sr-only">Products</h2>
 
           <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+            <!-- big -->
             <!-- Filters -->
             <form class="hidden lg:block">
               <h3 class="sr-only">Categories</h3>
