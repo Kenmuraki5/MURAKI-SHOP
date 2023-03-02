@@ -94,7 +94,7 @@ const Book = [
       color: 'Light Novel',
       quantity:0,
       release_date:"old",
-      category:["Action", "Drama"]
+      category:["Romance", "Drama"]
     },
     {
       id: 9,
@@ -106,7 +106,7 @@ const Book = [
       color: 'Light Novel',
       quantity:0,
       release_date:"old",
-      category:["Action", "Drama"]
+      category:["Action", "Drama", "Harem"]
     },
     {
       id: 10,
@@ -118,7 +118,7 @@ const Book = [
       color: 'Light Novel',
       quantity:0,
       release_date:"old",
-      category:["Action", "Drama"]
+      category:["Action", "Drama", "Harem"]
     },
     {
       id: 11,
