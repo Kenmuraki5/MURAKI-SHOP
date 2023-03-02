@@ -320,11 +320,12 @@ export default {
       categoryChecked:[],
       sortSel:null,
       subcat:0,
+      sub:Manga
     }
   },
   computed: {
     newFilteredManga() {
-      let array = this.products // สร้าง array 
+      let array = this.sub // สร้าง array 
       //  Sorting array
       if (this.sortSel == "0") {
         array.sort((a, b) => a.id >= b.id ? 1 : -1);
@@ -349,13 +350,18 @@ export default {
         return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000))
       }
       // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
-      if (this.subcat == 1){
-        return this.categoryFilter(array.filter((val) => val.release_date.includes("new")))
-      }
       return this.categoryFilter(array)
     },
     
     
+  },
+  watch:{
+    subcat(){
+      if(this.subcat == '1')
+        this.sub = this.sub.filter((val) => val.release_date.includes("new"))
+      else 
+        this.sub = this.products
+    }
   },
   methods: {
     categoryFilter(array){
