@@ -8,7 +8,8 @@ const Manga = [
       price: '$100',
       color: 'MANGA',
       quantity:0,
-      release_date:"new"
+      release_date:"new",
+      category:["Action", "Comedy", "Drama"]
       
     },
     {
@@ -20,7 +21,8 @@ const Manga = [
       price: '$600',
       color: 'MANGA',
       quantity:0,
-      release_date:"new"
+      release_date:"new",
+      category:["Drama", "Harem", "Mystery", "Romance"]
     },
     {
       id: 3,
@@ -31,7 +33,8 @@ const Manga = [
       price: '$91',
       color: 'MANGA',
       quantity:0,
-      release_date:"new"
+      release_date:"new",
+      category:["Comedy", "Romance"]
     },
     {
       id: 4,
@@ -42,7 +45,8 @@ const Manga = [
       price: '$91',
       color: 'MANGA',
       quantity:0,
-      release_date:"new"
+      release_date:"new",
+      category:["Action", "Drama"]
     },
     {
       id: 5,
@@ -53,18 +57,20 @@ const Manga = [
       price: '$75',
       color: 'MANGA',
       quantity:0,
-      release_date:"old"
+      release_date:"old",
+      category:["Action", "Comedy", "Drama"]
     },
     {
       id: 6,
-      name: 'Goddess Cafe terrace vol 7',
+      name: 'Goddess Cafe Terrace vol 7',
       href: '#',
       imageSrc: 'https://pbs.twimg.com/media/Fac4QgFVsAEkv_m?format=jpg&name=medium',
       imageAlt: "Front of men's Basic Tee in MANGA.",
       price: '$91',
       color: 'MANGA',
       quantity:0,
-      release_date:"old"
+      release_date:"old",
+      category:["Comedy", "Romance"]
     },
   ]
   export default Manga

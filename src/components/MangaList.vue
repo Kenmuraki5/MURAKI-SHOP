@@ -173,7 +173,9 @@
                   </div>
                 </DisclosurePanel>
               </Disclosure>
-              <Disclosure as="div" v-for="section in category" :key="section.id" class="border-b border-gray-200 py-6"
+              {{ newFilteredManga }}
+
+              <Disclosure as="div" v-for="section in category" :key="section.id"  class="border-b border-gray-200 py-6"
                 v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton
@@ -190,7 +192,7 @@
                     <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                       <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
                         type="checkbox" :checked="option.checked"
-                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" v-model="categoryChecked"/>
                       <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">{{ option.label
                       }}</label>
                     </div>
@@ -205,7 +207,7 @@
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
 
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                    <div v-for="product in produects" :key="product.id" class="group relative grid justify-center">
+                    <div v-for="product in newFilteredManga" :key="product.id" class="group relative grid justify-center">
                       <div
                         class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-70">
                         <img :src="product.imageSrc" :alt="product.imageAlt"
@@ -222,6 +224,8 @@
                           <p class="mt-1 text-sm text-gray-500">{{ product.color }}</p>
                         </div>
                         <p class="text-sm font-medium text-gray-900">{{ product.price }}</p>
+                        {{ categoryChecked }}
+                        
                       </div>
 
 
@@ -289,13 +293,11 @@ const category = [
     id: 'category',
     name: 'Category',
     options: [
-      { value: 'All', label: 'All', checked: true },
-      { value: 'Action', label: 'Actionle', checked: false },
+      { value: 'Action', label: 'Action', checked: false },
       { value: 'Comedy', label: 'Comedy', checked: false },
       { value: 'Drama', label: 'Drama', checked: false },
       { value: 'Harem', label: 'Harem', checked: false },
       { value: 'Mystery', label: 'Mystery', checked: false },
-      { value: 'Harem', label: 'Harem', checked: false },
       { value: 'Romance', label: 'Romance', checked: false },
       { value: 'Sport', label: 'Sport', checked: false },
     ],
@@ -306,6 +308,7 @@ const mobileFiltersOpen = ref(false)
 
 <script>
 import Manga from "../data/book.js"
+
 export default {
   name: 'MainitemList',
   props: {
@@ -316,39 +319,50 @@ export default {
       amount: 1,
       products: Manga,
       checkedNames: 0,
+      categoryChecked:[],
       sort: Manga,
       reversesort: Manga
     }
   },
   computed: {
-    produects() {
+    newFilteredManga() {
       if (this.checkedNames == "1") {
-        return this.products.filter((val) => parseInt((val.price).slice(1)) < 100)
+        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) < 100))
       }
-      if (this.checkedNames == "2") {
-        return this.products.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500)
+      else if (this.checkedNames == "2") {
+        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500))
       }
-      if (this.checkedNames == "3") {
-        return this.products.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000)
+      else if (this.checkedNames == "3") {
+        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000))
       }
-      if (this.checkedNames == "4") {
-        return this.products.filter((val) => parseInt((val.price).slice(1)) > 1000)
+      else if (this.checkedNames == "4") {
+        return this.categoryFilter(this.products.filter((val) => parseInt((val.price).slice(1)) > 1000))
       }
-      return this.products
+      // JSON.stringify(this.categoryChecked.filter(val=> this.products.includes(val))) == JSON.stringify(this.categoryChecked)
+      
+      return this.categoryFilter(this.products)
     }
   },
   methods: {
+    categoryFilter(array){
+      return array.filter(product =>(JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked)));
+      
+    },
     sorting(check) {
       if (check == "0") {
-        return this.produects.sort((a, b) => a.id >= b.id ? 1 : -1);
+        this.newFilteredManga = this.newFilteredManga.sort((a, b) => a.id >= b.id ? 1 : -1);
       }
-      else if (check == "1") {
-        return this.produects.sort((a, b) => (parseInt((a.price).slice(1)) >= parseInt((b.price).slice(1)) ? 1 : -1));
+      else if (check == "1") {  
+      
+        this.newFilteredManga = this.newFilteredManga.sort((a, b) => (parseInt((a.price).slice(1)) >= parseInt((b.price).slice(1)) ? 1 : -1));
       }
       else if (check == "2") {
-        return this.produects.sort((a, b) => (parseInt((a.price).slice(1)) <= parseInt((b.price).slice(1)) ? 1 : -1))
+        this.newFilteredManga = this.newFilteredManga.sort((a, b) => (parseInt((a.price).slice(1)) <= parseInt((b.price).slice(1)) ? 1 : -1))
       }
     }
   }
+    // array1 = [1,2], array2 = [1,2,3]
+//   inter  = array1.filter(value => array2.includes(value)) 
+// JSON.stringify(inter) == JSON.stringify(array1)
 }
 </script>
