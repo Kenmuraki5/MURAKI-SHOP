@@ -145,7 +145,7 @@
               <h3 class="sr-only">Categories</h3>
               <ul role="list" class="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                 <li v-for="category in subCategories" :key="category.name">
-                  <a :href="category.href">{{ category.name }}</a>
+                  <a @click="subcat = category.value">{{ category.name }}</a>
                 </li>
               </ul>
 
@@ -270,8 +270,8 @@ const sortOptions = [
   { name: 'Price: High to Low', value: '2', current: false },
 ]
 const subCategories = [
-  { name: 'All series', href: '#' },
-  { name: 'New Release', href: '#' },
+  { name: 'All series', value:0 },
+  { name: 'New Release', value:1 },
 ]
 const filters = [
   {
@@ -319,8 +319,7 @@ export default {
       priceRange: 0,
       categoryChecked:[],
       sortSel:null,
-      sort: Manga,
-      reversesort: Manga
+      subcat:0,
     }
   },
   computed: {
@@ -350,7 +349,9 @@ export default {
         return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000))
       }
       // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
-     
+      if (this.subcat == 1){
+        return this.categoryFilter(array.filter((val) => val.release_date.includes("new")))
+      }
       return this.categoryFilter(array)
     },
     
