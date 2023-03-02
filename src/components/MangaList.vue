@@ -145,7 +145,7 @@
               <h3 class="sr-only">Categories</h3>
               <ul role="list" class="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
                 <li v-for="category in subCategories" :key="category.name">
-                  <a @click="subcat = category.value">{{ category.name }}</a>
+                  <a type="button" @click="subcat = category.name">{{ category.name }}</a>
                 </li>
               </ul>
 
@@ -204,6 +204,7 @@
             <!-- Product grid -->
             <div class="lg:col-span-3">
               <div class="bg-white">
+                <span class="text-2xl font-black">{{subcat}}</span>
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
 
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
@@ -319,7 +320,7 @@ export default {
       priceRange: 0,
       categoryChecked:[],
       sortSel:null,
-      subcat:0,
+      subcat:'All Series',
       sub:Manga
     }
   },
@@ -357,10 +358,12 @@ export default {
   },
   watch:{
     subcat(){
-      if(this.subcat == '1')
+      if(this.subcat.includes('New Release'))
         this.sub = this.sub.filter((val) => val.release_date.includes("new"))
-      else 
+      else{
+        this.subcat = 'All Series'
         this.sub = this.products
+      }
     }
   },
   methods: {
