@@ -64,7 +64,7 @@
                         </TransitionChild>
                         <div class="flex h-full flex-col overflow-y-scroll bg-white py-4 shadow-xl">
                           <div class="px-4 sm:px-6">
-                            <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart
+                            <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart ({{totalCart}})
                             </DialogTitle>
                           </div>
                           <div class="relative mt-2 flex-initial px-4 sm:px-6" v-for="item in cart" :key="item.id">
@@ -101,7 +101,7 @@
                             </div>
                           </div>
                           <button
-                            class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded">
+                            class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase ">
                             Checkout {{ totalPrice }}
                           </button>
                         </div>
