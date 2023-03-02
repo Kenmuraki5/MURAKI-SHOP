@@ -115,7 +115,7 @@
                   class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                   <div class="py-1">
                     <MenuItem v-for="option in sortOptions"  :key="option.name" v-slot="{ active }" >
-                    <a  @click="sortSel = option.value"
+                    <a  @click="sortSel = option.value, sortname = option.name"
                       :class="[option.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
                         option.name }}</a>
                     </MenuItem>
@@ -124,10 +124,6 @@
               </transition>
             </Menu>
 
-            <button type="button" class="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
-              <span class="sr-only">View grid</span>
-              <Squares2X2Icon class="h-5 w-5" aria-hidden="true" />
-            </button>
             <button type="button" class="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
               @click="mobileFiltersOpen = true">
               <span class="sr-only">Filters</span>
@@ -204,7 +200,8 @@
             <!-- Product grid -->
             <div class="lg:col-span-3">
               <div class="bg-white">
-                <span class="text-2xl font-black">{{subcat}}</span>
+                <span class="text-2xl font-black mr-5">{{subcat}}</span>
+                Sorted by<span class="mx-2 text-red-900 font-medium"> {{sortname}}</span>
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
 
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
@@ -264,7 +261,7 @@ import {
   TransitionRoot,
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
-import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/vue/20/solid'
+import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
 const sortOptions = [
   { name: 'Update release', value: '0', current: false },
   { name: 'Price: Low to High', value: '1', current: false },
@@ -322,7 +319,8 @@ export default {
       categoryChecked:[],
       sortSel:null,
       subcat:'All Series',
-      sub:this.typebook
+      sub:this.typebook,
+      sortname:"Update release"
     }
   },
   computed: {
