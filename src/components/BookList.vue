@@ -31,7 +31,7 @@
                   <h3 class="sr-only">Categories</h3>
                   <ul role="list" class="px-2 py-3 font-medium text-gray-900">
                     <li v-for="category in subCategories" :key="category.name">
-                      <a :href="category.href" class="block px-2 py-3">{{ category.name }}</a>
+                      <a type="button" @click="subcat = category.name" class="block px-2 py-3"> {{ category.name }}</a>
                     </li>
                   </ul>
                   <!-- ปุ่ม price เเบบหน้าจอเล็ก -->
@@ -76,9 +76,9 @@
                     <DisclosurePanel class="pt-6">
                       <div class="space-y-6">
                         <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
-                          <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]`"
-                            :value="option.value" type="checkbox" :checked="option.checked"
-                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                          <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]` "
+                            :value="option.value" type="checkbox" :checked="option.checked" 
+                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" v-model="categoryChecked"/>
                           <label :for="`filter-mobile-${section.id}-${optionIdx}`"
                             class="ml-3 min-w-0 flex-1 text-gray-500">{{ option.label }}</label>
                         </div>
@@ -268,7 +268,7 @@ const sortOptions = [
   { name: 'Price: High to Low', value: '2', current: false },
 ]
 const subCategories = [
-  { name: 'All series', value:0 },
+  { name: 'All Series', value:0 },
   { name: 'New Release', value:1 },
 ]
 const filters = [
