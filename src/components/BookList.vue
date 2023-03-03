@@ -203,6 +203,7 @@
               <div class="bg-white">
                 <span class="text-2xl font-black mr-5">{{subcat}}</span>
                 Sorted by<span class="mx-2 text-red-900 font-medium"> {{sortname}}</span>
+                <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search name" v-model="input_search">
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
                   <span class="group relative grid justify-center font-bold text-xl" v-if="newFilteredManga.length === 0">No results found.</span>
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
@@ -321,7 +322,8 @@ export default {
       sortSel:null,
       subcat:'All Series',
       sub:this.typebook,
-      sortname:"Update release"
+      sortname:"Update release",
+      input_search:""
     }
   },
   computed: {
@@ -339,20 +341,20 @@ export default {
       // Filter array (range price and genres)
       }
       if (this.priceRange == "1") {
-        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) < 100))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) < 100)))
       }
       else if (this.priceRange == "2") {
-        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500)))
       }
       else if (this.priceRange == "3") {
-        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000)))
       }
       else if (this.priceRange == "4") {
-        return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000)))
       }
       // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
       // console.log(this.categoryFilter(array))
-      return this.categoryFilter(array)
+      return this.categoryFilter(this.searchFilter(array))
     },
     
     
@@ -373,6 +375,9 @@ export default {
       return array.filter(product => JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked));
       
     },
+    searchFilter(array){
+        return  array.filter((val)=>(val.name).toLowerCase().replace(/\s/g, '').includes(this.input_search.toLowerCase().replace(/\s/g, '')))
+    }
     // sorting(check) {
     //   let array = this.newFilteredManga
     //   if (check == "0") {

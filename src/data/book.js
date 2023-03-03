@@ -26,7 +26,7 @@ const Book = [
     },
     {
       id: 3,
-      name: 'OSHI NO KO vol 10',
+      name: 'Kubo san vol 10',
       href: '#',
       imageSrc: 'https://cdn.discordapp.com/attachments/880831085431390301/1079329874747076638/Kubo-san_Volume_11.webp',
       imageAlt: "Front of men's Basic Tee in MANGA.",
