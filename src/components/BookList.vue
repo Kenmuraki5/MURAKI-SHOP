@@ -93,7 +93,7 @@
       </TransitionRoot>
 
       <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div class="flex items-baseline justify-between border-b border-gray-200 pt-24 pb-6">
+        <div class="flex items-baseline justify-between border-b border-gray-200 pt-14 pb-6">
           <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{Name}}</h1>
 
           <div class="flex items-center">
@@ -132,7 +132,7 @@
           </div>
         </div>
 
-        <section aria-labelledby="products-heading" class="pt-6 pb-24">
+        <section aria-labelledby="products-heading" class="pt-6 pb-14">
           <h2 id="products-heading" class="sr-only">Products</h2>
 
           <div class="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
@@ -204,7 +204,7 @@
                 <span class="text-2xl font-black mr-5">{{subcat}}</span>
                 Sorted by<span class="mx-2 text-red-900 font-medium"> {{sortname}}</span>
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
-
+                  <span class="group relative grid justify-center font-bold text-xl" v-if="newFilteredManga.length === 0">No results found.</span>
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                     <div v-for="product in newFilteredManga" :key="product.id" class="group relative grid justify-center">
                       <div
@@ -351,6 +351,7 @@ export default {
         return this.categoryFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000))
       }
       // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
+      // console.log(this.categoryFilter(array))
       return this.categoryFilter(array)
     },
     
