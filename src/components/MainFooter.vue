@@ -104,7 +104,7 @@ export default {
     },
     methods:{
       async open(){
-        let res = await axios.get("http://localhost:8080")
+        let res = await axios.get("http://localhost:8080/")
         alert(JSON.stringify(res.data));
       }
     }

@@ -5,7 +5,7 @@ router = express.Router();
 
 
 router.get("/blogs/search", async function (req, res, next) {
-  
+
 });
 
 router.post("/blogs/addlike/:blogId", async function (req, res, next) {
