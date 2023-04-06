@@ -1,0 +1,136 @@
+const Book = [
+    {
+      id: 1,
+      name: 'Jujutsu Kaisen vol 22',
+      href: '#',
+      imageSrc: 'https://preview.redd.it/volume-22-cover-v0-225990wokxfa1.jpg?width=640&crop=smart&auto=webp&s=11ae726a0a173fe1680f1e6937300d72c1c0c4c8',
+      imageAlt: "Front of men's Basic Tee in black.",
+      price: '฿100',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"new",
+      category:["Action", "Comedy", "Drama"]
+      
+    },
+    {
+      id: 2,
+      name: 'Lust Guess vol 6',
+      href: '#',
+      imageSrc: 'https://kbimages1-a.akamaihd.net/7ea5a327-af04-4e18-bfb3-635dbab0ed37/1200/1200/False/lust-geass-vol-6.jpg',
+      imageAlt: "Front of men's Basic Tee in black.",
+      price: '฿600',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"new",
+      category:["Drama", "Harem", "Mystery", "Romance"]
+    },
+    {
+      id: 3,
+      name: 'Kubo san vol 10',
+      href: '#',
+      imageSrc: 'https://cdn.discordapp.com/attachments/880831085431390301/1079329874747076638/Kubo-san_Volume_11.webp',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿91',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"new",
+      category:["Comedy", "Romance"]
+    },
+    {
+      id: 4,
+      name: 'KAIJYU NO.8 vol 10',
+      href: '#',
+      imageSrc: 'https://pbs.twimg.com/media/FoAs23dXgAEzYqC?format=jpg&name=4096x4096',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿91',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"new",
+      category:["Action", "Drama"]
+    },
+    {
+      id: 5,
+      name: 'MY HERO ACADEMIA vol 35',
+      href: '#',
+      imageSrc: 'https://du.lnwfile.com/015vj6.jpg',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿75',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"old",
+      category:["Action", "Comedy", "Drama"]
+    },
+    {
+      id: 6,
+      name: 'Goddess Cafe Terrace vol 7',
+      href: '#',
+      imageSrc: 'https://pbs.twimg.com/media/Fac4QgFVsAEkv_m?format=jpg&name=medium',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿91',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"old",
+      category:["Comedy", "Romance"]
+    },
+    {
+      id: 7,
+      name: 'Eighty six vol 1',
+      href: '#',
+      imageSrc: 'https://bci.kinokuniya.com/jsp/images/book-img/97819/97819753/9781975303129.JPG',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿91',
+      color: 'Light Novel',
+      quantity:0,
+      release_date:"old",
+      category:["Action", "Drama"]
+    },
+    {
+      id: 8,
+      name: 'The Angel Next Door vol 1',
+      href: '#',
+      imageSrc: 'https://m.media-amazon.com/images/I/71xDHczF8JL._AC_UF1000,1000_QL80_.jpg',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿250',
+      color: 'Light Novel',
+      quantity:0,
+      release_date:"old",
+      category:["Romance", "Drama"]
+    },
+    {
+      id: 9,
+      name: 'Our Last Crusade Or the Rise of a New World, vol 10',
+      href: '#',
+      imageSrc: 'https://cdn.shopify.com/s/files/1/0523/4733/8902/products/91Q49gqNLlL_800x.jpg?v=1664473776',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿1000',
+      color: 'Light Novel',
+      quantity:0,
+      release_date:"old",
+      category:["Action", "Drama", "Harem"]
+    },
+    {
+      id: 10,
+      name: 'Danmachi vol 18',
+      href: '#',
+      imageSrc: 'https://kbimages1-a.akamaihd.net/d8a918ed-3102-4baa-8854-6f70435f681f/1200/1200/False/overlord-vol-12-light-novel.jpg',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿250',
+      color: 'Light Novel',
+      quantity:0,
+      release_date:"old",
+      category:["Action", "Drama", "Harem"]
+    },
+    {
+      id: 11,
+      name: 'Jujutsu Kaisen Box Set Vols. 1-4 (Limited Edition)',
+      href: '#',
+      imageSrc: 'http://prodimage.images-bn.com/pimages/9781974737109_p0_v1_s1200x630.jpg',
+      imageAlt: "Front of men's Basic Tee in MANGA.",
+      price: '฿1200',
+      color: 'MANGA',
+      quantity:0,
+      release_date:"old",
+      category:["Action", "Drama"]
+    },
+  ]
+  export default Book
