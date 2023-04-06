@@ -4,8 +4,8 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: 'root',
+  port: 8889,
   database: 'webpro2',
-  port:8889,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0
