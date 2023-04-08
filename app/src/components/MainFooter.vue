@@ -91,23 +91,14 @@
         >
     </div>
 </footer>
-<button v-on:click="open()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">kenmuraki</button>
 </template>
 <script>
-import axios from "axios"
 export default {
     name:'MainFooter',
     data(){
         return{
 
         }
-    },
-    methods:{
-      async open(){
-        let res = await axios.get("http://localhost:3000/")
-        alert(JSON.stringify(res.data));
-      }
     }
-    
 }
 </script>
