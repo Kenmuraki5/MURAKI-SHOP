@@ -4,12 +4,24 @@ const pool = require("../config/db.config");
 router = express.Router();
 
 
-router.get("/blogs/search", async function (req, res, next) {
-
+router.get("/AllBook/", async function (req, res, next) {
+    try {
+        let result = await pool.query(`SELECT * FROM Book`)
+        console.log(result[0])
+        res.json(result[0])
+    } catch (error) {
+        next(error)
+    }
 });
 
-router.post("/blogs/addlike/:blogId", async function (req, res, next) {
-  
+router.post("/AllBook/:sortby", async function (req, res, next) {
+//    try {
+//         let result = req.params.sortby == "0" ? await pool.query(`SELECT * FROM BOOK ORDER BY publisher_date desc`) :
+//         await pool.query(`SELECT * FROM BOOK ORDER BY book_price ${req.params.sortby}`)
+//         res.json(result[0])
+//    } catch (error) {
+//         next(error)
+//    }
 });
 
 router.get("/blogs/create", async function (req, res, next) {

@@ -5,7 +5,7 @@ router = express.Router();
 
 router.get("/", async function (req, res, next) {
   try {
-    let result = await pool.query("SELECT * FROM blogs where id = 1");
+    let result = await pool.query("SELECT * FROM Book");
     res.send(result[0])
     console.log(result[0])
   } catch (err) {

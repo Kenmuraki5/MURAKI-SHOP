@@ -1,6 +1,6 @@
 <template>
     <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
-    <BookList :add="addtoCart" :typebook="typeBook" :Name="name"/>
+    <BookList :add="addtoCart" :Name="name"/>
     <MainFooter />
 </template>
 <script>
@@ -9,7 +9,6 @@ import BookList from '../components/BookList.vue'
 import MainFooter from '../components/MainFooter.vue'
 
 
-import Book from "../data/book.js"
 
 export default {
   name: 'HomePages',
@@ -21,8 +20,7 @@ export default {
   data(){
     return{
       cart:[],
-      typeBook:Book,
-      name:"ALL BOOK"
+      name:"AllBooK"
     }
   },
   methods:{
@@ -50,10 +48,6 @@ export default {
     totalCart(){
       return this.cart.reduce((total, item) => total+item.quantity, 0)
     }
-  },
-  created(){
-    this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
   }
-
 } 
 </script>

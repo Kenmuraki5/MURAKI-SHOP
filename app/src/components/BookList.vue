@@ -77,8 +77,8 @@
                       <div class="space-y-6">
                         <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                           <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]` "
-                            :value="option.value" type="checkbox" :checked="option.checked" 
-                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" v-model="categoryChecked"/>
+                            :value="option.value" type="radio" v-model="categoryChecked"
+                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
                           <label :for="`filter-mobile-${section.id}-${optionIdx}`"
                             class="ml-3 min-w-0 flex-1 text-gray-500">{{ option.label }}</label>
                         </div>
@@ -205,9 +205,9 @@
                 Sorted by<span class="mx-2 text-red-900 font-medium"> {{sortname}}</span>
                 <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search name" v-model="input_search">
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
-                  <span class="group relative grid justify-center font-bold text-xl" v-if="newFilteredManga.length === 0">No results found.</span>
+                  <span class="group relative grid justify-center font-bold text-xl">No results found.</span>
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                    <div v-for="product in newFilteredManga" :key="product.id" class="group relative grid justify-center">
+                    <div v-for="product in products" :key="product.id" class="group relative grid justify-center">
                       <div
                         class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-70">
                         <img :src="product.imageSrc" :alt="product.imageAlt"
@@ -264,6 +264,7 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
+import axios from 'axios';
 const sortOptions = [
   { name: 'Update release', value: '0', current: false },
   { name: 'Price: Low to High', value: '1', current: false },
@@ -310,18 +311,18 @@ export default {
   name: 'MainitemList',
   props: {
     add: Function,
-    typebook: Array,
     Name:String
   },
   data() {
     return {
+      name:this.Name,
       amount: 1,
-      products: this.typebook,
+      products: null,
       priceRange: 0,
-      categoryChecked:[],
+      categoryChecked:null,
       sortSel:null,
       subcat:'All Series',
-      sub:this.typebook,
+      sub:this.products,
       sortname:"Update release",
       input_search:""
     }
@@ -331,26 +332,26 @@ export default {
       let array = this.sub // สร้าง array 
       //  Sorting array
       if (this.sortSel == "0") {
-        array.sort((a, b) => a.id >= b.id ? 1 : -1);
+        array.sort((a, b) => a.isbn >= b.isbn ? 1 : -1);
       }
       else if (this.sortSel == "1") {  
-        array.sort((a, b) => (parseInt((a.price).slice(1)) >= parseInt((b.price).slice(1)) ? 1 : -1));
+        array.sort((a, b) => (parseInt((a.book_price)) >= parseInt((b.book_price)) ? 1 : -1));
       }
       else if (this.sortSel == "2") {
-        array.sort((a, b) => (parseInt((a.price).slice(1)) <= parseInt((b.price).slice(1)) ? 1 : -1))
+        array.sort((a, b) => (parseInt((a.book_price)) <= parseInt((b.book_price)) ? 1 : -1))
       // Filter array (range price and genres)
       }
       if (this.priceRange == "1") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) < 100)))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) < 100)))
       }
       else if (this.priceRange == "2") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 100 && parseInt((val.price).slice(1)) <= 500)))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) >= 100 && parseInt((val.book_price)) <= 500)))
       }
       else if (this.priceRange == "3") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) >= 500 && parseInt((val.price).slice(1)) <= 1000)))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) >= 500 && parseInt((val.book_price)) <= 1000)))
       }
       else if (this.priceRange == "4") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.price).slice(1)) > 1000)))
+        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) > 1000)))
       }
       // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
       // console.log(this.categoryFilter(array))
@@ -359,24 +360,14 @@ export default {
     
     
   },
-  watch:{
-    subcat(){
-      if(this.subcat.includes('New Release'))
-        this.sub = this.sub.filter((val) => val.release_date.includes("new"))
-      else{
-        this.subcat = 'All Series'
-        this.sub = this.products
-      }
-    }
-  },
   methods: {
     categoryFilter(array){
   
-      return array.filter(product => JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked));
-      
+      //return array.filter(product => JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked));
+      return array.filter(val => val.book_category.includes(this.categoryChecked))
     },
     searchFilter(array){
-        return  array.filter((val)=>(val.name).toLowerCase().replace(/\s/g, '').includes(this.input_search.toLowerCase().replace(/\s/g, '')))
+      return  array.filter((val)=>(val.book_name).toLowerCase().replace(/\s/g, '').includes(this.input_search.toLowerCase().replace(/\s/g, '')))
     }
     // sorting(check) {
     //   let array = this.newFilteredManga
@@ -393,6 +384,11 @@ export default {
     //   return array
     
     
+  },
+  created(){
+    axios.get(`http://localhost:3000/${this.Name}`)
+      .then(res => this.products = res.data)
+      .catch(err => console.log(err))
   }
     // array1 = [1,2], array2 = [1,2,3]
 //   inter  = array1.filter(value => array2.includes(value)) 

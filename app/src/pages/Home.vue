@@ -48,9 +48,6 @@ export default {
     totalCart(){
       return this.cart.reduce((total, item) => total+item.quantity, 0)
     }
-  },
-  created(){
-    this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
   }
 } 
 </script>
