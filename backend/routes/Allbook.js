@@ -6,7 +6,8 @@ router = express.Router();
 
 router.get("/AllBook/", async function (req, res, next) {
     try {
-        let result = await pool.query(`SELECT * FROM Book`)
+        let result = await pool.query(`SELECT a.*, group_concat(genre) as 'genres' FROM Book a join book_genres using (isbn) join genres b using(genre_id) group by isbn`)
+        
         console.log(result[0])
         res.json(result[0])
     } catch (error) {

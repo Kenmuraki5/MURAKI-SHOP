@@ -28,12 +28,7 @@
                 <!-- small -->
                 <!-- Filters -->
                 <form class="mt-4 border-t border-gray-200">
-                  <h3 class="sr-only">Categories</h3>
-                  <ul role="list" class="px-2 py-3 font-medium text-gray-900">
-                    <li v-for="category in subCategories" :key="category.name">
-                      <a type="button" @click="subcat = category.name" class="block px-2 py-3"> {{ category.name }}</a>
-                    </li>
-                  </ul>
+                  
                   <!-- ปุ่ม price เเบบหน้าจอเล็ก -->
                   <Disclosure as="div" v-for="section in filters" :key="section.id"
                     class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
@@ -60,8 +55,8 @@
                     </DisclosurePanel>
                   </Disclosure>
 
-                  <!-- ปุ่ม category เเบบหน้าจอเล็ก -->
-                  <Disclosure as="div" v-for="section in category" :key="section.id"
+                  <!-- ปุ่ม genes เเบบหน้าจอเล็ก -->
+                  <Disclosure as="div" v-for="section in genes" :key="section.id"
                     class="border-t border-gray-200 px-4 py-6" v-slot="{ open }">
                     <h3 class="-mx-2 -my-3 flow-root">
                       <DisclosureButton
@@ -77,7 +72,7 @@
                       <div class="space-y-6">
                         <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                           <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]` "
-                            :value="option.value" type="radio" v-model="categoryChecked"
+                            :value="option.value" type="radio" v-model="genesChecked"
                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
                           <label :for="`filter-mobile-${section.id}-${optionIdx}`"
                             class="ml-3 min-w-0 flex-1 text-gray-500">{{ option.label }}</label>
@@ -139,12 +134,7 @@
             <!-- big -->
             <!-- Filters -->
             <form class="hidden lg:block">
-              <h3 class="sr-only">Categories</h3>
-              <ul role="list" class="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-900">
-                <li v-for="category in subCategories" :key="category.name">
-                  <a type="button" @click="subcat = category.name">{{ category.name }}</a>
-                </li>
-              </ul>
+             
 
               <Disclosure as="div" v-for="section in filters" :key="section.id" class="border-b border-gray-200 py-6"
                 v-slot="{ open }">
@@ -172,7 +162,7 @@
               </Disclosure>
             
 
-              <Disclosure as="div" v-for="section in category" :key="section.id"  class="border-b border-gray-200 py-6"
+              <Disclosure as="div" v-for="section in genes" :key="section.id"  class="border-b border-gray-200 py-6"
                 v-slot="{ open }">
                 <h3 class="-my-3 flow-root">
                   <DisclosureButton
@@ -188,8 +178,8 @@
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                       <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
-                        type="checkbox" :checked="option.checked"
-                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" v-model="categoryChecked"/>
+                        type="radio" :checked="option.checked"
+                        class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" v-model="genesChecked"/>
                       <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">{{ option.label
                       }}</label>
                     </div>
@@ -207,7 +197,7 @@
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
                   <span class="group relative grid justify-center font-bold text-xl">No results found.</span>
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
-                    <div v-for="product in products" :key="product.id" class="group relative grid justify-center">
+                    <div v-for="product in newFilteredManga" :key="product.id" class="group relative grid justify-center">
                       <div
                         class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-70">
                         <img :src="product.imageSrc" :alt="product.imageAlt"
@@ -270,10 +260,7 @@ const sortOptions = [
   { name: 'Price: Low to High', value: '1', current: false },
   { name: 'Price: High to Low', value: '2', current: false },
 ]
-const subCategories = [
-  { name: 'All Series', value:0 },
-  { name: 'New Release', value:1 },
-]
+
 const filters = [
   {
     id: 'price',
@@ -287,11 +274,12 @@ const filters = [
     ],
   }]
 
-const category = [
+const genes = [
   {
-    id: 'category',
-    name: 'Category',
+    id: 'genes',
+    name: 'Genes',
     options: [
+      { value: 'All', label: 'All', checked: true },
       { value: 'Action', label: 'Action', checked: false },
       { value: 'Comedy', label: 'Comedy', checked: false },
       { value: 'Drama', label: 'Drama', checked: false },
@@ -319,17 +307,21 @@ export default {
       amount: 1,
       products: null,
       priceRange: 0,
-      categoryChecked:null,
+      genesChecked:"",
       sortSel:null,
       subcat:'All Series',
-      sub:this.products,
       sortname:"Update release",
       input_search:""
     }
+  }
+  ,created(){
+    axios.get(`http://localhost:3000/${this.Name}`)
+      .then(res => this.products = res.data)
+      .catch(err => console.log(err))
   },
   computed: {
     newFilteredManga() {
-      let array = this.sub // สร้าง array 
+      let array = this.products // สร้าง array 
       //  Sorting array
       if (this.sortSel == "0") {
         array.sort((a, b) => a.isbn >= b.isbn ? 1 : -1);
@@ -342,31 +334,38 @@ export default {
       // Filter array (range price and genres)
       }
       if (this.priceRange == "1") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) < 100)))
+        return this.genesFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) < 100)))
       }
       else if (this.priceRange == "2") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) >= 100 && parseInt((val.book_price)) <= 500)))
+        return this.genesFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) >= 100 && parseInt((val.book_price)) <= 500)))
       }
       else if (this.priceRange == "3") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) >= 500 && parseInt((val.book_price)) <= 1000)))
+        return this.genesFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) >= 500 && parseInt((val.book_price)) <= 1000)))
       }
       else if (this.priceRange == "4") {
-        return this.categoryFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) > 1000)))
+        return this.genesFilter(this.searchFilter(array.filter((val) => parseInt((val.book_price)) > 1000)))
       }
-      // JSON.stringify(this.categoryChecked.filter(val=> array.includes(val))) == JSON.stringify(this.categoryChecked)
-      // console.log(this.categoryFilter(array))
-      return this.categoryFilter(this.searchFilter(array))
+      // JSON.stringify(this.genesChecked.filter(val=> array.includes(val))) == JSON.stringify(this.genesChecked)
+      // console.log(this.genesFilter(array))
+      return this.genesFilter(this.searchFilter(array))
     },
     
     
   },
   methods: {
-    categoryFilter(array){
-  
-      //return array.filter(product => JSON.stringify(this.categoryChecked.filter(val=> product.category.includes(val))) == JSON.stringify(this.categoryChecked));
-      return array.filter(val => val.book_category.includes(this.categoryChecked))
+    genesFilter(array){
+      
+      //return array.filter(product => JSON.stringify(this.genesChecked.filter(val=> product.genes.includes(val))) == JSON.stringify(this.genesChecked));
+
+      if(this.genesChecked == "All" ) {
+        return array
+      } 
+      // console.log(array.filter(val => val.genre.includes(this.genesChecked)))
+      return array.filter(val => val.genres.includes(this.genesChecked));
+      
     },
     searchFilter(array){
+      
       return  array.filter((val)=>(val.book_name).toLowerCase().replace(/\s/g, '').includes(this.input_search.toLowerCase().replace(/\s/g, '')))
     }
     // sorting(check) {
@@ -385,11 +384,7 @@ export default {
     
     
   },
-  created(){
-    axios.get(`http://localhost:3000/${this.Name}`)
-      .then(res => this.products = res.data)
-      .catch(err => console.log(err))
-  }
+  
     // array1 = [1,2], array2 = [1,2,3]
 //   inter  = array1.filter(value => array2.includes(value)) 
 // JSON.stringify(inter) == JSON.stringify(array1)
