@@ -139,8 +139,10 @@ CREATE TABLE `Admin` (
   `a_password` VARCHAR(255) NOT NULL,
   `a_first_name` VARCHAR(255) NOT NULL,
   `a_last_name` VARCHAR(255) NOT NULL,
+  `a_address` TEXT NOT NULL,
   `a_email` VARCHAR(255) NOT NULL,
-  `a_phone` VARCHAR(10) NOT NULL,
+  `a_phone` CHAR(10) NOT NULL,
+  `a_image` VARCHAR(200) NOT NULL,
   PRIMARY KEY (`admin_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
