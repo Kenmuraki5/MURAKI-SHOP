@@ -195,7 +195,7 @@
                 Sorted by<span class="mx-2 text-red-900 font-medium"> {{sortname}}</span>
                 <input type="search" id="default-search" class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Search name" v-model="input_search">
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
-                  <span class="group relative grid justify-center font-bold text-xl">No results found.</span>
+                  <span class="group relative grid justify-center font-bold text-xl" v-if="newFilteredManga.length == 0">No results found.</span>
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                     <div v-for="product in newFilteredManga" :key="product.isbn" class="group relative grid justify-center">
                       <div

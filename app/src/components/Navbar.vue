@@ -100,10 +100,10 @@
                               </div>
                             </div>
                           </div>
-                          <button
-                            class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase ">
+                          <router-link
+                            class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase " to="/CheckOut">
                             Checkout {{ totalPrice }}
-                          </button>
+                          </router-link>
                         </div>
                       </DialogPanel>
                     </TransitionChild>

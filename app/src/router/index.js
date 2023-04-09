@@ -5,6 +5,7 @@ import MangaPage from '../pages/Manga.vue'
 import NovelPage from '../pages/Novel.vue'
 import LoginPage from '../pages/LoginPage.vue'
 import RegisterPage from '../pages/RegisterPage.vue'
+import CheckOutPage from '../pages/CheckOut.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -13,7 +14,8 @@ const router = createRouter({
         {path:'/Manga', name:"MangaPage", component: MangaPage },
         {path:'/Novel', name:"NovelPage", component: NovelPage },
         {path:'/LoginPage', name:"LoginPage", component: LoginPage },
-        {path:'/RegisterPage', name:"RegisterPage", component: RegisterPage }
+        {path:'/RegisterPage', name:"RegisterPage", component: RegisterPage },
+        {path:'/CheckOut', name:"CheckOutPage", component: CheckOutPage }
     ]
 })
 
