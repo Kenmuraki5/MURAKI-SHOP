@@ -67,15 +67,15 @@
                             <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart ({{totalCart}})
                             </DialogTitle>
                           </div>
-                          <div class="relative mt-2 flex-initial px-4 sm:px-6" v-for="item in cart" :key="item.id">
+                          <div class="relative mt-2 flex-initial px-4 sm:px-6" v-for="item in cart" :key="item.isbn">
                             <!-- Your content -->
                             <div class="py-6 ">
                               <div class="flex  max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
-                                <div class="w-1/3 bg-cover" :style="{ 'background-image': 'url(' + item.imageSrc + ')' }">
+                                <div class="w-1/3 bg-cover" :style="{ 'background-image': 'url(' + item.book_img + ')' }">
                                 </div>
                                 <div class="w-2/3 p-4">
                                   <h1 class="text-gray-900 font-bold text-2xl">
-                                    {{ item.name }}
+                                    {{ item.book_name }}
                                   </h1>
                                   <p class="mt-2 text-gray-600 text-sm">
                                     Lorem ipsum dolor sit amet consectetur
@@ -89,7 +89,7 @@
                                       -
                                     </button>
                                     <h1 class="text-gray-700 font-bold text-xl">
-                                      {{ item.price }} x{{ item.quantity }}
+                                      {{ item.book_price }} ฿ x{{ item.quantity }}
                                     </h1>
                                     <button @click="add(item)"
                                       class="px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded">

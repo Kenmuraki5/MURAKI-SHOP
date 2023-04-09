@@ -1,7 +1,7 @@
 <template>
   <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
   <EventBar></EventBar>
-  <MainitemList :add="addtoCart"/>
+  <MainitemList :add="addtoCart" :products="products"/>
   <MainFooter />
 </template>
 
@@ -10,6 +10,7 @@ import MainNavbar from '../components/Navbar.vue'
 import EventBar from '../components/CarouselBar.vue'
 import MainitemList from '../components/MainitemList.vue'
 import MainFooter from '../components/MainFooter.vue'
+import axios from 'axios'
 export default {
   name: 'HomePages',
   components: {
@@ -20,20 +21,22 @@ export default {
   },
   data(){
     return{
-      cart:[]
+      cart:[],
+      products:[]
     }
   },
   methods:{
     addtoCart(value){
       for(let i = 0 ;i<this.cart.length;i++){
-          if(this.cart[i].id == value.id){
+          if(this.cart[i].isbn == value.isbn){
             this.cart[i].quantity++
             return localStorage.setItem("cart", JSON.stringify(this.cart))
           }
       }
-    value.quantity = 1
-    this.cart.push(value)
-    localStorage.setItem("cart", JSON.stringify(this.cart))
+      Object.assign(value, {quantity:0});
+      value.quantity = 1
+      this.cart.push(value)
+      localStorage.setItem("cart", JSON.stringify(this.cart))
     },
     removefromCart(value){
       this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
@@ -43,11 +46,17 @@ export default {
   },
   computed:{
     totalPrice(){
-      return this.cart.reduce((total, item) => total+(parseInt(item.price.slice(1)))*item.quantity, 0)
+      return this.cart.reduce((total, item) => total+(parseInt(item.book_price))*item.quantity, 0)
     },
     totalCart(){
       return this.cart.reduce((total, item) => total+item.quantity, 0)
     }
+  },
+  created(){
+    this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
+    axios.get(`http://localhost:3000/`)
+      .then(res => this.products = res.data)
+      .catch(err => console.log(err))
   }
 } 
 </script>

@@ -33,28 +33,17 @@
   </div>
 </template>
 <script>
-import axios from "axios"
 
 export default {
   name: 'MainitemList',
   props:{
-    add:Function
+    add:Function,
+    products:Array
   },
   data(){
     return{
-      amount: 1,
-      products: null
+      
     }
-  },
-  created(){
-    this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-    axios.get("http://localhost:3000/")
-    .then((res) => {
-      this.products = res.data
-    })
-    .catch((err) => {
-      console.log(err)
-    })
   }
 }
 </script>

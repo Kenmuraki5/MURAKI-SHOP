@@ -89,7 +89,7 @@
 
       <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div class="flex items-baseline justify-between border-b border-gray-200 pt-14 pb-6">
-          <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{Name}}</h1>
+          <h1 class="text-4xl font-bold tracking-tight text-gray-900">{{ name }}</h1>
 
           <div class="flex items-center">
             <Menu as="div" class="relative inline-block text-left">
@@ -254,7 +254,7 @@ import {
 } from '@headlessui/vue'
 import { XMarkIcon } from '@heroicons/vue/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/vue/20/solid'
-import axios from 'axios';
+
 const sortOptions = [
   { name: 'Update release', value: '0', current: false },
   { name: 'Price: Low to High', value: '1', current: false },
@@ -299,13 +299,12 @@ export default {
   name: 'MainitemList',
   props: {
     add: Function,
-    Name:String
+    products:Array
   },
   data() {
     return {
-      name:this.Name,
+      name:"Allbook",
       amount: 1,
-      products: null,
       priceRange: 0,
       genesChecked:"",
       sortSel:null,
@@ -313,11 +312,6 @@ export default {
       sortname:"Update release",
       input_search:""
     }
-  }
-  ,created(){
-    axios.get(`http://localhost:3000/${this.Name}`)
-      .then(res => this.products = res.data)
-      .catch(err => console.log(err))
   },
   computed: {
     newFilteredManga() {
