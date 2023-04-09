@@ -72,7 +72,7 @@
                       <div class="space-y-6">
                         <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                           <input :id="`filter-mobile-${section.id}-${optionIdx}`" :name="`${section.id}[]` "
-                            :value="option.value" type="radio" v-model="genesChecked"
+                            :value="option.value" type="checkbox" v-model="genesChecked"
                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"/>
                           <label :for="`filter-mobile-${section.id}-${optionIdx}`"
                             class="ml-3 min-w-0 flex-1 text-gray-500">{{ option.label }}</label>
@@ -178,7 +178,7 @@
                   <div class="space-y-4">
                     <div v-for="(option, optionIdx) in section.options" :key="option.value" class="flex items-center">
                       <input :id="`filter-${section.id}-${optionIdx}`" :name="`${section.id}[]`" :value="option.value"
-                        type="radio" :checked="option.checked"
+                        type="checkbox" :checked="option.checked"
                         class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" v-model="genesChecked"/>
                       <label :for="`filter-${section.id}-${optionIdx}`" class="ml-3 text-sm text-gray-600">{{ option.label
                       }}</label>
@@ -279,7 +279,6 @@ const genes = [
     id: 'genes',
     name: 'Genes',
     options: [
-      { value: '', label: 'All', checked: true },
       { value: 'Action', label: 'Action', checked: false },
       { value: 'Comedy', label: 'Comedy', checked: false },
       { value: 'Drama', label: 'Drama', checked: false },
@@ -306,7 +305,7 @@ export default {
     return {
       amount: 1,
       priceRange: 0,
-      genesChecked:"",
+      genesChecked:[],
       sortSel:null,
       subcat:'All Series',
       sortname:"Update release",
@@ -349,9 +348,9 @@ export default {
   methods: {
     genesFilter(array){
       
-      //return array.filter(product => JSON.stringify(this.genesChecked.filter(val=> product.genes.includes(val))) == JSON.stringify(this.genesChecked));
+      return array.filter(product => JSON.stringify(this.genesChecked.filter(val=> product.genres.split(",").includes(val))) == JSON.stringify(this.genesChecked));
       // console.log(array.filter(val => val.genre.includes(this.genesChecked)))
-      return array.filter(val => val.genres.includes(this.genesChecked));
+      // return array.filter(val => val.genres.includes(this.genesChecked));
       
     },
     searchFilter(array){
