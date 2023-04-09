@@ -200,7 +200,7 @@
                     <div v-for="product in newFilteredManga" :key="product.isbn" class="group relative grid justify-center">
                       <div
                         class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-70">
-                        <img :src="product.bookimg"
+                        <img :src="product.book_img"
                           class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
                       </div>
                       <div class="mt-4 flex justify-between">
