@@ -1,4 +1,5 @@
 <template>
+    <MainNavbar/>
     <section class="min-h-screen flex flex-col">
         <nav>
             <div class="px-4 py-8 text-center text-2xl">
@@ -45,7 +46,11 @@
 </template>
 
 <script>
+import MainNavbar from '../components/Navbar.vue'
     export default{
+        components: {
+            MainNavbar,
+        },
         data(){
             
         }
