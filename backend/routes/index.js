@@ -14,12 +14,10 @@ router.get("/", async function (req, res, next) {
 });
 router.post("/signin", async function (req, res, next) {
   try {
-    let result = await pool.query("SELECT * FROM Customer where c_username = ? and c_password = ?", [req.body.username, req.body.password]);
-    let result2 = await pool.query("SELECT * FROM Admin where a_username = ? and a_password = ?", [req.body.username, req.body.password]);
+    let result = await pool.query("SELECT * FROM `Admin` where (a_username = ? or a_email = ?) and a_password = ? \
+    UNION ALL SELECT * FROM `Customer` where (c_username = ? or c_email = ?) and c_password = ?", 
+    [req.body.username, req.body.username, req.body.password, req.body.username, req.body.username, req.body.password]);
     if(result[0].length != 0){
-      res.redirect("/")
-    }
-    if(result2[0].length != 0){
       res.redirect("/")
     }
     else{
