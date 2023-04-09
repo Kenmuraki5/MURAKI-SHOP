@@ -19,8 +19,13 @@ app.use(express.urlencoded({ extended: true })); /* bodyParser.urlencoded() is d
 // route
 const indexRouter = require('./routes/index')
 const AllbookRouter = require('./routes/Allbook')
+const MangaRouter = require('./routes/Manga')
+const NovelRouter = require('./routes/LightNovel')
 app.use(indexRouter.router)
 app.use(AllbookRouter.router)
+app.use(MangaRouter.router)
+app.use(NovelRouter.router)
+
 
 // set port, listen for requests
 const PORT = process.env.PORT || 3000;

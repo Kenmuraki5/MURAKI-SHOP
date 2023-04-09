@@ -1,7 +1,7 @@
 <template>
-    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
-    <BookList :add="addtoCart" :products="products"/>
-    <MainFooter />
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" />
+  <BookList :add="addtoCart" :products="products" :name="name" />
+  <MainFooter />
 </template>
 <script>
 import MainNavbar from '../components/Navbar.vue'
@@ -12,47 +12,47 @@ import axios from 'axios'
 
 
 export default {
-  name: 'HomePages',
+  name: 'AllBookPage',
   components: {
     MainNavbar,
     BookList,
     MainFooter
   },
-  data(){
-    return{
-      cart:[],
-      name:"AllBooK",
-      products:[]
+  data() {
+    return {
+      cart: [],
+      name: "AllBook",
+      products: []
     }
   },
-  methods:{
-    addtoCart(value){
-      for(let i = 0 ;i<this.cart.length;i++){
-          if(this.cart[i].isbn == value.isbn){
-            this.cart[i].quantity++
-            return localStorage.setItem("cart", JSON.stringify(this.cart))
-          }
+  methods: {
+    addtoCart(value) {
+      for (let i = 0; i < this.cart.length; i++) {
+        if (this.cart[i].isbn == value.isbn) {
+          this.cart[i].quantity++
+          return localStorage.setItem("cart", JSON.stringify(this.cart))
+        }
       }
-      Object.assign(value, {quantity:0});
+      Object.assign(value, { quantity: 0 });
       value.quantity = 1
       this.cart.push(value)
       localStorage.setItem("cart", JSON.stringify(this.cart))
     },
-    removefromCart(value){
+    removefromCart(value) {
       this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
       // this.cart.splice(this.cart.indexOf(value), 1)
       localStorage.setItem("cart", JSON.stringify(this.cart))
     }
   },
-  computed:{
-    totalPrice(){
-      return this.cart.reduce((total, item) => total+(parseInt(item.book_price))*item.quantity, 0)
+  computed: {
+    totalPrice() {
+      return this.cart.reduce((total, item) => total + (parseInt(item.book_price)) * item.quantity, 0)
     },
-    totalCart(){
-      return this.cart.reduce((total, item) => total+item.quantity, 0)
+    totalCart() {
+      return this.cart.reduce((total, item) => total + item.quantity, 0)
     }
   },
-  created(){
+  created() {
     this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
     axios.get(`http://localhost:3000/AllBook`)
       .then(res => this.products = res.data)

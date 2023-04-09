@@ -1,7 +1,7 @@
 <template>
-    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
-    <BookList :add="addtoCart" :typebook="filtertypebook" :Name="name"/>
-    <MainFooter />
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" />
+  <BookList :add="addtoCart" :products="products" :name="name" />
+  <MainFooter />
 </template>
 <script>
 import MainNavbar from '../components/Navbar.vue'
@@ -9,53 +9,54 @@ import BookList from '../components/BookList.vue'
 import MainFooter from '../components/MainFooter.vue'
 
 
-import Book from "../data/book.js"
+import axios from 'axios'
 
 export default {
-  name: 'HomePages',
+  name: 'NovelPage',
   components: {
     MainNavbar,
     BookList,
     MainFooter
   },
-  data(){
-    return{
-      cart:[],
-      typeBook:Book,
-      name:"LIGHT NOVEL"
+  data() {
+    return {
+      cart: [],
+      name: "LightNovel",
+      products: []
     }
   },
-  methods:{
-    addtoCart(value){
-      for(let i = 0 ;i<this.cart.length;i++){
-          if(this.cart[i].id == value.id){
-            this.cart[i].quantity++
-            return localStorage.setItem("cart", JSON.stringify(this.cart))
-          }
+  methods: {
+    addtoCart(value) {
+      for (let i = 0; i < this.cart.length; i++) {
+        if (this.cart[i].isbn == value.isbn) {
+          this.cart[i].quantity++
+          return localStorage.setItem("cart", JSON.stringify(this.cart))
+        }
       }
+      Object.assign(value, { quantity: 0 });
       value.quantity = 1
       this.cart.push(value)
       localStorage.setItem("cart", JSON.stringify(this.cart))
     },
-    removefromCart(value){
+    removefromCart(value) {
       this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
       // this.cart.splice(this.cart.indexOf(value), 1)
       localStorage.setItem("cart", JSON.stringify(this.cart))
     }
   },
-  computed:{
-    totalPrice(){
-      return this.cart.reduce((total, item) => total+(parseInt(item.price.slice(1)))*item.quantity, 0)
+  computed: {
+    totalPrice() {
+      return this.cart.reduce((total, item) => total + (parseInt(item.book_price)) * item.quantity, 0)
     },
-    totalCart(){
-      return this.cart.reduce((total, item) => total+item.quantity, 0)
-    },
-    filtertypebook(){
-      return this.typeBook.filter((val) => val.color.includes("Novel"))
+    totalCart() {
+      return this.cart.reduce((total, item) => total + item.quantity, 0)
     }
   },
-  created(){
+  created() {
     this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
+    axios.get(`http://localhost:3000/Novel`)
+      .then(res => this.products = res.data)
+      .catch(err => console.log(err))
   }
 
 } 

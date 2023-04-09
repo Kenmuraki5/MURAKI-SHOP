@@ -299,11 +299,11 @@ export default {
   name: 'MainitemList',
   props: {
     add: Function,
-    products:Array
+    products:Array,
+    name:String
   },
   data() {
     return {
-      name:"Allbook",
       amount: 1,
       priceRange: 0,
       genesChecked:"",
