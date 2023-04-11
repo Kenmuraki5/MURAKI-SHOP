@@ -7,6 +7,7 @@ const app = express();
 // var corsOptions = {
 //   origin: "http://localhost:8081"
 // };
+app.use(express.static('static'))
 
 app.use(cors());
 
@@ -21,10 +22,13 @@ const indexRouter = require('./routes/index')
 const AllbookRouter = require('./routes/Allbook')
 const MangaRouter = require('./routes/Manga')
 const NovelRouter = require('./routes/LightNovel')
+const adminRouter = require('./routes/adminPage')
+
 app.use(indexRouter.router)
 app.use(AllbookRouter.router)
 app.use(MangaRouter.router)
 app.use(NovelRouter.router)
+app.use(adminRouter.router)
 
 
 // set port, listen for requests
