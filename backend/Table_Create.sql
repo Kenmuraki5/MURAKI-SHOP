@@ -167,7 +167,8 @@ INSERT INTO `Book_Author` (`isbn`, `author_id`) VALUES
 ('9786169953203', 1);
 
 -- Insert data into genres table
-INSERT INTO `genres` (`genre`) VALUES ('Action'), ('Adventure'), ('Mystery'), ('Horror');
+INSERT INTO `genres` (`genre`) VALUES ('Action'), ('Comedy'), ('Drama'), ('Harem')
+, ('Mystery'), ('Romance'), ('Sport');
 
 -- Insert data into book_genres table
 INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES 
