@@ -6,6 +6,7 @@ import NovelPage from '../pages/Novel.vue'
 import LoginPage from '../pages/LoginPage.vue'
 import RegisterPage from '../pages/RegisterPage.vue'
 import CheckOutPage from '../pages/CheckOut.vue'
+import AdminPage from '../pages/AdminPage.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -15,7 +16,8 @@ const router = createRouter({
         {path:'/Novel', name:"NovelPage", component: NovelPage },
         {path:'/LoginPage', name:"LoginPage", component: LoginPage },
         {path:'/RegisterPage', name:"RegisterPage", component: RegisterPage },
-        {path:'/CheckOut', name:"CheckOutPage", component: CheckOutPage }
+        {path:'/CheckOut', name:"CheckOutPage", component: CheckOutPage },
+        {path:'/AdminPage', name:"AdminPage", component: AdminPage }
     ]
 })
 
