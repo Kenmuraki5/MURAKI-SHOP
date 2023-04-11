@@ -149,7 +149,7 @@ export default {
             this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart);
             const res = await axios.get("http://localhost:3000/CheckOut")
             this.shipping = res.data
-            const res1 = await axios.get("http://localhost:3000/")
+            // const res1 = await axios.get("http://localhost:3000/")
             // const result = this.cart.filter(val => res1.data.find(val2 => val.isbn == val2.isbn))
             // console.log(result)
         } catch (error) {
