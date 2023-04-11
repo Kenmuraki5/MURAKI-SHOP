@@ -24,6 +24,7 @@ const MangaRouter = require('./routes/Manga')
 const NovelRouter = require('./routes/LightNovel')
 const adminRouter = require('./routes/adminPage')
 const CheckoutRouter = require('./routes/Checkout')
+const DetailPage = require('./routes/DetailPage')
 
 app.use(indexRouter.router)
 app.use(AllbookRouter.router)
@@ -31,6 +32,7 @@ app.use(MangaRouter.router)
 app.use(NovelRouter.router)
 app.use(adminRouter.router)
 app.use(CheckoutRouter.router)
+app.use(DetailPage.router)
 
 
 // set port, listen for requests

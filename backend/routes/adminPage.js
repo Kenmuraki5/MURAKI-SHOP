@@ -43,8 +43,8 @@ router.post('/addBook', upload.single('image'), async function (req, res, next) 
             form.publisher = insertPublisher[0].insertId
         }
         if(form.newAuthor == 1){
-            let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`) VALUES (?)',
-            [form.author])
+            let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
+            [form.author, form.newauthor_alias])
             form.author = insertAuthor[0].insertId
         }
         let insertBook = await conn.query('INSERT INTO `Book` (`isbn`, `book_name`, `book_description`, `book_price`, `book_category`, `publisher_id`, `publisher_date`, `book_img`, `in_stock`) value(?,?,?,?,?,?,?,?,?)',

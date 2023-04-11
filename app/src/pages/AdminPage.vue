@@ -10,17 +10,17 @@
                     <div class="py-2 text-left">
                         <input type="text"
                             class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700"
-                            placeholder="ISBN" v-model="isbn"/>
+                            placeholder="ISBN" v-model="isbn" />
                     </div>
                     <div class="py-2 text-left">
                         <input type="text"
                             class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700"
-                            placeholder="Title" v-model="title"/>
+                            placeholder="Title" v-model="title" />
                     </div>
                     <div class="py-2 text-left">
                         <input type="number"
                             class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700"
-                            placeholder="Price" v-model="price"/>
+                            placeholder="Price" v-model="price" />
                     </div>
                     <div class="py-2 text-left"></div>
                     <div class="py-2 text-left">
@@ -73,6 +73,9 @@
                         <input v-if="author == 'x'" type="text"
                             class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700"
                             placeholder="New Author" v-model="newAuthor" />
+                        <input v-if="author == 'x'" type="text"
+                            class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700"
+                            placeholder="New Author alias" v-model="newauthor_alias" />
                     </div>
                     <div class="py-2 text-left">Genres :</div>
                     <div class="grid grid-cols-3 gap-4">
@@ -85,12 +88,12 @@
                     <label for="upload-button"
                         class="flex items-center justify-center px-4 py-2 text-gray-100 bg-blue-600 rounded-md cursor-pointer">
                         <span class="mr-2">Upload Image {{ imageName }}</span>
-                        <input id="upload-button" type="file" class="hidden" ref="file" @change="handleFileUpload()"/>
+                        <input id="upload-button" type="file" class="hidden" ref="file" @change="handleFileUpload()" />
                     </label>
                     <div class="py-2 text-left">
                         <input type="number"
                             class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700"
-                            placeholder="Amount" v-model="inStock"/>
+                            placeholder="Amount" v-model="inStock" />
                     </div>
                     <div class="py-2">
                         <button type="submit" @click="validateForm()"
@@ -121,11 +124,12 @@ export default {
             author: "",
             newPublisher: null,
             newAuthor: null,
+            newauthor_alias: null,
             genres: null,
             selectedGenres: [],
-            image:null,
-            imageName:null,
-            inStock:null
+            image: null,
+            imageName: null,
+            inStock: null
         }
     },
     created() {
@@ -141,10 +145,10 @@ export default {
             )
     },
     methods: {
-        handleFileUpload(){
-          this.image = this.$refs.file.files[0];
-          this.imageName = this.image.name
-      },
+        handleFileUpload() {
+            this.image = this.$refs.file.files[0];
+            this.imageName = this.image.name
+        },
         submit() {
             var formData = new FormData()
             formData.append("isbn", this.isbn)
@@ -162,6 +166,7 @@ export default {
             }
             if (this.author == "x") {
                 formData.append("author", this.newAuthor)
+                formData.append("newauthor_alias", this.newauthor_alias)
                 formData.append("newAuthor", 1)
             } else {
                 formData.append("author", this.author)
@@ -171,11 +176,14 @@ export default {
             formData.append("image", this.image)
             formData.append("inStock", this.inStock)
 
-            axios.post('http://localhost:3000/addBook', formData,{
-              headers: {
-              'Content-Type': 'multipart/form-data'
-              }
-          }).then(res => console.log(res.data)).catch(err => console.log(err))
+            axios.post('http://localhost:3000/addBook', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then((res) => {
+                console.log(res.data)
+                alert("Add Book success")
+            }).catch(err => console.log(err))
         },
         validateForm() {
             let errors = []
@@ -203,6 +211,9 @@ export default {
             if (!this.author && this.author !== 'x' || (this.author == 'x' && !this.newAuthor)) {
                 errors.push('Author is something wrong.')
             }
+            if (this.author == 'x' && !this.newauthor_alias) {
+                errors.push('Author alias is something wrong.')
+            }
             if (!this.selectedGenres.length) {
                 errors.push('At least one genre must be selected.')
             }
@@ -211,7 +222,7 @@ export default {
             }
             if (errors.length) {
                 // Display error messages to user or handle them however you wish
-                console.log(errors)
+                alert(errors)
                 return false
             }
             if (this.inStock < 0) {

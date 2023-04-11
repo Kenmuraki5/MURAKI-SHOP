@@ -198,25 +198,27 @@
                   <span class="group relative grid justify-center font-bold text-xl" v-if="newFilteredManga.length == 0">No results found.</span>
                   <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                     <div v-for="product in newFilteredManga" :key="product.isbn" class="group relative grid justify-center" :style="{opacity:product.in_stock == 0 ? 0.5 : 1 }">
-                      <div
-                        class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-70">
-                        <img :src="product.book_img"
-                          class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
-                          <h3 v-show="product.in_stock == 0" class="absolute top-28 left-24 text-rose-800">out of stock</h3>
-                      </div>
-                      <div class="mt-4 flex justify-between">
-                        <div>
-                          <h3 class="text-sm text-gray-700">
-                            <a href="#">
-                              <span aria-hidden="true" class="absolute inset-0" />
-                              {{ product.book_name }}
-                            </a>
-                          </h3>
-                          <p class="mt-1 text-sm text-gray-500">{{ product.book_color }}</p>
+                      <RouterLink :to="`/DetailPage/${product.isbn}`">
+                        <div
+                          class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-70">
+                          <img :src="product.book_img"
+                            class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+                            <h3 v-show="product.in_stock == 0" class="absolute top-28 left-24 text-rose-800">out of stock</h3>
                         </div>
-                        <p class="text-sm font-medium text-gray-900">{{ product.book_price }}</p>
-                        
-                      </div>
+                        <div class="mt-4 flex justify-between">
+                          <div>
+                            <h3 class="text-sm text-gray-700">
+                              <a href="#">
+                                <span aria-hidden="true" class="absolute inset-0" />
+                                {{ product.book_name }}
+                              </a>
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500">{{ product.book_color }}</p>
+                          </div>
+                          <p class="text-sm font-medium text-gray-900">{{ product.book_price }}</p>
+                          
+                        </div>
+                      </RouterLink>
 
 
 
