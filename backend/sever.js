@@ -23,12 +23,14 @@ const AllbookRouter = require('./routes/Allbook')
 const MangaRouter = require('./routes/Manga')
 const NovelRouter = require('./routes/LightNovel')
 const adminRouter = require('./routes/adminPage')
+const CheckoutRouter = require('./routes/Checkout')
 
 app.use(indexRouter.router)
 app.use(AllbookRouter.router)
 app.use(MangaRouter.router)
 app.use(NovelRouter.router)
 app.use(adminRouter.router)
+app.use(CheckoutRouter.router)
 
 
 // set port, listen for requests

@@ -25,16 +25,15 @@
                                     </div>
                                     <div class="col-md-6 col-lg-6 col-xl-6">
                                         <h5>{{ product.book_name }}</h5>
-                                        <h3 class="">
-                                            amount: ${{ product.quantity }}
+                                        <h3 class="py-3">
+                                            amount: {{ product.quantity }}
                                         </h3>
                                         <h5 style="position:absolute; bottom:10px;">total price:
                                             <span style="color:red;">${{ product.quantity * product.book_price }} ฿</span>
                                         </h5>
                                     </div>
                                     <div class="col-md-12 col-lg-3 col-xl-3 border-sm-start-none border-start">
-                                        <div class="d-flex justify-content-between mt-4">
-                                            <h6 class="text-success">price</h6>
+                                        <div class="d-flex justify-content-end mt-4">
                                             <div class="div">
                                                 <h4 style="text-align: right;">${{ product.book_price }} ฿</h4>
                                             </div>
@@ -149,6 +148,7 @@ export default {
             this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart);
             const res = await axios.get("http://localhost:3000/CheckOut")
             this.shipping = res.data
+            
             const res1 = await axios.get("http://localhost:3000/")
             const result = this.cart.filter(val => res1.data.find(val2 => val.isbn == val2.isbn))
             console.log(result)
