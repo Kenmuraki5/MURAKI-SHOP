@@ -21,7 +21,7 @@ router.post("/signin", async function (req, res, next) {
       res.redirect("/")
     }
     else{
-      throw new Error("eee")
+      res.status(500).send("Invalid username or password !!!!");
     }
   } catch (err) {
     next(err)

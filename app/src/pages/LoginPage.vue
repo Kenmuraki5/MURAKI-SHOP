@@ -87,8 +87,8 @@ export default {
             }).then((response) => {
                 console.log(response.data)
                 this.$router.push({ name: "HomePage" })
-            }).catch(() => {
-                alert("Invalid email or password")
+            }).catch((error) => {
+                alert(error.response.data)
             });
         },
     },

@@ -8,7 +8,7 @@
           <RouterLink :to="`/DetailPage/${product.isbn}`">
             <div
               class="min-h-100 aspect-w-1 aspect-h-1 w-60 overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:aspect-none lg:h-90">
-              <img :src="product.book_img" class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
+              <img :src="`http://localhost:3000/uploads/${product.book_img}`" class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
             </div>
             <div class="mt-4 flex justify-between">
               <div>
