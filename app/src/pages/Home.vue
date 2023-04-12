@@ -6,6 +6,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import MainNavbar from '../components/Navbar.vue'
 import EventBar from '../components/CarouselBar.vue'
 import MainitemList from '../components/MainitemList.vue'
@@ -51,6 +53,9 @@ export default {
     totalCart() {
       return this.cart.reduce((total, item) => total + item.quantity, 0)
     }
+  },
+  mounted(){
+    mapState(['id'])
   },
   created() {
     this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)

@@ -86,6 +86,7 @@ export default {
                 }
             }).then((response) => {
                 console.log(response.data)
+                this.$store.commit('login',response.data.admin_id)
                 this.$router.push({ name: "HomePage" })
             }).catch((error) => {
                 alert(error.response.data)

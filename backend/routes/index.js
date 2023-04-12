@@ -18,7 +18,7 @@ router.post("/signin", async function (req, res, next) {
     UNION ALL SELECT * FROM `Customer` where (c_username = ? or c_email = ?) and c_password = ?", 
     [req.body.username, req.body.username, req.body.password, req.body.username, req.body.username, req.body.password]);
     if(result[0].length != 0){
-      res.redirect("/")
+      res.json(result[0][0])
     }
     else{
       res.status(500).send("Invalid username or password !!!!");

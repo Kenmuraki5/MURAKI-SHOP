@@ -128,7 +128,7 @@
               leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
               leave-to-class="transform opacity-0 scale-95">
               <MenuItems
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" v-if="$store.state.id != ''">
                 <MenuItem v-slot="{ active }">
                 <a href="#" :class="[
                   active ? 'bg-gray-100' : '',
@@ -136,16 +136,19 @@
                 ]">Your Profile</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
-                <a href="#" :class="[
+                <a @click="logout()" :class="[
                   active ? 'bg-gray-100' : '',
                   'block px-4 py-2 text-sm text-gray-700',
-                ]">Settings</a>
+                ]">Sign Out</a>
                 </MenuItem>
+              </MenuItems>
+              <MenuItems
+                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" v-else>
                 <MenuItem v-slot="{ active }">
-                <a href="#" :class="[
+                <RouterLink to="/LoginPage" :class="[
                   active ? 'bg-gray-100' : '',
                   'block px-4 py-2 text-sm text-gray-700',
-                ]">Sign out</a>
+                ]">SignIn</RouterLink>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -188,6 +191,7 @@ import {
   XMarkIcon,
   ShoppingCartIcon,
 } from "@heroicons/vue/24/outline";
+import { RouterLink } from "vue-router";
 
 const navigation = [
   { name: "New", href: "/", current: true },
@@ -201,14 +205,20 @@ const isOpen = ref(false);
 
 <script>
 export default {
-  name: "MainNavbar",
-  props: {
-    cart:Array,
-    add: Function,
-    remove: Function,
-    totalPrice: Number,
-    totalCart:Number,
-    addlocal:Function
-  }
+    name: "MainNavbar",
+    props: {
+        cart: Array,
+        add: Function,
+        remove: Function,
+        totalPrice: Number,
+        totalCart: Number,
+        addlocal: Function
+    },
+    components: { RouterLink },
+    methods:{
+      logout(){
+        this.$store.commit("logout")
+      }
+    }
 };
 </script>
