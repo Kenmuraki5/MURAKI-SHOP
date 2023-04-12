@@ -7,11 +7,10 @@ router.post("/register", async function (req, res, next) {
   try {
     let result2 = await pool.query(`select c_email from Customer where c_email = ?`, [req.body.email])
     let result = await pool.query(`select c_password from Customer where c_password = ?`, [req.body.password])
-    console.log(result2)
-    if(result2[0] > 1){
+    if(result2[0].length > 1){
       res.status(500).send("This email has already been used !!!!");
     }
-    else if(result[0] > 1){
+    else if(result[0].length > 1){
       res.status(500).send("This password has already been used !!!!");
     }
     else{
