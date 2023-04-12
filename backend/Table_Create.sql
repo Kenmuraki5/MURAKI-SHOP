@@ -46,8 +46,8 @@ CREATE TABLE `Book_Author` (
   `isbn` VARCHAR(13),
   `author_id` INT(5),
   PRIMARY KEY (`isbn`, `author_id`),
-  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`), 
-  FOREIGN KEY (`author_id`) REFERENCES `Author`(`author_id`)
+  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`) on delete cascade on update cascade, 
+  FOREIGN KEY (`author_id`) REFERENCES `Author`(`author_id`) on delete cascade on update cascade
 )ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
 DROP TABLE IF EXISTS `genres`;
@@ -64,8 +64,8 @@ CREATE TABLE `book_genres` (
   `isbn` VARCHAR(13),
   `genre_id` INT,
   PRIMARY KEY (`isbn`, `genre_id`),
-  FOREIGN KEY (`genre_id`) REFERENCES `genres`(`genre_id`), 
-  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`)
+  FOREIGN KEY (`genre_id`) REFERENCES `genres`(`genre_id`) on delete cascade on update cascade, 
+  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`) on delete cascade on update cascade
 )ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
 DROP TABLE IF EXISTS `Shipping_Method`;
@@ -103,8 +103,8 @@ CREATE TABLE `Cust_Order` (
   `total_price` DOUBLE NOT NULL,
   `status_value` ENUM("success", "shipping", "pending", "cancel") NOT NULL,
   PRIMARY KEY (`order_id`),
-  FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`customer_id`), 
-  FOREIGN KEY (`shipping_id`) REFERENCES `Shipping_Method`(`shipping_id`)
+  FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`customer_id`) on delete cascade on update cascade, 
+  FOREIGN KEY (`shipping_id`) REFERENCES `Shipping_Method`(`shipping_id`) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Order_Line`;
@@ -116,8 +116,8 @@ CREATE TABLE `Order_Line` (
   `quantity` INT,
   `price` DOUBLE NOT NULL,
   PRIMARY KEY (`line_id`),
-  FOREIGN KEY (`order_id`) REFERENCES `Cust_Order`(`order_id`),
-  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`)
+  FOREIGN KEY (`order_id`) REFERENCES `Cust_Order`(`order_id`) on delete cascade on update cascade,
+  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`) on delete cascade on update cascade
 )ENGINE=InnoDB DEFAULT CHARSET=utf8; 
 
 DROP TABLE IF EXISTS `Payment`;
@@ -128,7 +128,7 @@ CREATE TABLE `Payment`(
     `payment_status` ENUM("success", "pending", "cancel") NOT NULL,
     `slip_img` VARCHAR(200) NOT NULL,
     PRIMARY KEY (`payment_id`),
-    FOREIGN KEY (`order_id`) REFERENCES `Cust_Order`(`order_id`)
+    FOREIGN KEY (`order_id`) REFERENCES `Cust_Order`(`order_id`) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `Admin`;
