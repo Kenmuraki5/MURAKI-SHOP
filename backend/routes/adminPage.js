@@ -7,12 +7,12 @@ router = express.Router();
 const multer = require('multer')
 // SET STORAGE
 var storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    callback(null, './static/uploads')
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.originalname)
-  }
+    destination: function (req, file, callback) {
+        callback(null, './static/uploads')
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.originalname)
+    }
 })
 const upload = multer({ storage: storage })
 
@@ -32,49 +32,102 @@ router.get("/formBook", async function (req, res, next) {
 });
 
 router.post('/addBook', upload.single('image'), async function (req, res, next) {
-    const form = req.body 
+    const form = req.body
     const image = req.file.filename
     const conn = await pool.getConnection()
     await conn.beginTransaction();
-    try{
-        if(form.newPublisher == 1){
+    console.log(form)
+    try {
+        if (form.newPublisher == 1) {
             let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
-            [form.publisher])
+                [form.publisher])
             form.publisher = insertPublisher[0].insertId
         }
-        if(form.newAuthor == 1){
+        if (form.newAuthor == 1) {
             let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
-            [form.author, form.newauthor_alias])
+                [form.author, form.newAuthorAlias])
             form.author = insertAuthor[0].insertId
         }
         let insertBook = await conn.query('INSERT INTO `Book` (`isbn`, `book_name`, `book_description`, `book_price`, `book_category`, `publisher_id`, `publisher_date`, `book_img`, `in_stock`) value(?,?,?,?,?,?,?,?,?)',
-            [form.isbn,form.title,form.description,form.price,form.category,form.publisher,form.publisherDate,image,form.inStock])
+            [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, image, form.inStock])
         form.genres.split(",").forEach(async x => {
             let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
-            [form.isbn, x])
+                [form.isbn, x])
         });
+        let insertBookAuthor = await conn.query('INSERT INTO `Book_Author` (isbn,author_id) value(?,?)',
+            [form.isbn, form.author])
         await conn.commit()
         res.json("success!")
     }
-    catch(err){
+    catch (err) {
         await conn.rollback();
         next(err)
     }
     finally {
         console.log('finally')
         conn.release();
-      }
+    }
 });
 
-router.get("/blogs/create", async function (req, res, next) {
-
+router.get("/editBook", async function (req, res, next) {
+    try {
+        let result = await pool.query(`SELECT a.*, c.*, d.*, g.genres, g.genres_id
+        FROM Book a
+        JOIN publisher c USING(publisher_id)
+        JOIN book_author USING(isbn)
+        JOIN author d USING(author_id)
+        JOIN (
+          SELECT isbn, GROUP_CONCAT(genre) AS genres, GROUP_CONCAT(genre_id) AS genres_id
+          FROM book_genres
+          JOIN genres USING(genre_id)
+          GROUP BY isbn
+        ) g ON a.isbn = g.isbn`)
+        res.json(result[0])
+    } catch (error) {
+        next(error)
+    }
 });
 
 // POST - create new blog with single upload file
 
-// show detail
-router.get("/blogs/:id", async function (req, res, next) {
-  
+router.put("/editBook", upload.single('image'), async function (req, res, next) {
+    const form = req.body;
+    const image = req.file.filename;
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+    console.log(req.body)
+    try {
+        if (image != "sameasbefore") {
+            await conn.query('update book set book_img = ? where  isbn = ?',
+            [form.oldIsbn, image])
+        }
+        if (form.newPublisher == 1) {
+            let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
+                [form.publisher])
+            form.publisher = insertPublisher[0].insertId
+        }
+        if (form.newAuthor == 1) {
+            let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
+                [form.author, form.newAuthorAlias])
+            form.author = insertAuthor[0].insertId
+        }
+        await conn.query('delete from book_genres where isbn = ?', [form.oldIsbn])
+        await conn.query('update book set isbn = ?, book_name = ?, book_description = ?, book_price = ?, book_category = ?, publisher_id = ?, publisher_date = ?, in_stock = ? where isbn = ?',
+            [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, form.inStock, form.oldIsbn])
+        form.genres.split(",").forEach(async x => {
+            let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
+                [form.isbn, x])
+        });
+        await conn.commit()
+        res.json("success!")
+    } catch (err) {
+        await conn.rollback();
+        next(err)
+    }
+    finally {
+        console.log('finally')
+        conn.release();
+    }
 });
 
 //update blogs
@@ -82,9 +135,21 @@ router.put('/blogs/:id', async (req, res, next) => {
 
 });
 
-router.delete('/blogs/:id', async (req, res, next) => {
-
-  
+router.delete('/editBook/', async (req, res, next) => {
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+    try {
+        await conn.query('DELETE FROM book WHERE isbn = ?',[req.query.isbn])
+        await conn.commit()
+        res.json("success!")
+    } catch (err) {
+        await conn.rollback();
+        next(err)
+    }
+    finally {
+        console.log('finally')
+        conn.release();
+    }
 });
 
 exports.router = router;
