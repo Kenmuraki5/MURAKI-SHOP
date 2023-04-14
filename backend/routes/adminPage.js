@@ -96,10 +96,11 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
     const conn = await pool.getConnection()
     await conn.beginTransaction();
     console.log(req.body)
+    console.log(image)
     try {
-        if (image != "sameasbefore") {
-            await conn.query('update book set book_img = ? where  isbn = ?',
-            [form.oldIsbn, image])
+        if (image != "sameasbefore.png") {
+            await conn.query('update book set book_img = ? where isbn = ?',
+            [image, form.oldIsbn])
         }
         if (form.newPublisher == 1) {
             let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',

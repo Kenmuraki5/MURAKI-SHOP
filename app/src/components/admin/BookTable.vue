@@ -57,6 +57,7 @@
                         {{ book.publisher_date.slice(0, 10) }}
                     </td>
                     <td class="px-6 py-4 ">
+                        <img class="w-20 h-30" :src="`http://localhost:3000/uploads/${book.book_img}`" alt="">
                         {{ book.book_img }}
                     </td>
                     <td class="px-6 py-4 ">

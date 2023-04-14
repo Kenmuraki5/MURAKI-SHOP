@@ -163,8 +163,8 @@ INSERT INTO `Author` (`author_name`, `author_alias`) VALUES ('Eiichiro Oda', 'Od
 INSERT INTO `Book_Author` (`isbn`, `author_id`) VALUES 
 ('9789742454312', 1),
 ('9786169265061', 2),
-('9786169953203', 3),
-('9786169953203', 1);
+('9786169953203', 3);
+
 
 -- Insert data into genres table
 INSERT INTO `genres` (`genre`) VALUES ('Action'), ('Comedy'), ('Drama'), ('Harem')
