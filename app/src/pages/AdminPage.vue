@@ -7,16 +7,16 @@
         <AddBook/>
       </div>
       <div v-else>
-        <BookTable @button-clicked="bookFromEdit"/>
-        <EditForm v-if="bookEditing" :book="bookEditing" :key="bookEditing.isbn"/>
+        <BookTable @button-clicked="bookFromEdit" :key="re" @book="save"/>
+        <EditForm v-if="bookEditing" :book="bookEditing" :key="bookEditing.isbn" @book="save"/>
       </div>
     </div>
 
   </template>
   <script>
-  import AddBook from '../components/AddBook.vue'
-  import BookTable from '../components/BookTable.vue'
-  import EditForm from '../components/EditForm.vue'
+  import AddBook from '../components/admin/AddBook.vue'
+  import BookTable from '../components/admin/BookTable.vue'
+  import EditForm from '../components/admin/EditForm.vue'
 
   export default {
     name: 'AdminPage',
@@ -28,10 +28,15 @@
     data() {
       return {
         selectedOption: 'add',
-        bookEditing:null
+        bookEditing:null,
+        re:0
       }
     },
     methods: {
+    save(x){
+      this.bookEditing = x
+      this.re++
+    },
     toggleComponent() {
       this.selectedOption = this.selectedOption === 'add' ? 'edit' : 'add'
     },

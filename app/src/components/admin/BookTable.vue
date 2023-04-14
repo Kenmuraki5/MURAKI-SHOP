@@ -94,13 +94,16 @@ export default {
             })
                 .then(res => {
                     console.log(res)
+                    this.$emit('book', null);
                 }
                 ).
                 catch(err => console.log(err)
                 )
+            
         }
     },
     created() {
+        console.log("create")
         axios.get("http://localhost:3000/editBook")
             .then(res => {
                 this.allBook = res.data

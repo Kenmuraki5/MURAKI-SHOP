@@ -176,6 +176,18 @@ export default {
                 image: this.image,
                 inStock: this.inStock,
             });
+            this.isbn = null
+            this.title = null
+            this.price = null
+            this.description = null
+            this.category = ""
+            this.publisherDate = null
+            this.publisher = 0
+            this.author = 0
+            this.selectedGenres = null
+            this.image = null
+            this.imageName = null
+            this.inStock = null
         },
         validateForm() {
             let errors = []
@@ -212,13 +224,13 @@ export default {
             if (!this.image) {
                 errors.push('Please upload file.')
             }
+            if (this.inStock < 0) {
+                errors.push('Amount is something wrong.')
+            }
             if (errors.length) {
                 // Display error messages to user or handle them however you wish
                 alert(errors)
                 return false
-            }
-            if (this.inStock < 0) {
-                errors.push('Amount is something wrong.')
             }
             // If all fields are valid, submit form
             this.submitForm()

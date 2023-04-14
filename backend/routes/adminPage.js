@@ -118,6 +118,8 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
             let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
                 [form.isbn, x])
         });
+        let insertBookAuthor = await conn.query('update `Book_Author` set author_id = ? where isbn = ?',
+            [form.author, form.isbn])
         await conn.commit()
         res.json("success!")
     } catch (err) {

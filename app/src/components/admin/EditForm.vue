@@ -1,9 +1,9 @@
 <template>
-    <FormBook name="Edit Book" @submit-form="submit" fname="Edit Book" :fisbn=this.book.isbn :ftitle="this.book.book_name" :fprice="this.book.book_price"
-        :fdescription="this.book.book_description" :fcategory="this.book.book_category"
-        :fpublisherDate="this.book.publisher_date.slice(0, 10)" :fpublisher="this.book.publisher_id" :fauthor="this.book.author_id"
-        :fselectedGenres="this.book.genres_id.split(',')" :fimage="image" :fimageName="this.book.book_img"
-        :finStock="this.book.in_stock" />
+    <FormBook name="Edit Book" @submit-form="submit" fname="Edit Book" :fisbn=this.book.isbn :ftitle="this.book.book_name"
+        :fprice="this.book.book_price" :fdescription="this.book.book_description" :fcategory="this.book.book_category"
+        :fpublisherDate="this.book.publisher_date.slice(0, 10)" :fpublisher="this.book.publisher_id"
+        :fauthor="this.book.author_id" :fselectedGenres="this.book.genres_id.split(',')" :fimage="image"
+        :fimageName="this.book.book_img" :finStock="this.book.in_stock" />
 </template>
 
 <script>
@@ -19,7 +19,7 @@ export default {
     },
     data() {
         return {
-            image : new File([], "sameasbefore.png")
+            image: new File([], "sameasbefore.png")
         }
     },
     methods: {
@@ -32,15 +32,16 @@ export default {
             formData.append("description", book.description)
             formData.append("category", book.category)
             formData.append("publisherDate", book.publisherDate)
-            if (book.publisher == "x") {
+            if (book.publisher == -1) {
                 formData.append("publisher", book.newPublisher)
                 formData.append("newPublisher", 1)
             } else {
                 formData.append("publisher", book.publisher)
                 formData.append("newPublisher", 0)
             }
-            if (book.author == "x") {
+            if (book.author == -1) {
                 formData.append("author", book.newAuthor)
+                formData.append("newAuthorAlias", book.newAuthorAlias)
                 formData.append("newAuthor", 1)
             } else {
                 formData.append("author", book.author)
@@ -54,8 +55,11 @@ export default {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            }).then(res => console.log(res.data))
-            .catch(err => console.log(err))
+            }).then(res => {
+                console.log(res.data)
+                this.$emit('book', null);
+            })
+                .catch(err => console.log(err))
         },
     },
 }
