@@ -131,6 +131,19 @@ CREATE TABLE `Payment`(
     FOREIGN KEY (`order_id`) REFERENCES `Cust_Order`(`order_id`) on delete cascade on update cascade
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+DROP TABLE IF EXISTS `comments`;
+
+CREATE TABLE `comments` (
+  `comment_id` INT(40) AUTO_INCREMENT,
+  `isbn` VARCHAR(13),
+  `customer_id` INT(20),
+  `comment` TEXT NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`comment_id`),
+  FOREIGN KEY (`isbn`) REFERENCES `Book`(`isbn`) on delete cascade on update cascade,
+  FOREIGN KEY (`customer_id`) REFERENCES `Customer`(`customer_id`) on delete cascade on update cascade
+)ENGINE=InnoDB DEFAULT CHARSET=utf8; 
+
 DROP TABLE IF EXISTS `Admin`;
 
 CREATE TABLE `Admin` (
