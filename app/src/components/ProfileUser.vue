@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-md-4 border-right">
                 <div class="flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-full mt-5 sm:w-30 sm:h-30 lg:w-72 h-72"
-                    :src="`http://localhost:3000/uploads/john_doe.jpg`">
+                    :src="`http://localhost:3000/uploads/`+ img_user">
                     <span class="font-semibold mt-3">{{ username }}</span>
                     <span
                         class="text-black-50">{{ email}}
