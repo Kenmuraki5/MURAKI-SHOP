@@ -9,7 +9,7 @@
                         <input type="file"
                         id="file" ref="file"
                         accept="image/png, image/jpeg" @change="handleFileUpload()">
-                        <button v-if="showchage" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
+                        <button v-if="file" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
                         @click="changepicture()">uploads</button>
                     </div>
                     <span class="font-semibold mt-3">{{ username }}</span>
@@ -59,9 +59,9 @@
                         {{ edit }}
                     </button>
                     <button v-else
-                        class="mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                        class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"
                         @click="submit()">
-                        save
+                        SAVE
                     </button>
                 </div>
             </div>
@@ -86,15 +86,12 @@ export default {
             encodepassword:"",
             edit: "Edit Profile",
             showsubmit: true,
-            showchage: false,
             file:null
         }
     },
     methods: {
         handleFileUpload() {
         this.file = this.$refs.file.files[0];
-        console.log(this.file)
-        this.showchage = true
         },
         changepicture(){
             const formData = new FormData()
