@@ -2,8 +2,16 @@
     <div class="container rounded bg-white mt-5 mb-5">
         <div class="row">
             <div class="col-md-4 border-right">
-                <div class="flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-full mt-5 sm:w-30 sm:h-30 lg:w-72 h-72"
-                    :src="`http://localhost:3000/uploads/`+ img_user">
+                <div class="relative flex flex-column align-items-center text-center p-3 py-5">
+                    <img class="rounded-full mt-5 sm:w-30 sm:h-30 lg:w-72 h-72"
+                    :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: img_user"/>
+                    <div class="flex mt-3">
+                        <input type="file"
+                        id="file" ref="file"
+                        accept="image/png, image/jpeg" @change="handleFileUpload()">
+                        <button v-if="showchage" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
+                        @click="changepicture()">uploads</button>
+                    </div>
                     <span class="font-semibold mt-3">{{ username }}</span>
                     <span
                         class="text-black-50">{{ email}}
@@ -18,7 +26,7 @@
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Username</label><input type="text" class="form-control"
                                 placeholder="first name" v-model="username" :readonly="showsubmit"></div>
-                        <div v-if ="this.showsubmit" class="col-md-6"><label class="labels">Password</label><input type="text" class="form-control"
+                        <div v-if ="showsubmit" class="col-md-6"><label class="labels">Password</label><input type="text" class="form-control"
                             placeholder="surname" :value="encodepassword" :readonly="showsubmit"></div>
                         <div v-else class="col-md-6"><label class="labels">Password</label><input type="text" class="form-control"
                                 v-model="password" placeholder="surname" :readonly="showsubmit"></div>
@@ -77,10 +85,29 @@ export default {
             password: "",
             encodepassword:"",
             edit: "Edit Profile",
-            showsubmit: true
+            showsubmit: true,
+            showchage: false,
+            file:null
         }
     },
     methods: {
+        handleFileUpload() {
+        this.file = this.$refs.file.files[0];
+        console.log(this.file)
+        this.showchage = true
+        },
+        changepicture(){
+            const formData = new FormData()
+            formData.append("img", this.file);
+            formData.append("id", this.$store.state.id);
+            axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+                .then((res) => {
+                    this.img_user = res.data.c_image
+                    this.$refs.file.value = null;
+                    this.showchage = false
+                })
+                .catch((err) => { console.log(err) })
+        },
         editprofile() {
             this.showsubmit = false
         },

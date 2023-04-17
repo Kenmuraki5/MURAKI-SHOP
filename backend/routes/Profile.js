@@ -2,6 +2,18 @@ const express = require("express");
 const pool = require("../config/db.config");
 
 router = express.Router();
+// Require multer for file upload
+const multer = require('multer')
+// SET STORAGE
+var storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './static/uploads')
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.originalname)
+    }
+})
+const upload = multer({ storage: storage })
 
 router.get("/profile", async function (req, res, next) {
   try {
@@ -26,4 +38,15 @@ router.put("/EditProfile", async function (req, res, next) {
   }
 });
 
+router.put("/changepicture", upload.single('img'),async function (req, res, next) {
+  try {
+    const file = req.file;
+    await pool.query(`UPDATE CUSTOMER SET c_image = ? where customer_id = ?`, [file.filename, req.body.id])
+    let result = await pool.query(`select c_image from customer`)
+    console.log("success")
+    res.json(result[0][0])
+  } catch (err) {
+    return next(err)
+  }
+});
 exports.router = router;
