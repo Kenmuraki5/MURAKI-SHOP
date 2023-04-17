@@ -41,7 +41,7 @@
                         <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text"
                                 class="form-control" placeholder="enter phone number" v-model="phonenumber"
                                 :readonly="showsubmit"></div>
-                        <div class="col-md-12"><label class="labels">Address Line 1</label><textarea type="text"
+                        <div class="col-md-12"><label class="labels">Address</label><textarea type="text"
                                 class="form-control" placeholder="enter address line 1" v-model="address"
                                 :readonly="showsubmit" /></div>
                         <!-- <div class="col-md-12"><label class="labels">Postcode</label><input type="text" class="form-control"
