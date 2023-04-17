@@ -19,8 +19,10 @@ export default {
 
         }
     },
-    methods: {
-
+    mounted(){
+        if(!this.$store.state.id){
+            this.$router.push("/")
+        }
     }
 }
 </script>

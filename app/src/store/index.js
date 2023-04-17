@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import router from '../router/index'
 
 const storagePlugin = store => {
   // Listen for changes to the local storage and update the store
@@ -23,6 +24,8 @@ export default createStore({
     logout(state) {
       state.id = ''
       localStorage.removeItem('id')
+      if(router.currentRoute.value.name == "ProfilePage")
+        router.push("/")
     },
     setPrevId(state, id) {
       state.prevId = id
