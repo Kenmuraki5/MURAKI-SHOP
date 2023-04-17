@@ -1,6 +1,7 @@
 const express = require("express");
 const pool = require("../config/db.config");
 
+
 router = express.Router();
 
 router.get("/", async function (req, res, next) {
@@ -27,4 +28,17 @@ router.post("/signin", async function (req, res, next) {
     next(err)
   }
 });
+
+router.get('/imageProfile/:id', async function (req, res, next) {
+  try {
+    let result = await pool.query('select customer_id, c_username,c_image from customer where customer_id = ?',[req.params.id])
+    if(result[0].length != 0){
+      res.json(result[0][0])
+    }
+  } catch (err) {
+    next(err)
+  }
+
+});
+
 exports.router = router;

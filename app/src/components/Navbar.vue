@@ -32,7 +32,7 @@
             type="button">
             <span class="sr-only">View notifications</span>
             <ShoppingCartIcon class="h-6 w-6" aria-hidden="true" />
-            {{totalCart}}
+            {{ totalCart }}
           </button>
 
           <TransitionRoot as="template" :show="isOpen">
@@ -64,7 +64,8 @@
                         </TransitionChild>
                         <div class="flex h-full flex-col overflow-y-scroll bg-white py-4 shadow-xl">
                           <div class="px-4 sm:px-6">
-                            <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart ({{totalCart}})
+                            <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart
+                              ({{ totalCart }})
                             </DialogTitle>
                           </div>
                           <div class="relative mt-2 flex-initial px-4 sm:px-6" v-for="item in cart" :key="item.isbn">
@@ -101,7 +102,8 @@
                             </div>
                           </div>
                           <router-link
-                            class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase " to="/CheckOut">
+                            class="px-3 absolute inset-x-0 bottom-0 py-2 bg-gray-800 text-white text-xs font-bold uppercase "
+                            to="/CheckOut">
                             Checkout {{ totalPrice }}
                           </router-link>
                         </div>
@@ -119,7 +121,7 @@
                 class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span class="sr-only">Open user menu</span>
                 <img class="h-8 w-8 rounded-full"
-                  src="https://cdn.discordapp.com/attachments/399896332187336704/1059387118486573086/image.png"
+                  :src="image ? `http://localhost:3000/uploads/${image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
                   alt="Profile Image" />
               </MenuButton>
             </div>
@@ -128,7 +130,8 @@
               leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
               leave-to-class="transform opacity-0 scale-95">
               <MenuItems
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" v-if="$store.state.id != ''">
+                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                v-if="$store.state.id != ''">
                 <MenuItem v-slot="{ active }">
                 <RouterLink to="/ProfilePage" :class="[
                   active ? 'bg-gray-100' : '',
@@ -143,7 +146,8 @@
                 </MenuItem>
               </MenuItems>
               <MenuItems
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none" v-else>
+                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+                v-else>
                 <MenuItem v-slot="{ active }">
                 <RouterLink to="/LoginPage" :class="[
                   active ? 'bg-gray-100' : '',
@@ -204,21 +208,33 @@ const isOpen = ref(false);
 
 
 <script>
+import axios from 'axios';
+
 export default {
-    name: "MainNavbar",
-    props: {
-        cart: Array,
-        add: Function,
-        remove: Function,
-        totalPrice: Number,
-        totalCart: Number,
-        addlocal: Function
-    },
-    components: { RouterLink },
-    methods:{
-      logout(){
-        this.$store.commit("logout")
-      }
+  name: "MainNavbar",
+  data(){
+    return{
+      image: null
     }
+  },
+  props: {
+    cart: Array,
+    add: Function,
+    remove: Function,
+    totalPrice: Number,
+    totalCart: Number,
+    addlocal: Function,
+  },
+  components: { RouterLink },
+  methods: {
+    logout() {
+      this.$store.commit("logout")
+    }
+  },
+  created(){
+    axios.get(`http://localhost:3000/imageProfile/${localStorage.id}`).then(res =>{
+      this.image = res.data.c_image
+    }).catch(err => console.log(err))
+  }
 };
 </script>
