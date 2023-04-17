@@ -4,7 +4,7 @@
             <div class="col-md-4 border-right">
                 <div class="relative flex flex-column align-items-center text-center p-3 py-5">
                     <img class="rounded-full mt-5 sm:w-30 sm:h-30 lg:w-72 h-72"
-                    :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: img_user"/>
+                    :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: `http://localhost:3000/uploads/noneprofile.png`"/>
                     <div class="flex mt-3">
                         <input type="file"
                         id="file" ref="file"
