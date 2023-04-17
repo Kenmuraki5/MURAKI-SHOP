@@ -105,7 +105,7 @@ import axios from 'axios'
 
 
 export default {
-  name: 'AllBookPage',
+  name: 'DetaiPage',
   components: {
     MainNavbar,
     MainFooter
