@@ -118,11 +118,11 @@
           <Menu as="div" class="relative ml-3">
             <div>
               <MenuButton
-                class="flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full"
+                class="flex rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <RouterLink to="/LoginPage" v-if="$store.state.id == ''" class="text-gray-200 hover:text-gray-200">Log in</RouterLink>
+                <img v-else class="h-8 w-8 rounded-full"
                   :src="image ? `http://localhost:3000/uploads/${image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
-                  alt="Profile Image" />
+                  alt="Profile Image"/>
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100"
@@ -143,16 +143,6 @@
                   active ? 'bg-gray-100' : '',
                   'block px-4 py-2 text-sm text-gray-700',
                 ]">Sign Out</a>
-                </MenuItem>
-              </MenuItems>
-              <MenuItems
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                v-else>
-                <MenuItem v-slot="{ active }">
-                <RouterLink to="/LoginPage" :class="[
-                  active ? 'bg-gray-100' : '',
-                  'block px-4 py-2 text-sm text-gray-700',
-                ]">SignIn</RouterLink>
                 </MenuItem>
               </MenuItems>
             </transition>
@@ -212,8 +202,8 @@ import axios from 'axios';
 
 export default {
   name: "MainNavbar",
-  data(){
-    return{
+  data() {
+    return {
       image: null
     }
   },
@@ -231,8 +221,8 @@ export default {
       this.$store.commit("logout")
     }
   },
-  created(){
-    axios.get(`http://localhost:3000/imageProfile/${localStorage.id}`).then(res =>{
+  created() {
+    axios.get(`http://localhost:3000/imageProfile/${localStorage.id}`).then(res => {
       this.image = res.data.c_image
     }).catch(err => console.log(err))
   }
