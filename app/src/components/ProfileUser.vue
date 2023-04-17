@@ -1,16 +1,19 @@
 <template>
-    <div class="container rounded bg-white mt-5 mb-5">
+    <div class="container rounded bg-white mb-5 lg:mt-14">
         <div class="row">
             <div class="col-md-4 border-right">
-                <div class="relative flex flex-column align-items-center text-center p-3 py-5">
-                    <img class="rounded-full mt-5 sm:w-30 sm:h-30 lg:w-72 h-72"
+                <div class="relative flex flex-column align-items-center text-center p-3 lg:py-5">
+                    <img class="rounded-full mt-5 w-56 h-56 lg:w-72 lg:h-72"
                     :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: `http://localhost:3000/uploads/noneprofile.png`"/>
                     <div class="flex mt-3">
-                        <input type="file"
-                        id="file" ref="file"
-                        accept="image/png, image/jpeg" @change="handleFileUpload()">
-                        <button v-if="file" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full" 
-                        @click="changepicture()">uploads</button>
+                        <div class="row">
+                            <input type="file"
+                            id="file" ref="file"
+                            accept="image/png, image/jpeg" @change="handleFileUpload()">
+                            <button v-if="file" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-2 rounded-full" 
+                            @click="changepicture()">uploads</button>
+                        </div>
+                        
                     </div>
                     <span class="font-semibold mt-3">{{ username }}</span>
                     <span
