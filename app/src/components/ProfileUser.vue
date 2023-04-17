@@ -106,7 +106,16 @@ export default {
                 .catch((err) => { console.log(err) })
         },
         editprofile() {
-            this.showsubmit = false
+            let person = prompt("Please enter your password:", "");
+            if (person == this.password) {
+                this.showsubmit = false
+            }
+            else if(person == "" || person == null){
+                this.showsubmit = true
+            }
+            else {
+                alert("password is invalid")
+            }
         },
         submit() {
             const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
