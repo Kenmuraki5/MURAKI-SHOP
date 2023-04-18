@@ -100,9 +100,10 @@ export default {
             const formData = new FormData()
             formData.append("img", this.file);
             formData.append("id", this.$store.state.id);
+            formData.append("user", this.$store.state.user);
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
-                    this.img_user = res.data.c_image
+                    this.img_user = res.data.image
                     location.reload()
                     this.$refs.file.value = null;
                     this.showchage = false
@@ -161,6 +162,7 @@ export default {
                 formData.append("email", this.email)
                 formData.append("address", this.address)
                 formData.append("phonenumber", this.phonenumber)
+                formData.append("user", this.$store.state.user);
                 axios.put(`http://localhost:3000/EditProfile`, formData, { headers: { 'Content-Type': 'application/json' } })
                     .then((res) => {
                         this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
@@ -171,16 +173,16 @@ export default {
         }
     },
     created() {
-        axios.get(`http://localhost:3000/profile`, { params: { id: this.$store.state.id } })
+        axios.get(`http://localhost:3000/profile`, { params: { id: this.$store.state.id, user:this.$store.state.user } })
             .then((res) => {
-                this.img_user = res.data.c_image
-                this.name = res.data.c_first_name
-                this.surname = res.data.c_last_name
-                this.email = res.data.c_email
-                this.phonenumber = res.data.c_phone
-                this.address = res.data.c_address
-                this.username = res.data.c_username
-                this.password = res.data.c_password
+                this.img_user = res.data.image
+                this.name = res.data.first_name
+                this.surname = res.data.last_name
+                this.email = res.data.email
+                this.phonenumber = res.data.phone
+                this.address = res.data.address
+                this.username = res.data.username
+                this.password = res.data.password
                 this.data = res.data
                 this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
             })

@@ -5,13 +5,10 @@ router = express.Router();
 
 router.post("/register", async function (req, res, next) {
   try {
-    let result2 = await pool.query(`select c_email from Customer where c_email = ?`, [req.body.email])
-    let result = await pool.query(`select c_password from Customer where c_password = ?`, [req.body.password])
-    if(result2[0].length > 1){
-      res.status(500).send("This email has already been used !!!!");
-    }
-    else if(result[0].length > 1){
-      res.status(500).send("This password has already been used !!!!");
+    let result2 = await pool.query(`select c_username from Customer where c_username = ?`, [req.body.username])
+    let result3 = await pool.query(`select a_username from Admin where a_username = ?`, [req.body.username])
+    if(result2[0].length > 1  || result3[0].length > 1){
+      res.status(500).send("This username has already been used !!!!");
     }
     else{
       await pool.query('INSERT INTO `Customer`(`c_username`, `c_password`, `c_first_name`, `c_last_name`, `c_address`, `c_email`, `c_phone`, `c_image`) \

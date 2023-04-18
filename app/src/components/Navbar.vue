@@ -222,8 +222,8 @@ export default {
     }
   },
   created() {
-    axios.get(`http://localhost:3000/imageProfile/${localStorage.id}`).then(res => {
-      this.image = res.data.c_image
+    axios.get(`http://localhost:3000/imageProfile/`, { params: { id: this.$store.state.id, user:this.$store.state.user } }).then(res => {
+      this.image = res.data.image
     }).catch(err => console.log(err))
   }
 };

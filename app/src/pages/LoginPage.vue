@@ -86,7 +86,11 @@ export default {
                 }
             }).then((response) => {
                 console.log(response.data)
-                this.$store.commit('login',response.data.admin_id)
+                if(response.data.type == 'customer'){
+                    this.$store.commit('login',[response.data.customer_id, response.data.type])
+                }else if(response.data.type == 'admin'){
+                    this.$store.commit('login',[response.data.admin_id, response.data.type])
+                }
                 this.$router.push({ name: "HomePage" })
             }).catch((error) => {
                 alert(error.response.data)
