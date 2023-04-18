@@ -13,6 +13,7 @@ router.get("/", async function (req, res, next) {
     return next(err)
   }
 });
+
 router.post("/signin", async function (req, res, next) {
   try {
     let result = await pool.query("SELECT * FROM `Admin` where (a_username = ? or a_email = ?) and a_password = ? \

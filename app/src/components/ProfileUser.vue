@@ -103,6 +103,7 @@ export default {
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
                     this.img_user = res.data.c_image
+                    location.reload()
                     this.$refs.file.value = null;
                     this.showchage = false
                 })
