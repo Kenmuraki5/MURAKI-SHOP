@@ -14,7 +14,7 @@
                                 <div class="row">
                                     <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                                         <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                                            <img :src="product.book_img" class="w-100" />
+                                            <img :src="`http://localhost:3000/uploads/${product.book_img}`" class="w-100" />
                                             <a href="#!">
                                                 <div class="hover-overlay">
                                                     <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
@@ -29,13 +29,13 @@
                                             amount: {{ product.quantity }}
                                         </h3>
                                         <h5 style="position:absolute; bottom:10px;">total price:
-                                            <span style="color:red;">${{ product.quantity * product.book_price }} ฿</span>
+                                            <span style="color:red;">{{ product.quantity * product.book_price }} ฿</span>
                                         </h5>
                                     </div>
                                     <div class="col-md-12 col-lg-3 col-xl-3 border-sm-start-none border-start">
                                         <div class="d-flex justify-content-end mt-4">
                                             <div class="div">
-                                                <h4 style="text-align: right;">${{ product.book_price }} ฿</h4>
+                                                <h4 style="text-align: right;">{{ product.book_price }} ฿</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -45,9 +45,10 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4 p-3">
-                <div class="customers p-3b border rounded-3 p-3" style="background-color: rgb(251, 251, 251);">
-                    <h3 style="text-align:center;">Delivery</h3>
+            <div class="col-md-4 ">
+
+                <div class="customers mt-3 p-3 border rounded-3" style="background-color: rgb(251, 251, 251);">
+
                     <!-- <div class="form-check">
                        <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" <?php echo 'onclick="showaddress()"'; ?> checked>
                        <label class="form-check-label" for="exampleRadios1">
@@ -60,40 +61,42 @@
                            New address
                        </label>
                    </div> -->
-                    <h5>Address</h5>
-                    <form>
-                        <div class="p-3 d-flex justify-content-center flex-column" id="delivery-address"></div>
-                        <div class="form-group row mt-3">
-                            <label for="Phone" class="col-sm-4 col-form-label">Phone:</label>
-                            <div class="col-sm-8">
-                                <input type="number" class="form-control" name="phone" placeholder="Phone number" required>
-                            </div><br><br><br>
-                            <label for="countries" class="col-sm-4 col-form-label text-sm text-gray-900 dark:text-white">ตัวเลือกการจัดส่ง</label>
-                            <div class="col-sm-8">
-                                <select id="countries"
-                                class="form-control" v-model="selected">
-                                    <option v-if="!selected" value="">Select Shipping</option>
-                                    <option :value="val" v-for="val in shipping" :key="val.shipping_id">{{val.shipping_name}}</option>
-                                </select>
-                            </div>
-                            <br><br><br>
-                            <label></label>
+                    <section class="flex flex-col">
+                        <img src="https://cdn.discordapp.com/attachments/399896332187336704/1098272137195831469/Moment_1681918864643.jpg"
+                            alt="">
+                        <br>
+                        <div class="">
+                            Slip image:
+                            <input type="file" id="file" ref="file" accept="image/png, image/jpeg"
+                                @change="handleFileUpload()">
+
                         </div>
+                        <br>
+                        <div class="flex">
+                            Shipping methods:
+                            <select id="countries" class="form-control" v-model="selected">
+                                <option v-if="!selected" value="">Select Shipping</option>
+                                <option :value="val" v-for="val in shipping" :key="val.shipping_id">
+                                    {{ val.shipping_name }}</option>
+                            </select>
+                        </div>
+                        <br>
                         <hr>
-                        <h3 style="text-align:center;" class="py-4">ข้อมูลการชำระเงิน</h3>
                         <!-- ส่วนของ ราคารวม -->
                         <div class="grid px-4 my-4">
                             <div class="flex justify-between">
-                                <span>ราคารวม</span>
+                                <span>Total price</span>
                                 <span class="text-rose-800">{{ totalPrice }} ฿</span>
                             </div>
                             <div class="flex justify-between">
-                                <span>ค่าจัดส่ง</span>
-                                <span class="text-rose-800">{{ selected == "" ? "Please select shipping" : selected.cost }} ฿</span>
+                                <span>Shipping cost</span>
+                                <span class="text-rose-800">{{ selected == "" ? "Please select shipping" : selected.cost }}
+                                    ฿</span>
                             </div>
                         </div>
-                        <input type="submit" name="SUBMIT" value="Payment" class="btn btn-warning" style="width:100%;"><br>
-                    </form>
+                        <input type="submit" name="" value="Submit" @click="validateForm()"
+                            class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"><br>
+                    </section>
                 </div>
             </div>
         </div>
@@ -112,11 +115,46 @@ export default {
     data() {
         return {
             cart: [],
-            shipping:null,
-            selected:""
+            shipping: null,
+            selected: "",
+
+            file: null,
         }
     },
     methods: {
+        handleFileUpload() {
+            this.file = this.$refs.file.files[0];
+        },
+        validateForm() {
+            let errors = []
+            if (!this.file) {
+                errors.push('Please upload file.')
+            }
+            if (!this.selected) {
+                errors.push('Please select shipping.')
+            }
+            if (errors.length) {
+                // Display error messages to user or handle them however you wish
+                alert(errors)
+                return false
+            }
+            // If all fields are valid, submit form
+            this.submit()
+        },
+        submit() {
+            const form = new FormData()
+            form.append("customer_id", this.$store.state.id)
+            form.append("cart", JSON.stringify(this.cart))
+            form.append("shipping", JSON.stringify(this.selected))
+            form.append("totalPrice", this.totalPrice)
+            form.append("image", this.file)
+
+            axios.post('http://localhost:3000/addPayment', form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            }).then(res => console.log(res)).catch(err => console.log(err))
+        },
         addtoCart(value) {
             for (let i = 0; i < this.cart.length; i++) {
                 if (this.cart[i].isbn == value.isbn) {
@@ -148,7 +186,7 @@ export default {
             this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart);
             const res = await axios.get("http://localhost:3000/CheckOut")
             this.shipping = res.data
-            
+
             const res1 = await axios.get("http://localhost:3000/")
             const result = this.cart.filter(val => res1.data.find(val2 => val.isbn == val2.isbn))
             console.log(result)

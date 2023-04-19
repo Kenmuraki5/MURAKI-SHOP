@@ -72,16 +72,14 @@
                             <!-- Your content -->
                             <div class="py-6 ">
                               <div class="flex  max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
-                                <div class="w-1/3 bg-cover" :style="{ 'background-image': 'url(' + item.book_img + ')' }">
-                                </div>
+
+                                <img class="w-1/3" :src="`http://localhost:3000/uploads/${item.book_img}`" alt="">
                                 <div class="w-2/3 p-4">
                                   <h1 class="text-gray-900 font-bold text-2xl">
                                     {{ item.book_name }}
                                   </h1>
                                   <p class="mt-2 text-gray-600 text-sm">
-                                    Lorem ipsum dolor sit amet consectetur
-                                    adipisicing elit In odit exercitationem fuga
-                                    id nam quia
+                                    {{ item.book_description }}
                                   </p>
                                   <div class="flex item-center justify-between mt-3">
 
