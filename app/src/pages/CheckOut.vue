@@ -85,7 +85,7 @@
                         <!-- ส่วนของ ราคารวม -->
                         <div class="grid px-4 my-4">
                             <div class="flex justify-between">
-                                <span>Total price</span>
+                                <span>Books price</span>
                                 <span class="text-rose-800">{{ totalPrice }} ฿</span>
                             </div>
                             <div class="flex justify-between">
@@ -93,13 +93,17 @@
                                 <span class="text-rose-800">{{ selected == "" ? "Please select shipping" : selected.cost }}
                                     ฿</span>
                             </div>
+                            <div class="flex justify-between" v-if="selected">
+                                <span>Total Price</span>
+                                <span class="text-rose-800">{{ totalPrice + selected.cost }} ฿</span>
+                            </div>
                         </div>
-                        <input type="submit" name="" value="Submit" @click="validateForm()"
-                            class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"><br>
-                    </section>
-                </div>
+                <input type="submit" name="" value="Submit" @click="validateForm()"
+                    class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"><br>
+                </section>
             </div>
         </div>
+    </div>
     </div>
     <MainFooter />
 </template>
@@ -145,7 +149,7 @@ export default {
             const form = new FormData()
             form.append("customer_id", this.$store.state.id)
             form.append("cart", JSON.stringify(this.cart))
-            form.append("shipping", JSON.stringify(this.selected))
+            form.append("shipping", this.selected.shipping_id)
             form.append("totalPrice", this.totalPrice)
             form.append("image", this.file)
 
