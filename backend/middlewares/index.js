@@ -1,4 +1,5 @@
-const pool = require("../config");
+const pool = require("../config/db.config");
+const jwt = require('jsonwebtoken');
 
 async function isLoggedIn(req, res, next) {
     let authorization = req.headers.authorization
@@ -19,12 +20,7 @@ async function isLoggedIn(req, res, next) {
     }
 
     // Set user
-    const [users] = await pool.query(
-        'SELECT * ' +
-        'FROM users WHERE id = ?', [token.user_id]
-    )
-    req.user = users[0]
-
+    req.user = jwt.verify(part2, "miraki");
     next()
 }
 

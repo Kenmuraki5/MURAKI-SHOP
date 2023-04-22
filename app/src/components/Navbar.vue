@@ -117,7 +117,7 @@
             <div>
               <MenuButton
                 class="flex rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                <RouterLink to="/LoginPage" v-if="$store.state.id == ''" class="text-gray-200 hover:text-gray-200">Log in</RouterLink>
+                <RouterLink to="/LoginPage" v-if="$store.state.token == ''" class="text-gray-200 hover:text-gray-200">Log in</RouterLink>
                 <img v-else class="h-8 w-8 rounded-full"
                   :src="image ? `http://localhost:3000/uploads/${image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
                   alt="Profile Image"/>
@@ -129,7 +129,7 @@
               leave-to-class="transform opacity-0 scale-95">
               <MenuItems
                 class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
-                v-if="$store.state.id != ''">
+                v-if="$store.state.token != ''">
                 <MenuItem v-slot="{ active }">
                 <RouterLink to="/ProfilePage" :class="[
                   active ? 'bg-gray-100' : '',
@@ -196,7 +196,7 @@ const isOpen = ref(false);
 
 
 <script>
-import axios from 'axios';
+import axios from '@/plugins/axios'
 
 export default {
   name: "MainNavbar",
@@ -220,8 +220,9 @@ export default {
     }
   },
   created() {
-    axios.get(`http://localhost:3000/imageProfile/`, { params: { id: this.$store.state.id, user:this.$store.state.user } }).then(res => {
-      this.image = res.data.image
+    axios.get(`http://localhost:3000/user/me`)
+    .then(res => {
+      this.image = res.data.c_image || res.data.a_image
     }).catch(err => console.log(err))
   }
 };

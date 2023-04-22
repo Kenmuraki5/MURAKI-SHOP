@@ -1,5 +1,6 @@
 const express = require("express");
 const pool = require("../config/db.config");
+const { isLoggedIn } = require('../middlewares/index')
 
 router = express.Router();
 
@@ -19,11 +20,10 @@ router.get("/DetailPage/:id", async function (req, res, next) {
   }
 });
 
-router.post("/addComment/:id", async function (req, res, next) {
+router.post("/addComment/:id", isLoggedIn, async function (req, res, next) {
   try {
-
-    let addComment = await pool.query('insert into comments (isbn, customer_id, comment) value (?,?,?)',
-    [req.params.id, req.body.id, req.body.comment])
+    await pool.query('insert into comments (isbn, customer_id, comment) value (?,?,?)',
+    [req.params.id, req.user.customer_id || req.user.admin_id, req.body.comment])
     res.redirect(`/DetailPage/${req.params.id}`)
     
   } catch (err) {

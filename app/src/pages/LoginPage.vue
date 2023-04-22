@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '@/plugins/axios'
 import MainNavbar from '../components/Navbar.vue'
 export default {
     components: {
@@ -85,12 +85,8 @@ export default {
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
-                console.log(response.data)
-                if(response.data.type == 'customer'){
-                    this.$store.commit('login',[response.data.customer_id, response.data.type])
-                }else if(response.data.type == 'admin'){
-                    this.$store.commit('login',[response.data.admin_id, response.data.type])
-                }
+                console.log(response.data.token)
+                this.$store.commit('login',[response.data.token])
                 this.$router.push({ name: "HomePage" })
             }).catch((error) => {
                 alert(error.response.data)
@@ -107,9 +103,6 @@ export default {
     },
     created() {
         this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-        axios.get(`http://localhost:3000/AllBook`)
-            .then(res => this.products = res.data)
-            .catch(err => console.log(err))
     }
 }
 </script>

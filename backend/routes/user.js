@@ -2,6 +2,8 @@ const express = require("express");
 const pool = require("../config/db.config");
 const Joi = require('joi');
 const argon2 = require('argon2');
+const jwt = require('jsonwebtoken');
+const { isLoggedIn } = require('../middlewares/index')
 
 router = express.Router();
 
@@ -30,7 +32,7 @@ const signupSchema = Joi.object({
   phonenumber: Joi.string().required().pattern(/0[0-9]{9}/),
   fname: Joi.string().required().max(150),
   lname: Joi.string().required().max(150),
-  address:  Joi.string().required(),
+  address: Joi.string().required(),
   password: Joi.string().required().custom(passwordValidator),
   confirm_password: Joi.string().required().valid(Joi.ref('password')),
   username: Joi.string().required().min(5).max(20).external(usernameValidator),
@@ -63,46 +65,81 @@ router.post("/register", async function (req, res, next) {
 
 
 router.post("/signin", async function (req, res, next) {
+  const username = req.body.username
+  const password = req.body.password
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
   try {
-    let admin = await pool.query("SELECT * FROM `Admin` where (a_username = ? or a_email = ?) and a_password = ?",
-      [req.body.username, req.body.email, req.body.password]);
-    let customer = await pool.query("SELECT * FROM `Customer` where (c_username = ? or c_email = ?) and c_password = ?",
-      [req.body.username, req.body.email, req.body.password]);
-
-
-
-    if (customer[0].length != 0) {
-      customer[0][0].type = "customer"
-      console.log(customer[0][0])
-      res.json(customer[0][0])
+    const [customers] = await conn.query(
+      'SELECT * FROM Customer WHERE (c_username = ? or c_email = ?)',
+      [username, username]
+    )
+    const [admins] = await conn.query(
+      'SELECT * FROM Admin WHERE (a_username = ? or a_email = ?)',
+      [username, username]
+    )
+    const customer = customers[0] == undefined?"":customers[0]
+    const admin = admins[0]== undefined?"":admins[0]
+    // Check if username is correct
+    if (!customer && !admin) {
+      throw new Error('Incorrect username or password')
     }
-    else if (admin[0].length != 0) {
-      admin[0][0].type = "admin"
-      res.json(admin[0][0])
+    // Check if password is correct
+    if (await argon2.verify(customer.c_password, password)) {
+      customer.type = "customer"
+      const [tokens] = await conn.query(
+        'SELECT * FROM tokens WHERE user_id=?',
+        [customer.customer_id]
+      )
+      // Check if token already existed
+      let token = tokens[0]?.token
+      if (!token) {
+        const secretKey = "miraki";
+        // Generate and save token into database
+        token = jwt.sign(customer, secretKey, { algorithm: 'HS256' });
+        await conn.query(
+          'INSERT INTO tokens(user_id, token, role) VALUES (?, ?, ?)',
+          [customer.customer_id, token, customer.type]
+        )
+      }
+      conn.commit()
+      res.status(200).json({ 'token': token })
+    }
+    else if (await argon2.verify(admin.a_password, password)) {
+      admin.type = "admin"
+      const [tokens] = await conn.query(
+        'SELECT * FROM tokens WHERE user_id=?',
+        [admin.admin_id]
+      )
+      // Check if token already existed
+      let token = tokens[0]?.token
+      if (!token) {
+        const secretKey = "miraki";
+        // Generate and save token into database
+        token = jwt.sign(admin, secretKey, { algorithm: 'HS256' });
+        await conn.query(
+          'INSERT INTO tokens(user_id, token, role) VALUES (?, ?, ?)',
+          [admin.admin_id, token, admin.type]
+        )
+      }
+      conn.commit()
+      res.status(200).json({ 'token': token })
     }
     else {
-      res.status(500).send("Invalid username or password !!!!");
+      throw new Error('Incorrect username or password')
     }
-  } catch (err) {
-    next(err)
+  } catch (error) {
+    conn.rollback()
+    res.status(400).json(error.toString())
+  } finally {
+    conn.release()
   }
 });
 
-router.get('/imageProfile/', async function (req, res, next) {
+router.get('/user/me', isLoggedIn, async function (req, res, next) {
   try {
-    if (req.query.user == 'customer') {
-      let result = await pool.query('select customer_id "id", c_username "username",c_image "image" from customer where customer_id = ?', [req.query.id])
-      if (result[0].length != 0) {
-        res.json(result[0][0])
-      }
-    }
-    if (req.query.user == 'admin') {
-      let result = await pool.query('select admin_id "id", a_username "username",a_image "image" from admin where admin_id = ?', [req.query.id])
-      if (result[0].length != 0) {
-        res.json(result[0][0])
-      }
-    }
-
+    console.log(req.user)
+    res.json(req.user)
 
   } catch (err) {
     next(err)

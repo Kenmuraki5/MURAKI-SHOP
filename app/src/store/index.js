@@ -4,36 +4,32 @@ import router from '../router/index'
 const storagePlugin = store => {
   // Listen for changes to the local storage and update the store
   window.addEventListener('storage', event => {
-    if (event.key === 'id') {
-      const prevId = store.state.id
-      store.commit('login',prevId)
+    if (event.key === 'token') {
+      const prevtoken = store.state.token
+      store.commit('login', prevtoken)
     }
   })
 }
 
 export default createStore({
   state: {
-    id: localStorage.getItem('id') || '',
-    user: localStorage.getItem('user') || '',
-    prevId: '' // New state property to store the previous id value
+    token: localStorage.getItem('token') || '',
+    prevtoken: '' // New state property to store the previous id value
   },
   mutations: {
-    login(state, id) {
-      state.id = id[0]
-      state.user = id[1]
-      localStorage.setItem('id', id[0])
-      localStorage.setItem('user', id[1])
+    login(state, token) {
+      const signedToken = token
+      state.token = signedToken
+      localStorage.setItem('token', signedToken)
     },
     logout(state) {
-      state.id = ''
-      state.user = ''
-      localStorage.removeItem('id')
-      localStorage.removeItem('user')
+      state.token = ''
+      localStorage.removeItem('token')
       if(router.currentRoute.value.name == "ProfilePage")
         router.push("/")
     },
-    setPrevId(state, id) {
-      state.prevId = id
+    setPrevId(state, token) {
+      state.prevtoken = token
     }
   },
   actions: {},

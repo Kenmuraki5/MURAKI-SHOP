@@ -29,10 +29,6 @@
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Username</label><input type="text" class="form-control"
                                 placeholder="first name" v-model="username" :readonly="showsubmit"></div>
-                        <div v-if ="showsubmit" class="col-md-6"><label class="labels">Password</label><input type="text" class="form-control"
-                            placeholder="surname" :value="encodepassword" :readonly="showsubmit"></div>
-                        <div v-else class="col-md-6"><label class="labels">Password</label><input type="text" class="form-control"
-                                v-model="password" placeholder="surname" :readonly="showsubmit"></div>
                     </div>
                     <div class="row mt-2">
                         <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control"
@@ -72,7 +68,7 @@
     </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from '@/plugins/axios'
 
 export default {
     name: "ProfileUser",
@@ -85,8 +81,8 @@ export default {
             phonenumber: "",
             address: "",
             username: "",
-            password: "",
-            encodepassword:"",
+            // password: "",
+            // encodepassword:"",
             edit: "Edit Profile",
             showsubmit: true,
             file:null
@@ -99,31 +95,31 @@ export default {
         changepicture(){
             const formData = new FormData()
             formData.append("img", this.file);
-            formData.append("id", this.$store.state.id);
-            formData.append("user", this.$store.state.user);
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
-                    this.img_user = res.data.image
+                    console.log(res.data)
+                    this.$store.commit('login',[res.data])
                     location.reload()
-                    this.$refs.file.value = null;
-                    this.showchage = false
                 })
                 .catch((err) => { console.log(err) })
         },
         editprofile() {
             let person = prompt("Please enter your password:", "");
-            if (person == this.password) {
-                this.showsubmit = false
-            }
-            else if(person == "" || person == null){
-                this.showsubmit = true
-            }
-            else {
-                alert("password is invalid")
-            }
+            axios.get("http://localhost:3000/verifyuser", { params: { password: person } })
+            .then((res) => {
+                if (res.data) {
+                    this.showsubmit = false
+                }
+                else if(person == "" || person == null){
+                    this.showsubmit = true
+                }
+                else {
+                    alert("password is invalid")
+                }
+            })
+            .catch(err => console.log(err))
         },
         submit() {
-            const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             if (!this.name) {
                 alert('please fill firstname')
             }
@@ -132,12 +128,6 @@ export default {
             }
             else if (!this.username) {
                 alert('Please fill username.')
-            }
-            else if (!this.password) {
-                alert('Please fill password.')
-            }
-            else if (pattern.test(this.password)) {
-                alert('Password is invalid.')
             }
             else if (!this.email) {
                 alert('Please fill email.')
@@ -158,33 +148,33 @@ export default {
                 formData.append("fname", this.name)
                 formData.append("lname", this.surname)
                 formData.append("username", this.username)
-                formData.append("password", this.password)
+                // formData.append("password", this.password)
                 formData.append("email", this.email)
                 formData.append("address", this.address)
                 formData.append("phonenumber", this.phonenumber)
-                formData.append("user", this.$store.state.user);
                 axios.put(`http://localhost:3000/EditProfile`, formData, { headers: { 'Content-Type': 'application/json' } })
                     .then((res) => {
-                        this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
-                        alert(res.data)
+                        alert("update success")
+                        console.log(res.data)
+                        this.$store.commit('login',[res.data])
                     })
                     .catch((err) => { console.log(err) })
             }
         }
     },
     created() {
-        axios.get(`http://localhost:3000/profile`, { params: { id: this.$store.state.id, user:this.$store.state.user } })
+        axios.get(`http://localhost:3000/user/me`)
             .then((res) => {
-                this.img_user = res.data.image
-                this.name = res.data.first_name
-                this.surname = res.data.last_name
-                this.email = res.data.email
-                this.phonenumber = res.data.phone
-                this.address = res.data.address
-                this.username = res.data.username
-                this.password = res.data.password
+                this.img_user = res.data.c_image || res.data.a_image
+                this.name = res.data.c_first_name || res.data.a_first_name
+                this.surname = res.data.c_last_name || res.data.a_last_name
+                this.email = res.data.c_email || res.data.a_email
+                this.phonenumber = res.data.c_phone || res.data.a_phone
+                this.address = res.data.c_address || res.data.a_address
+                this.username = res.data.c_username || res.data.a_username
+                // this.password = res.data.c_password
                 this.data = res.data
-                this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
+                // this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
             })
             .catch((err) => { console.log(err) })
     }

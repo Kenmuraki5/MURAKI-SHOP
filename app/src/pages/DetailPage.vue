@@ -37,13 +37,13 @@
         </div>
 
     </section>
-    <section class="w-full flex flex-col justify-center">
+    <section class="container pb-3 w-full flex flex-col justify-center">
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 text-gray-700 rounded-lg bg-white shadow-lg ">COMMENTS</div>
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 border rounded-lg bg-white shadow-lg"
-            v-if="this.$store.state.user == 'customer'">
-            <div class="relative flex gap-4 my-5">
-                <img :src="`http://localhost:3000/uploads/${image}`"
-                    class="relative rounded-lg -top-8 -mb-2 bg-white border h-20 w-20" alt="" loading="lazy">
+            v-if="this.$store.state.token">
+            <div class="relative flex gap-4 ">
+                <img :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: `http://localhost:3000/uploads/noneprofile.png`"
+                    class="relative rounded-lg bg-white border h-20 w-20" alt="" loading="lazy">
                 <div class="flex flex-col w-full">
                     <div class="flex flex-row justify-between">
                         <p class="relative text-xl whitespace-nowrap truncate overflow-hidden">{{ username }}</p>
@@ -78,7 +78,7 @@
 <script>
 import MainNavbar from '../components/Navbar.vue'
 import MainFooter from '../components/MainFooter.vue'
-import axios from 'axios'
+import axios from '@/plugins/axios'
 
 
 
@@ -95,7 +95,7 @@ export default {
             products: [],
             comments: null,
             amount: 1,
-            image: null,
+            img_user: null,
             username: null,
             comment: null,
         }
@@ -125,7 +125,6 @@ export default {
         addComment() {
             if (!this.comment) return false
             const formData = {
-                id: localStorage.id,
                 comment: this.comment
             }
             axios.post(`http://localhost:3000/addComment/${this.$route.params.id}`, formData)
@@ -153,9 +152,10 @@ export default {
             }
             )
             .catch(err => console.log(err))
-        axios.get(`http://localhost:3000/imageProfile/`, { params: { id: this.$store.state.id, user: this.$store.state.user } }).then(res => {
-            this.username = res.data.username
-            this.image = res.data.image
+        axios.get(`http://localhost:3000/user/me`)
+        .then(res => {
+            this.username = res.data.c_username || res.data.a_username
+            this.img_user = res.data.c_image || res.data.a_image
         }).catch(err => console.log(err))
     }
 } 
