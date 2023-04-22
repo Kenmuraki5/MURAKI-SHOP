@@ -25,7 +25,7 @@ const NovelRouter = require('./routes/LightNovel')
 const adminRouter = require('./routes/adminPage')
 const CheckoutRouter = require('./routes/Checkout')
 const DetailPage = require('./routes/DetailPage')
-const Register = require('./routes/register')
+const user = require('./routes/user')
 const Profile = require('./routes/Profile')
 
 
@@ -36,7 +36,7 @@ app.use(NovelRouter.router)
 app.use(adminRouter.router)
 app.use(CheckoutRouter.router)
 app.use(DetailPage.router)
-app.use(Register.router)
+app.use(user.router)
 app.use(Profile.router)
 
 

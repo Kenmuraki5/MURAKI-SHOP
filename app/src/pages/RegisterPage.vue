@@ -38,6 +38,12 @@
                         <input
                             class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
                             id="password" type="password"  v-model="password" required />
+                            <label class="block text-gray-700 font-semibold mb-2" for="password">
+                           confirm password
+                        </label>
+                        <input
+                            class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
+                            id="password" type="password"  v-model="confirm_password" required />
                     </div>
                     <div class="mb-6">
                         <label class="block text-gray-700 font-semibold mb-2" for="email">
@@ -88,6 +94,7 @@ export default {
             lname: "",
             username: "",
             password: "",
+            confirm_password: "",
             email: "",
             address: "",
             phonenumber: ""
@@ -95,7 +102,6 @@ export default {
     },
     methods: {
         async submit() {
-            const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
             try {
                 if (!this.fname) {
                     alert('please fill firstname')
@@ -109,8 +115,11 @@ export default {
                 else if (!this.password) {
                     alert('Please fill password.')
                 }
-                else if (pattern.test(this.password)) {
-                    alert('Password is invalid.')
+                else if (!this.confirm_password) {
+                    alert('Please confirm password.')
+                }
+                else if (this.confirm_password != this.password) {
+                    alert('confirm password is invalid.')
                 }
                 else if (!this.email) {
                     alert('Please fill email.')
@@ -130,6 +139,7 @@ export default {
                     formData.append("lname", this.lname)
                     formData.append("username", this.username)
                     formData.append("password", this.password)
+                    formData.append("confirm_password", this.confirm_password)
                     formData.append("email", this.email)
                     formData.append("address", this.address)
                     formData.append("phonenumber", this.phonenumber)
