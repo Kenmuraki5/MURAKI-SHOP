@@ -30,7 +30,7 @@
           <!-- button increment -->
           <button class="bg-indigo-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-40"
             @click="add(product)">
-            Button
+            Add to cart
           </button>
         </div>
       </div>

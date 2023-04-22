@@ -155,4 +155,16 @@ router.delete('/editBook/', async (req, res, next) => {
     }
 });
 
+router.get('/allSlip/', async (req, res, next) => {
+   
+    try {
+       
+        res.json("success!")
+    } catch (err) {
+        next(err)
+    }
+    finally {
+        console.log('finally')
+    }
+})
 exports.router = router;

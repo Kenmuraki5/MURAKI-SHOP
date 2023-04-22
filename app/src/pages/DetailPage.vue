@@ -26,7 +26,8 @@
                         <div class="flex">
                             <span class="title-font font-medium text-2xl text-gray-900">฿ {{ products.book_price }}</span>
                             <button
-                                class="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded" @click="addtoCart(products)">Button</button>
+                                class="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded"
+                                @click="addtoCart(products)">Button</button>
 
                         </div>
                     </div>
@@ -38,7 +39,8 @@
     </section>
     <section class="w-full flex flex-col justify-center">
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 text-gray-700 rounded-lg bg-white shadow-lg ">COMMENTS</div>
-        <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 border rounded-lg bg-white shadow-lg" v-if="this.$store.state.user == 'customer'">
+        <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 border rounded-lg bg-white shadow-lg"
+            v-if="this.$store.state.user == 'customer'">
             <div class="relative flex gap-4 my-5">
                 <img :src="`http://localhost:3000/uploads/${image}`"
                     class="relative rounded-lg -top-8 -mb-2 bg-white border h-20 w-20" alt="" loading="lazy">
@@ -101,14 +103,18 @@ export default {
     methods: {
         addtoCart(value) {
             for (let i = 0; i < this.cart.length; i++) {
-                if (this.cart[i].isbn == value.isbn) {
+                if (this.cart[i].isbn == value.isbn && this.cart[i].quantity < value.in_stock) {
                     this.cart[i].quantity += this.amount
+                    if(this.cart[i].quantity > value.in_stock) this.cart[i].quantity = value.in_stock
                     return localStorage.setItem("cart", JSON.stringify(this.cart))
                 }
             }
-            Object.assign(value, { quantity: 0 });
-            value.quantity = 1
-            this.cart.push(value)
+            if (!this.cart.find(x => x.isbn == value.isbn)) {
+                Object.assign(value, { quantity: 0 });
+                if(this.amount > value.in_stock) this.amount = value.in_stock 
+                value.quantity = this.amount
+                this.cart.push(value)
+            }
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
         removefromCart(value) {
@@ -147,7 +153,7 @@ export default {
             }
             )
             .catch(err => console.log(err))
-        axios.get(`http://localhost:3000/imageProfile/`, { params: { id: this.$store.state.id, user:this.$store.state.user } }).then(res => {
+        axios.get(`http://localhost:3000/imageProfile/`, { params: { id: this.$store.state.id, user: this.$store.state.user } }).then(res => {
             this.username = res.data.username
             this.image = res.data.image
         }).catch(err => console.log(err))

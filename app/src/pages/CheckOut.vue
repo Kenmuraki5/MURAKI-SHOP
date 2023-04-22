@@ -98,12 +98,12 @@
                                 <span class="text-rose-800">{{ totalPrice + selected.cost }} ฿</span>
                             </div>
                         </div>
-                <input type="submit" name="" value="Submit" @click="validateForm()"
-                    class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"><br>
-                </section>
+                        <input type="submit" name="" value="Submit" @click="validateForm()"
+                            class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"><br>
+                    </section>
+                </div>
             </div>
         </div>
-    </div>
     </div>
     <MainFooter />
 </template>
@@ -188,13 +188,15 @@ export default {
     async created() {
         try {
             this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart);
-            const res = await axios.get("http://localhost:3000/CheckOut")
+            const res = await axios.get("http://localhost:3000/CheckOut", { params: { cart: this.cart } })
             this.shipping = res.data
 
             const res1 = await axios.get("http://localhost:3000/")
             const result = this.cart.filter(val => res1.data.find(val2 => val.isbn == val2.isbn))
             console.log(result)
         } catch (error) {
+            alert("Product out of stock")
+            this.$router.push("/")
             console.log(error)
         }
     }

@@ -206,13 +206,13 @@ export default {
             if (!this.category) {
                 errors.push('Category is something wrong.')
             }
-            if (!this.publisher && this.publisher !== 'x' || (this.publisher == 'x' && !this.newPublisher)) {
+            if (!this.publisher && this.publisher !== -1 || (this.publisher == -1 && !this.newPublisher)) {
                 errors.push('Publisher is something wrong.')
             }
             if (!this.publisherDate) {
                 errors.push('Publisher date is something wrong.')
             }
-            if (!this.author && this.author !== 'x' || (this.author == 'x' && !this.newAuthor)) {
+            if (!this.author && this.author !== -1 || (this.author == -1 && !this.newAuthor)) {
                 errors.push('Author is something wrong.')
             }
             if (this.author == 'x' && !this.newAuthorAlias) {
