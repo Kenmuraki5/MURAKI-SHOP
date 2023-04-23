@@ -176,7 +176,10 @@ export default {
                 this.data = res.data
                 // this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
             })
-            .catch((err) => { console.log(err) })
+            .catch((err) => { 
+                console.log(err)
+                this.$store.commit("logout") 
+            })
     }
 }
 </script>

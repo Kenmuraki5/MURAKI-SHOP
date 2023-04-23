@@ -24,5 +24,15 @@ const router = createRouter({
         {path:'/ProfilePage', name:"ProfilePage", component: ProfilePage }
     ]
 })
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = localStorage.getItem('token')
 
+
+  if (to.name == "LoginPage" && isLoggedIn) {
+    alert("You've already logged in")
+    next({ path: '/' })
+  }
+
+  next()
+})
 export default router

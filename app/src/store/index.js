@@ -35,7 +35,10 @@ export default createStore({
       axios.get(`http://localhost:3000/user/me`)
       .then((res) => {
         state.image = res.data.c_image || res.data.a_image
-      }).catch((err) => console.log(err))
+      }).catch((err) => {
+        console.log(err)
+        this.commit("logout");
+      })
     },
     setPrevId(state, token) {
       state.prevtoken = token
