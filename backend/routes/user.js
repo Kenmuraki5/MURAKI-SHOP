@@ -63,10 +63,21 @@ router.post("/register", async function (req, res, next) {
   }
 });
 
-
+const loginSchema = Joi.object({
+  username: Joi.string().required(),
+  password: Joi.string().required()
+})
 router.post("/signin", async function (req, res, next) {
+  try {
+    //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
+    await loginSchema.validateAsync(req.body, { abortEarly: false })
+  } catch (err) {
+    return res.status(400).send(err)
+  }
+
   const username = req.body.username
   const password = req.body.password
+
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
