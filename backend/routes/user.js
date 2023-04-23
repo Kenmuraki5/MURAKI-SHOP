@@ -99,7 +99,7 @@ router.post("/signin", async function (req, res, next) {
     if (customer && await argon2.verify(customer.c_password, password)) {
       customer.type = "customer"
       const [tokens] = await conn.query(
-        'SELECT * FROM tokens WHERE user_id=?',
+        'SELECT * FROM tokens_c WHERE user_id=?',
         [customer.customer_id]
       )
       // Check if token already existed
@@ -109,8 +109,8 @@ router.post("/signin", async function (req, res, next) {
         // Generate and save token into database
         token = jwt.sign(customer, secretKey, { algorithm: 'HS256' });
         await conn.query(
-          'INSERT INTO tokens(user_id, token, role) VALUES (?, ?, ?)',
-          [customer.customer_id, token, customer.type]
+          'INSERT INTO tokens_c(user_id, token) VALUES (?, ?)',
+          [customer.customer_id, token]
         )
       }
       conn.commit()
@@ -119,7 +119,7 @@ router.post("/signin", async function (req, res, next) {
     else if (admin && await argon2.verify(admin.a_password, password)) {
       admin.type = "admin"
       const [tokens] = await conn.query(
-        'SELECT * FROM tokens WHERE user_id=?',
+        'SELECT * FROM tokens_a WHERE user_id=?',
         [admin.admin_id]
       )
       // Check if token already existed
@@ -129,8 +129,8 @@ router.post("/signin", async function (req, res, next) {
         // Generate and save token into database
         token = jwt.sign(admin, secretKey, { algorithm: 'HS256' });
         await conn.query(
-          'INSERT INTO tokens(user_id, token, role) VALUES (?, ?, ?)',
-          [admin.admin_id, token, admin.type]
+          'INSERT INTO tokens_a(user_id, token) VALUES (?, ?)',
+          [admin.admin_id, token]
         )
       }
       conn.commit()

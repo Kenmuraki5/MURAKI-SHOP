@@ -87,7 +87,7 @@ export default {
             }).then((response) => {
                 console.log(response.data.token)
                 this.$store.commit('login',[response.data.token])
-                this.$emit('auth-change')
+                this.$store.commit('getprofileuser')
                 this.$router.push({ name: "HomePage" })
             }).catch((error) => {
                 alert(error.response.data)

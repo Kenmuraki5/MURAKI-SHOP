@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import router from '../router/index'
-
+import axios from '@/plugins/axios'
 const storagePlugin = store => {
   // Listen for changes to the local storage and update the store
   window.addEventListener('storage', event => {
@@ -30,6 +30,12 @@ export default createStore({
       localStorage.removeItem('token')
       if(router.currentRoute.value.name == "ProfilePage")
         router.push("/")
+    },
+    getprofileuser(state){
+      axios.get(`http://localhost:3000/user/me`)
+      .then((res) => {
+        state.image = res.data.c_image || res.data.a_image
+      }).catch((err) => console.log(err))
     },
     setPrevId(state, token) {
       state.prevtoken = token

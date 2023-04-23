@@ -45,7 +45,7 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
       const secretKey = "miraki";
       token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
       await conn.query(
-        'update tokens set token = ? where user_id = ?',
+        'update tokens_c set token = ? where user_id = ?',
         [token, customer[0].customer_id]
       )
       conn.commit()
@@ -61,7 +61,7 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
       const secretKey = "miraki";
       token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
       await conn.query(
-        'update tokens set token = ? where user_id = ?',
+        'update tokens_a set token = ? where user_id = ?',
         [token, admin[0].admin_id,]
       )
       conn.commit()
@@ -89,7 +89,7 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
       const secretKey = "miraki";
       token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
       await conn.query(
-        'update tokens set token = ? where user_id = ?',
+        'update tokens_c set token = ? where user_id = ?',
         [token, customer[0].customer_id]
       )
       conn.commit()
@@ -97,13 +97,13 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
       res.send(token)
     }
     if (req.user.type == 'admin') {
-      await conn.query(`UPDATE admin SET a_image = ? where admin_id = ?`, [file.filename, req.body.admin_id])
+      await conn.query(`UPDATE admin SET a_image = ? where admin_id = ?`, [file.filename, req.user.admin_id])
       const [admin] = await conn.query(`select * from admin where admin_id = ${req.user.admin_id}`)
       admin[0].type = "admin"
       const secretKey = "miraki";
       token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
       await conn.query(
-        'update tokens set token = ? where user_id = ?',
+        'update tokens_a set token = ? where user_id = ?',
         [token, admin[0].admin_id,]
       )
       conn.commit()
