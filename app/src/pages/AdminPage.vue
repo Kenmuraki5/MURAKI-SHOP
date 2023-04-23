@@ -10,6 +10,7 @@
         <BookTable @button-clicked="bookFromEdit" :key="re" @book="save"/>
         <EditForm v-if="bookEditing" :book="bookEditing" :key="bookEditing.isbn" @book="save"/>
       </div>
+      <SlipTable @slip="slipUpdate" :key="reSlip" />
     </div>
 
   </template>
@@ -17,19 +18,22 @@
   import AddBook from '../components/admin/AddBook.vue'
   import BookTable from '../components/admin/BookTable.vue'
   import EditForm from '../components/admin/EditForm.vue'
+import SlipTable from '../components/admin/SlipTable.vue'
 
   export default {
     name: 'AdminPage',
     components: {
         AddBook,
         BookTable,
-        EditForm
+        EditForm,
+        SlipTable
     },
     data() {
       return {
         selectedOption: 'add',
         bookEditing:null,
-        re:0
+        re:0,
+        reSlip:0
       }
     },
     methods: {
@@ -37,6 +41,11 @@
       this.bookEditing = x
       this.re++
     },
+    slipUpdate(x){
+      console.log(x)
+      this.reSlip++
+    },
+
     toggleComponent() {
       this.selectedOption = this.selectedOption === 'add' ? 'edit' : 'add'
     },

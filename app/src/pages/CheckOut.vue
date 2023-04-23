@@ -110,7 +110,7 @@
 <script>
 import MainNavbar from '../components/Navbar.vue'
 import MainFooter from '../components/MainFooter.vue'
-import axios from 'axios'
+import axios from '@/plugins/axios'
 export default {
     components: {
         MainFooter,
@@ -147,7 +147,6 @@ export default {
         },
         submit() {
             const form = new FormData()
-            form.append("customer_id", this.$store.state.id)
             form.append("cart", JSON.stringify(this.cart))
             form.append("shipping", this.selected.shipping_id)
             form.append("totalPrice", this.totalPrice)

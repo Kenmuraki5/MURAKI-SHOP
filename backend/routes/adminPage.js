@@ -100,7 +100,7 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
     try {
         if (image != "sameasbefore.png") {
             await conn.query('update book set book_img = ? where isbn = ?',
-            [image, form.oldIsbn])
+                [image, form.oldIsbn])
         }
         if (form.newPublisher == 1) {
             let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
@@ -142,7 +142,7 @@ router.delete('/editBook/', async (req, res, next) => {
     const conn = await pool.getConnection()
     await conn.beginTransaction();
     try {
-        await conn.query('DELETE FROM book WHERE isbn = ?',[req.query.isbn])
+        await conn.query('DELETE FROM book WHERE isbn = ?', [req.query.isbn])
         await conn.commit()
         res.json("success!")
     } catch (err) {
@@ -156,15 +156,66 @@ router.delete('/editBook/', async (req, res, next) => {
 });
 
 router.get('/allSlip/', async (req, res, next) => {
-   
+
     try {
-       
-        res.json("success!")
+        // select * from payment join cust_order using(order_id) join order_line using(order_id)
+        const payment = await pool.query("select  c_username, order_id, group_concat(isbn) `isbn`, group_concat(book_name)`name`,group_concat(quantity)\
+         `quantity`,group_concat(price) `price`, total_price, DATE_FORMAT(order_date,'%m/%d/%Y, %H:%i:%s') `order_date`, \
+        slip_img, status_value from payment join cust_order using(order_id) \
+        join order_line using(order_id) join customer using(customer_id)  join book using(isbn) group by order_id")
+        res.json(payment[0])
     } catch (err) {
         next(err)
     }
     finally {
         console.log('finally')
+    }
+})
+
+router.put('/approve/', async (req, res, next) => {
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+    console.log(req.body)
+    try {
+        await conn.query('update payment set payment_status = "success" WHERE order_id = ?', [req.body.order_id])
+        await conn.query('update cust_order set status_value = "shipping" WHERE order_id = ?', [req.body.order_id])
+        res.json('done')
+        await conn.commit()
+    } catch (err) {
+        await conn.rollback();
+        next(err)
+    }
+    finally {
+        console.log('finally')
+        conn.release();
+    }
+})
+
+router.put('/decline/', async (req, res, next) => {
+    isbn = req.body.isbn.split(',')
+    quantity = req.body.quantity.split(',')
+    console.log(isbn)
+    console.log(quantity)
+    const conn = await pool.getConnection()
+    await conn.beginTransaction();
+    console.log(req.body)
+    try {
+        await conn.query('update payment set payment_status = "cancel" WHERE order_id = ?', [req.body.order_id])
+        await conn.query('update cust_order set status_value = "cancel" WHERE order_id = ?', [req.body.order_id])
+        isbn.forEach(async (x,index)=>{
+            await conn.query('update book set in_stock = in_stock+? WHERE isbn = ?', [quantity[index], x])
+
+        })
+        await conn.commit()
+        res.json('done')
+
+    } catch (err) {
+        await conn.rollback();
+        next(err)
+    }
+    finally {
+        console.log('finally')
+        conn.release();
     }
 })
 exports.router = router;
