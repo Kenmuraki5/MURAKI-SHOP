@@ -12,17 +12,17 @@
           </DisclosureButton>
         </div>
         <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-          <a class="flex flex-shrink-0 items-center" href="/" @click="addlocal()">
+          <RouterLink class="flex flex-shrink-0 items-center" to="/">
             <span class="block h-auto w-auto font-black text-white lg:block" alt="Your Company">MURAKI COMIC</span>
-          </a>
+          </RouterLink>
           <div class="hidden sm:ml-6 sm:block">
             <div class="flex space-x-4">
-              <a v-for="item in navigation" :key="item.name" :href="item.href" :class="[
+              <RouterLink v-for="item in navigation" :key="item.name" :to="item.href" :class="[
                 item.current
                   ? 'bg-gray-900 text-white'
                   : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                 'px-3 py-2 rounded-md text-sm font-medium',
-              ]" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</a>
+              ]" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</RouterLink>
             </div>
           </div>
         </div>
@@ -119,7 +119,7 @@
                 class="flex rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <RouterLink to="/LoginPage" v-if="$store.state.token == ''" class="text-gray-200 hover:text-gray-200">Log in</RouterLink>
                 <img v-else class="h-8 w-8 rounded-full"
-                  :src="image ? `http://localhost:3000/uploads/${image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
+                  :src="$store.state.image ? `http://localhost:3000/uploads/${$store.state.image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
                   alt="Profile Image"/>
               </MenuButton>
             </div>
@@ -196,13 +196,13 @@ const isOpen = ref(false);
 
 
 <script>
-import axios from '@/plugins/axios'
+
 
 export default {
   name: "MainNavbar",
   data() {
     return {
-      image: null
+      
     }
   },
   props: {
@@ -211,19 +211,12 @@ export default {
     remove: Function,
     totalPrice: Number,
     totalCart: Number,
-    addlocal: Function,
   },
   components: { RouterLink },
   methods: {
     logout() {
       this.$store.commit("logout")
     }
-  },
-  created() {
-    axios.get(`http://localhost:3000/user/me`)
-    .then(res => {
-      this.image = res.data.c_image || res.data.a_image
-    }).catch(err => console.log(err))
   }
 };
 </script>

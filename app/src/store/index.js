@@ -14,6 +14,8 @@ const storagePlugin = store => {
 export default createStore({
   state: {
     token: localStorage.getItem('token') || '',
+    products: [],
+    image:"",
     prevtoken: '' // New state property to store the previous id value
   },
   mutations: {

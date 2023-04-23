@@ -1,6 +1,6 @@
 <template>
     <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"/>
-    <BookList :add="addtoCart" :products="products" :name="name"/>
+    <BookList :add="addtoCart" :name="name"/>
     <MainFooter />
 </template>
 <script>
@@ -22,7 +22,6 @@ export default {
     return{
       cart:[],
       name:"Manga",
-      products:[]
     }
   },
   methods:{
@@ -55,7 +54,7 @@ export default {
   created(){
     this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
     axios.get(`http://localhost:3000/Manga`)
-      .then(res => this.products = res.data)
+      .then(res => this.$store.state.products = res.data)
       .catch(err => console.log(err))
   }
 

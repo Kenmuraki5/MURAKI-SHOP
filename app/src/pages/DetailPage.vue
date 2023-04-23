@@ -6,7 +6,7 @@
             <div class="lg:w-4/5 mx-auto flex flex-wrap justify-center">
                 <div class="basis-1/2">
                     <img class="w-96 object-cover object-center rounded border border-gray-200"
-                        :src="`http://localhost:3000/uploads/${products.book_img}`">
+                        :src="products.book_img?`http://localhost:3000/uploads/${products.book_img}`:'http://localhost:3000/uploads/noneprofile.png'">
                 </div>
                 <div class="lg:basis-1/2">
                     <div class="w-full lg:pl-10 py-6 mt-6 lg:mt-0">

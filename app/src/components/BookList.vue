@@ -301,7 +301,6 @@ export default {
   name: 'MainitemList',
   props: {
     add: Function,
-    products:Array,
     name:String
   },
   data() {
@@ -317,7 +316,7 @@ export default {
   },
   computed: {
     newFilteredManga() {
-      let array = this.products // สร้าง array 
+      let array = this.$store.state.products // สร้าง array 
       //  Sorting array
       if (this.sortSel == "0") {
         array.sort((a, b) => a.isbn >= b.isbn ? 1 : -1);

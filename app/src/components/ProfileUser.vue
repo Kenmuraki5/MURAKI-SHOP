@@ -98,6 +98,7 @@ export default {
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
                     console.log(res.data)
+                    this.$store.state.a_image = res.data.c_image || res.data.a_image
                     this.$store.commit('login',[res.data])
                     location.reload()
                 })
