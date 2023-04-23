@@ -78,14 +78,14 @@ router.post("/signin", async function (req, res, next) {
       'SELECT * FROM Admin WHERE (a_username = ? or a_email = ?)',
       [username, username]
     )
-    const customer = customers[0] == undefined?"":customers[0]
-    const admin = admins[0]== undefined?"":admins[0]
+    const customer = customers[0] == undefined ? "" : customers[0]
+    const admin = admins[0] == undefined ? "" : admins[0]
     // Check if username is correct
     if (!customer && !admin) {
       throw new Error('Incorrect username or password')
     }
     // Check if password is correct
-    if (await argon2.verify(customer.c_password, password)) {
+    if (customer && await argon2.verify(customer.c_password, password)) {
       customer.type = "customer"
       const [tokens] = await conn.query(
         'SELECT * FROM tokens WHERE user_id=?',
@@ -105,7 +105,7 @@ router.post("/signin", async function (req, res, next) {
       conn.commit()
       res.status(200).json({ 'token': token })
     }
-    else if (await argon2.verify(admin.a_password, password)) {
+    else if (admin && await argon2.verify(admin.a_password, password)) {
       admin.type = "admin"
       const [tokens] = await conn.query(
         'SELECT * FROM tokens WHERE user_id=?',
@@ -128,6 +128,7 @@ router.post("/signin", async function (req, res, next) {
     else {
       throw new Error('Incorrect username or password')
     }
+
   } catch (error) {
     conn.rollback()
     res.status(400).json(error.toString())

@@ -1,5 +1,5 @@
 <template>
-  <router-view></router-view>
+  <router-view @auth-change="onAuthChange"></router-view>
 </template>
 <style>
 #app {
@@ -21,11 +21,19 @@ export default {
 
     }
   },
-  created() {
-    axios.get(`http://localhost:3000/user/me`)
-    .then(res => {
-      this.$store.state.image = res.data.c_image || res.data.a_image
-    }).catch(err => console.log(err))
+  methods: {
+    onAuthChange() {
+      const token = localStorage.getItem('token')
+      if (token) {
+        this.getprofileuser()
+      }
+    },
+    getprofileuser(){
+      axios.get(`http://localhost:3000/user/me`)
+      .then(res => {
+        this.$store.state.image = res.data.c_image || res.data.a_image
+      }).catch(err => console.log(err))
+    }
   }
 };
 </script>

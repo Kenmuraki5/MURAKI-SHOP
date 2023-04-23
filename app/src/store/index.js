@@ -26,6 +26,7 @@ export default createStore({
     },
     logout(state) {
       state.token = ''
+      state.image = ''
       localStorage.removeItem('token')
       if(router.currentRoute.value.name == "ProfilePage")
         router.push("/")
