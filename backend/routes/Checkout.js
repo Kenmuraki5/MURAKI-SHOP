@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path")
 const pool = require("../config/db.config");
+const { isLoggedIn } = require('../middlewares/index')
 
 router = express.Router();
 const multer = require('multer');
@@ -32,9 +33,10 @@ router.get("/CheckOut", async function (req, res, next) {
   }
 });
 
-router.post("/addPayment", upload.single('image'), async function (req, res, next) {
+router.post("/addPayment", isLoggedIn, upload.single('image'), async function (req, res, next) {
   const conn = await pool.getConnection()
-  console.log(req.body.shipping)
+
+
   try {
     const cart = JSON.parse(req.body.cart)
 
@@ -43,7 +45,7 @@ router.post("/addPayment", upload.single('image'), async function (req, res, nex
 
     let addOrder = await conn.query("INSERT INTO cust_order \
     (order_date, customer_id, shipping_id, address, total_price, status_value) value(current_timestamp(),?,?,'blank',?,'pending')",
-      [req.body.customer_id, req.body.shipping, req.body.totalPrice]);
+      [req.user.customer_id, req.body.shipping, req.body.totalPrice]);
     cart.forEach(item => {
       let addOrderLine = conn.query('insert into order_line (order_id, isbn, quantity, price) value (?,?,?,?)',
         [addOrder[0].insertId, item.isbn, item.quantity, item.quantity * item.book_price])

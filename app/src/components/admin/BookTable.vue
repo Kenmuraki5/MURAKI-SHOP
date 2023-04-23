@@ -66,8 +66,10 @@
                     <td class="px-6 py-4 break-all">
                         {{ book.genres }}
                     </td>
-                    <td class="px-6 py-4 "><button @click="edit(book)">Edit</button><button
-                            @click="delBook(book)">Delete</button></td>
+                    <td class="px-6 py-4 ">
+                        <button @click="edit(book)">Edit</button>
+                        <button @click="delBook(book)">Delete</button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -88,7 +90,7 @@ export default {
             this.$emit('button-clicked', book)
         },
         delBook(book) {
-            axios.delete("http://localhost:3000/editBook/", {params:{ isbn: book.isbn }}, {
+            axios.delete("http://localhost:3000/editBook/", { params: { isbn: book.isbn } }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -100,7 +102,7 @@ export default {
                 ).
                 catch(err => console.log(err)
                 )
-            
+
         }
     },
     created() {
