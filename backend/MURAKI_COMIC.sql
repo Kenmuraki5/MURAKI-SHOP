@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Apr 22, 2023 at 11:21 PM
+-- Generation Time: Apr 23, 2023 at 07:51 AM
 -- Server version: 5.7.39
 -- PHP Version: 8.2.0
 
@@ -220,9 +220,6 @@ CREATE TABLE `comments` (
 --
 
 INSERT INTO `comments` (`comment_id`, `isbn`, `customer_id`, `comment`, `created_at`) VALUES
-(1, '9786169265061', 1, 'hello', '2023-04-17 18:23:30'),
-(2, '9786169265061', 1, 'youngohm', '2023-04-17 18:23:41'),
-(3, '9786169953203', 1, 'hello', '2023-04-17 19:03:33'),
 (4, '9786169953203', NULL, 'I love it', '2023-04-22 22:42:26'),
 (5, '9786169953203', 5, 'hello', '2023-04-22 22:45:55');
 
@@ -249,11 +246,9 @@ CREATE TABLE `Customer` (
 --
 
 INSERT INTO `Customer` (`customer_id`, `c_username`, `c_password`, `c_first_name`, `c_last_name`, `c_address`, `c_email`, `c_phone`, `c_image`) VALUES
-(1, 'johndoe', 'password123', 'John', 'Doe', '123 Main Street, Bangkok, Thailand', 'johndoe@email.com', '0891234567', 'youngohm.jpeg'),
-(2, 'janedoe', 'password456', 'Jane', 'Doe', '456 Second Avenue, Bangkok, Thailand', 'janedoe@email.com', '0827654321', 'jane_doe.jpg'),
 (3, 'kenmuralo', '$argon2id$v=19$m=65536,t=3,p=4$AIULtStDfLbbXjmZkmNbCQ$/q4k5KhwpRO4UQDkm15/FHWZ5tnaeA7/u9O/UdtNGok', 'qere', 'adfdf', 'adfdf', 'ere@gmail.com', '0987654321', ''),
 (4, 'Kenmuraki2345', '$argon2id$v=19$m=65536,t=3,p=4$MMWvCk/DENlwKKtJIaWaJw$86il/dsllGSZ4wZhfC/ucc14W+BHwXIkjEeo1UWaG4c', 'ken', 'muraki', 'hello123456789', 'miraki@gmail.com', '0987654321', ''),
-(5, 'hello123ken', '$argon2id$v=19$m=65536,t=3,p=4$ZE8IOFbjDnBFYGj0inkJyw$7JHJjZdwxv2lZ4Krk2AucICLl7KJ9esUSatbhgPCV7U', 'Yusuke', 'Urameshi', 'tokyo', 'Urameshi@gmail.com', '0987654321', 'yusuke.jpeg');
+(5, 'hello123ken', '$argon2id$v=19$m=65536,t=3,p=4$ZE8IOFbjDnBFYGj0inkJyw$7JHJjZdwxv2lZ4Krk2AucICLl7KJ9esUSatbhgPCV7U', 'Yusukeeee', 'Urameshi', 'tokyo', 'Urameshi@gmail.com', '0987654321', 'yusuke.jpeg');
 
 -- --------------------------------------------------------
 
@@ -276,8 +271,6 @@ CREATE TABLE `Cust_Order` (
 --
 
 INSERT INTO `Cust_Order` (`order_id`, `order_date`, `customer_id`, `shipping_id`, `address`, `total_price`, `status_value`) VALUES
-(1, '2023-04-07 12:30:00', 1, 1, '123 Main Street, Bangkok', 500, 'shipping'),
-(2, '2023-04-07 13:15:00', 2, 2, '456 Main Street, Chiang Mai', 700, 'pending'),
 (3, '2023-04-07 14:00:00', 3, 3, '789 Main Street, Phuket', 900, 'success');
 
 -- --------------------------------------------------------
@@ -344,11 +337,6 @@ CREATE TABLE `Order_Line` (
 --
 
 INSERT INTO `Order_Line` (`line_id`, `order_id`, `isbn`, `quantity`, `price`) VALUES
-(1, 1, '9789742454312', 1, 119),
-(2, 1, '9786169265061', 2, 198),
-(3, 2, '9789742454312', 1, 119),
-(4, 2, '9786169265061', 1, 99),
-(5, 2, '9786169953203', 1, 109),
 (6, 3, '9789742454312', 3, 327),
 (7, 3, '9786169265061', 1, 99),
 (8, 3, '9786169953203', 2, 218);
@@ -371,8 +359,6 @@ CREATE TABLE `Payment` (
 --
 
 INSERT INTO `Payment` (`payment_id`, `order_id`, `payment_status`, `slip_img`) VALUES
-(1, 1, 'pending', 'https://example.com/slip1.jpg'),
-(2, 2, 'cancel', 'https://example.com/slip2.jpg'),
 (3, 3, 'success', 'https://example.com/slip3.jpg');
 
 -- --------------------------------------------------------
@@ -432,7 +418,7 @@ CREATE TABLE `tokens` (
 --
 
 INSERT INTO `tokens` (`id`, `user_id`, `token`, `role`) VALUES
-(8, 5, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NSwiY191c2VybmFtZSI6ImhlbGxvMTIza2VuIiwiY19wYXNzd29yZCI6IiRhcmdvbjJpZCR2PTE5JG09NjU1MzYsdD0zLHA9NCRaRThJT0ZiakRuQkZZR2owaW5rSnl3JDdKSEpqWmR3eHYybFo0S3JrMkF1Y0lDTGw3S0o5ZXNVU2F0YmhnUENWN1UiLCJjX2ZpcnN0X25hbWUiOiJZdXN1a2UiLCJjX2xhc3RfbmFtZSI6IlVyYW1lc2hpIiwiY19hZGRyZXNzIjoidG9reW8iLCJjX2VtYWlsIjoiVXJhbWVzaGlAZ21haWwuY29tIiwiY19waG9uZSI6IjA5ODc2NTQzMjEiLCJjX2ltYWdlIjoieXVzdWtlLmpwZWciLCJ0eXBlIjoiY3VzdG9tZXIiLCJpYXQiOjE2ODIyMDMzMjJ9.dQVAhMC5-ML8Sey3r5Orkn8222XzzC5sZRYNW60k07E', 'customer');
+(8, 5, 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjdXN0b21lcl9pZCI6NSwiY191c2VybmFtZSI6ImhlbGxvMTIza2VuIiwiY19wYXNzd29yZCI6IiRhcmdvbjJpZCR2PTE5JG09NjU1MzYsdD0zLHA9NCRaRThJT0ZiakRuQkZZR2owaW5rSnl3JDdKSEpqWmR3eHYybFo0S3JrMkF1Y0lDTGw3S0o5ZXNVU2F0YmhnUENWN1UiLCJjX2ZpcnN0X25hbWUiOiJZdXN1a2VlZWUiLCJjX2xhc3RfbmFtZSI6IlVyYW1lc2hpIiwiY19hZGRyZXNzIjoidG9reW8iLCJjX2VtYWlsIjoiVXJhbWVzaGlAZ21haWwuY29tIiwiY19waG9uZSI6IjA5ODc2NTQzMjEiLCJjX2ltYWdlIjoieXVzdWtlLmpwZWciLCJ0eXBlIjoiY3VzdG9tZXIiLCJpYXQiOjE2ODIyMzIzMTB9._2gWIYUVwIDnbHG2jtfRT9YnOiLRwPkP3DHpORxmRvg', 'customer');
 
 -- --------------------------------------------------------
 
@@ -670,7 +656,7 @@ ALTER TABLE `Shipping_Method`
 -- AUTO_INCREMENT for table `tokens`
 --
 ALTER TABLE `tokens`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables
