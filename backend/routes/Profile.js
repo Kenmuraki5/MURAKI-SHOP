@@ -28,7 +28,7 @@ router.get("/verifyuser", isLoggedIn, async function (req, res, next) {
       res.send(false)
     }
   } catch (error) {
-    res.status(500).json(err);
+    res.status(400).json(err);
   }
 });
 
