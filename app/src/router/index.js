@@ -9,6 +9,7 @@ import CheckOutPage from '../pages/CheckOut.vue'
 import AdminPage from '../pages/AdminPage.vue'
 import DetailPage from '../pages/DetailPage.vue'
 import ProfilePage from '../pages/ProfilePage.vue'
+import OrderDetail from '../pages/OrderDetail.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -21,7 +22,8 @@ const router = createRouter({
         {path:'/CheckOut', name:"CheckOutPage", component: CheckOutPage },
         {path:'/AdminPage', name:"AdminPage", component: AdminPage },
         {path:'/DetailPage/:id', name:"DetailPage", component: DetailPage },
-        {path:'/ProfilePage', name:"ProfilePage", component: ProfilePage }
+        {path:'/ProfilePage', name:"ProfilePage", component: ProfilePage },
+        {path:'/OrderDetail', name:"OrderDetail", component: OrderDetail }
     ]
 })
 router.beforeEach((to, from, next) => {

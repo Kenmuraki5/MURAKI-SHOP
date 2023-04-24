@@ -1,5 +1,5 @@
 <template>
-    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" />
+    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :clear="clearCart"/>
     <div class="container px-6 py-20">
         <div class="row">
             <div class="col-md-8">
@@ -126,6 +126,10 @@ export default {
         }
     },
     methods: {
+        clearCart(){
+            localStorage.removeItem("cart")
+            this.cart = []
+        },
         handleFileUpload() {
             this.file = this.$refs.file.files[0];
         },

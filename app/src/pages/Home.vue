@@ -1,5 +1,5 @@
 <template>
-  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" />
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :clear="clearCart"/>
   <EventBar></EventBar>
   <MainitemList :add="addtoCart" />
   <MainFooter />
@@ -27,6 +27,10 @@ export default {
     }
   },
   methods: {
+    clearCart(){
+      localStorage.removeItem("cart")
+      this.cart = []
+    },
     addtoCart(value) {
 
       for (let i = 0; i < this.cart.length; i++) {

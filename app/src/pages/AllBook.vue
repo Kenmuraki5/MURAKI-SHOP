@@ -1,5 +1,5 @@
 <template>
-  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" />
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :clear="clearCart"/>
   <BookList :add="addtoCart" :name="name" />
   <MainFooter />
 </template>
@@ -25,6 +25,10 @@ export default {
     }
   },
   methods: {
+    clearCart(){
+      localStorage.removeItem("cart")
+      this.cart = []
+    },
     addtoCart(value) {
       for (let i = 0; i < this.cart.length; i++) {
         if (this.cart[i].isbn == value.isbn) {

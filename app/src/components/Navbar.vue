@@ -63,10 +63,13 @@
                           </div>
                         </TransitionChild>
                         <div class="flex h-full flex-col overflow-y-scroll bg-white py-4 shadow-xl">
-                          <div class="px-4 sm:px-6">
+                          <div class="px-4 sm:px-6 flex justify-content-between">
                             <DialogTitle class="text-xl font-semibold leading-6 text-gray-900">Shopping Cart
                               ({{ totalCart }})
                             </DialogTitle>
+                            <button class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                              @click="clear()">Clear
+                            </button>
                           </div>
                           <div class="relative mt-2 flex-initial px-4 sm:px-6" v-for="item in cart" :key="item.isbn">
                             <!-- Your content -->
@@ -136,6 +139,12 @@
                   active ? 'bg-gray-100' : '',
                   'block px-4 py-2 text-sm text-gray-700',
                 ]">Your Profile</RouterLink>
+                </MenuItem>
+                <MenuItem v-slot="{ active }">
+                <RouterLink to="/Orderdetail" :class="[
+                  active ? 'bg-gray-100' : '',
+                  'block px-4 py-2 text-sm text-gray-700',
+                ]">Order detail</RouterLink>
                 </MenuItem>
                 <MenuItem v-slot="{ active }">
                 <a @click="logout()" :class="[
@@ -209,6 +218,7 @@ export default {
   props: {
     cart: Array,
     add: Function,
+    clear:Function,
     remove: Function,
     totalPrice: Number,
     totalCart: Number,

@@ -1,5 +1,5 @@
 <template>
-    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" />
+    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :clear="clearCart"/>
     <section class="min-h-screen flex flex-col">
         <nav>
             <div class="px-4 py-8 text-center text-2xl">
@@ -59,6 +59,10 @@ export default {
         }
     },
     methods: {
+        clearCart(){
+            localStorage.removeItem("cart")
+            this.cart = []
+        },
         addtoCart(value) {
             for (let i = 0; i < this.cart.length; i++) {
                 if (this.cart[i].isbn == value.isbn) {
