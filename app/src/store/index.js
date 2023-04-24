@@ -37,7 +37,7 @@ export default createStore({
         state.image = res.data.c_image || res.data.a_image
       }).catch((err) => {
         console.log(err)
-        this.commit("logout");
+        this.commit('logout')
       })
     },
     setPrevId(state, token) {

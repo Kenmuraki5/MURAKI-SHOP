@@ -97,7 +97,6 @@ export default {
             formData.append("img", this.file);
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
-                    this.$store.commit('getprofileuser')
                     this.$store.commit('login',[res.data])
                     location.reload()
                 })
