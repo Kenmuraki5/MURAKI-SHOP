@@ -12,12 +12,12 @@
                     Sign in
                 </h1>
                 <div class="py-2 text-left">
-                    <input type="text" name="username" v-model="username"
+                    <input type="text" name="username" v-model="username" v-on:keydown.enter.prevent='submit()'
                         class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700 "
                         placeholder="Email" />
                 </div>
                 <div class="py-2 text-left">
-                    <input type="password" name="password" v-model="password"
+                    <input type="password" name="password" v-model="password" v-on:keydown.enter.prevent='submit()'
                         class="bg-gray-200 border-2 border-gray-100 focus:outline-none bg-gray-100 block w-full py-2 px-4 rounded-lg focus:border-gray-700 "
                         placeholder="Password" />
                 </div>

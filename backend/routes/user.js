@@ -72,7 +72,7 @@ router.post("/signin", async function (req, res, next) {
     //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
     await loginSchema.validateAsync(req.body, { abortEarly: false })
   } catch (err) {
-    return res.status(400).send(err)
+    return res.status(400).json(err.toString())
   }
 
   const username = req.body.username

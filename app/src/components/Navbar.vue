@@ -72,8 +72,9 @@
                             <!-- Your content -->
                             <div class="py-6 ">
                               <div class="flex  max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
-
-                                <img class="w-1/3" :src="`http://localhost:3000/uploads/${item.book_img}`" alt="">
+                                <div class="w-1/3 grid items-center">
+                                  <img class="" :src="`http://localhost:3000/uploads/${item.book_img}`" alt="">
+                                </div>
                                 <div class="w-2/3 p-4">
                                   <h1 class="text-gray-900 font-bold text-2xl">
                                     {{ item.book_name }}
@@ -81,13 +82,13 @@
                                   <p class="mt-2 text-gray-600 text-sm">
                                     {{ item.book_description }}
                                   </p>
-                                  <div class="flex item-center justify-between mt-3">
+                                  <div class="flex justify-between mt-3">
 
                                     <button @click="remove(item)"
                                       class="px-3 py-2 bg-gray-800 text-white text-xs font-bold uppercase rounded">
                                       -
                                     </button>
-                                    <h1 class="text-gray-700 font-bold text-xl">
+                                    <h1 class="text-gray-700 font-bold text-xl text-center">
                                       {{ item.book_price }} ฿ x{{ item.quantity }}
                                     </h1>
                                     <button @click="add(item)"
