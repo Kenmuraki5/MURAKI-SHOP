@@ -75,18 +75,18 @@
                             <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                                 <span v-if="order.status_value == 'success'" class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
                                     <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                    <span v-if="order.status_value == 'success'" class="relative">{{order.status_value}}</span>
+                                    <span class="relative">{{order.status_value}}</span>
                                 </span>
                                 <span v-if="order.status_value == 'pending'" class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                    <span v-if="order.status_value == 'pending'" class="relative">{{order.status_value}}</span>
+                                    <span aria-hidden class="absolute inset-0 bg-cyan-200 opacity-50 rounded-full"></span>
+                                    <span class="relative">{{order.status_value}}</span>
                                 </span>
                                 <span v-if="order.status_value == 'shipping'" class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                    <span v-if="order.status_value == 'shipping'" class="relative">{{order.status_value}}</span>
+                                    <span aria-hidden class="absolute inset-0 bg-yellow-300 opacity-50 rounded-full"></span>
+                                    <span class="relative">{{order.status_value}}</span>
                                 </span><span v-if="order.status_value == 'cancel'" class="relative inline-block px-3 py-1 font-semibold text-green-900 leading-tight">
-                                    <span aria-hidden class="absolute inset-0 bg-green-200 opacity-50 rounded-full"></span>
-                                    <span v-if="order.status_value == 'cancel'" class="relative">{{order.status_value}}</span>
+                                    <span aria-hidden class="absolute inset-0 bg-red-600 opacity-50 rounded-full"></span>
+                                    <span class="relative">{{order.status_value}}</span>
                                 </span>
                             </td>
                         </tr>
