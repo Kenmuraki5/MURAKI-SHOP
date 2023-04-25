@@ -158,7 +158,7 @@ export default {
                 console.log(this.orders)
             })
             .catch(err => {
-                console.log(err)
+                alert(err.response.data)
                 this.$router.push("/")
             })
     }

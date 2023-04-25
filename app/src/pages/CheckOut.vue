@@ -160,7 +160,12 @@ export default {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            }).then(res => console.log(res)).catch(err => console.log(err))
+            }).then(res => {
+                console.log(res)
+                localStorage.removeItem("cart")
+                alert("payment success")
+                this.$router.push("/")
+            }).catch(err => console.log(err))
         },
         addtoCart(value) {
             for (let i = 0; i < this.cart.length; i++) {
