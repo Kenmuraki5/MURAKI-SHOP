@@ -27,6 +27,7 @@ const CheckoutRouter = require('./routes/Checkout')
 const DetailPage = require('./routes/DetailPage')
 const user = require('./routes/user')
 const Profile = require('./routes/Profile')
+const Orderdetail = require('./routes/Orderdetail')
 
 
 app.use(indexRouter.router)
@@ -38,6 +39,7 @@ app.use(CheckoutRouter.router)
 app.use(DetailPage.router)
 app.use(user.router)
 app.use(Profile.router)
+app.use(Orderdetail.router)
 
 
 // set port, listen for requests

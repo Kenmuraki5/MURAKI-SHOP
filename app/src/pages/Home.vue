@@ -1,5 +1,6 @@
 <template>
-  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :clear="clearCart"/>
+  <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"
+    :clear="clearCart" />
   <EventBar></EventBar>
   <MainitemList :add="addtoCart" />
   <MainFooter />
@@ -27,7 +28,7 @@ export default {
     }
   },
   methods: {
-    clearCart(){
+    clearCart() {
       localStorage.removeItem("cart")
       this.cart = []
     },
@@ -39,7 +40,7 @@ export default {
           return localStorage.setItem("cart", JSON.stringify(this.cart))
         }
       }
-      if(!this.cart.find(x => x.isbn == value.isbn)) {
+      if (!this.cart.find(x => x.isbn == value.isbn)) {
         Object.assign(value, { quantity: 0 });
         value.quantity = 1
         this.cart.push(value)

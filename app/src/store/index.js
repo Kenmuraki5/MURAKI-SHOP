@@ -28,7 +28,7 @@ export default createStore({
       state.token = ''
       state.image = ''
       localStorage.removeItem('token')
-      if(router.currentRoute.value.name == "ProfilePage")
+      if(router.currentRoute.value.name == "ProfilePage" || router.currentRoute.value.name == "OrderDetail")
         router.push("/")
     },
     getprofileuser(state){

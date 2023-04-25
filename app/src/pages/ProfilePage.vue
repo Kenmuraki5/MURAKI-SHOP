@@ -52,9 +52,6 @@ export default {
     },
     mounted() {
         this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-        if (!this.$store.state.token) {
-            this.$router.push("/")
-        }
     }
 }
 </script>
