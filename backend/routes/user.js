@@ -7,6 +7,17 @@ const { isLoggedIn } = require('../middlewares/index')
 
 router = express.Router();
 
+const usernameValidator = async (value, helpers) => {
+  const [customer, _] = await pool.query("select c_username from Customer where c_username = ?", [value])
+  const [admin] = await pool.query(`select a_username from Admin where a_username = ?`, [value])
+  if (customer.length > 0 || admin.length > 0) {
+    const message = 'This username is already taken'
+    throw new Joi.ValidationError(message, { message })
+    // throw new Joi.ValidationError('This username is already taken')
+  }
+  return value
+}
+
 const passwordValidator = (value, helpers) => {
   if (value.length < 8) {
     throw new Joi.ValidationError('Password must contain at least 8 characters')
@@ -17,25 +28,24 @@ const passwordValidator = (value, helpers) => {
   return value
 }
 
-const usernameValidator = async (value, helpers) => {
-  const [customer, _] = await pool.query("select c_username from Customer where c_username = ?", [value])
-  const [admin] = await pool.query(`select a_username from Admin where a_username = ?`, [value])
+const emailValidator = async (value, helpers) => {
+  const [customer, _] = await pool.query("select c_email from Customer where c_email = ?", [value])
+  const [admin] = await pool.query(`select a_email from Admin where a_email = ?`, [value])
   if (customer.length > 0 || admin.length > 0) {
-    const message = 'This username is already taken'
-    throw new Joi.ValidationError(message, { message })
+    throw new Joi.ValidationError('This email is already taken')
   }
   return value
 }
 
 const signupSchema = Joi.object({
-  email: Joi.string().required().email(),
+  username: Joi.string().required().min(5).max(20).external(usernameValidator),
+  password: Joi.string().required().custom(passwordValidator),
+  confirm_password: Joi.string().required().valid(Joi.ref('password')),
+  email: Joi.string().required().external(emailValidator),
   phonenumber: Joi.string().required().pattern(/0[0-9]{9}/),
   fname: Joi.string().required().max(150),
   lname: Joi.string().required().max(150),
   address: Joi.string().required(),
-  password: Joi.string().required().custom(passwordValidator),
-  confirm_password: Joi.string().required().valid(Joi.ref('password')),
-  username: Joi.string().required().min(5).max(20).external(usernameValidator),
 })
 
 router.post("/register", async function (req, res, next) {
@@ -55,7 +65,7 @@ router.post("/register", async function (req, res, next) {
   const email = req.body.email
   const mobile = req.body.phonenumber
   try {
-    if(!await argon2.verify(password, confirm_password)){
+    if (!await argon2.verify(password, confirm_password)) {
       throw new Error('confirm password not match password')
     }
     await pool.query('INSERT INTO `Customer`(`c_username`, `c_password`, `c_first_name`, `c_last_name`, `c_address`, `c_email`, `c_phone`, `c_image`) \
