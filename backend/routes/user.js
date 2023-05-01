@@ -44,16 +44,20 @@ router.post("/register", async function (req, res, next) {
     await signupSchema.validateAsync(req.body, { abortEarly: false })
   } catch (err) {
     console.log(err.message)
-    return res.status(400).send(err)
+    return res.status(400).send(err.message)
   }
   const username = req.body.username
   const password = await argon2.hash(req.body.password)
+  const confirm_password = req.body.confirm_password
   const first_name = req.body.fname
   const last_name = req.body.lname
   const address = req.body.address
   const email = req.body.email
   const mobile = req.body.phonenumber
   try {
+    if(!await argon2.verify(password, confirm_password)){
+      throw new Error('confirm password not match password')
+    }
     await pool.query('INSERT INTO `Customer`(`c_username`, `c_password`, `c_first_name`, `c_last_name`, `c_address`, `c_email`, `c_phone`, `c_image`) \
       VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
       [username, password, first_name, last_name, address, email, mobile, ""]);
