@@ -29,7 +29,7 @@
                 </div>
 
                 <div class="text-center">
-                    <a href="#" class="hover:underline">Forgot password?</a>
+                    <RouterLink to="/ResetPassword" class="hover:underline">Forgot password?</RouterLink>
                 </div>
                 <div class="text-center mt-12">
                     <span>

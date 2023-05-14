@@ -4,7 +4,7 @@ const Joi = require('joi');
 const argon2 = require('argon2');
 const jwt = require('jsonwebtoken');
 const { isLoggedIn } = require('../middlewares/index')
-
+const nodemailer = require('nodemailer');
 router = express.Router();
 
 const usernameValidator = async (value, helpers) => {
@@ -161,7 +161,33 @@ router.post("/signin", async function (req, res, next) {
     conn.release()
   }
 });
-
+router.post("/forgot-password",function(req, res, next){
+  var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'murakishopp@gmail.com',
+      pass: 'fjtwhzpyfvwiktrv'
+    }
+  });
+  
+  var mailOptions = {
+    from: 'murakishopp@gmail.com',
+    to: req.body.email,
+    subject: 'Password Reset',
+    text: 'That was easy!'
+  };
+  transporter.sendMail(mailOptions, function(error, info){
+    if (error) {
+      console.log(error);
+      res.status(400).send("error")
+    } else {
+      console.log('Email sent: ' + info.response);
+      res.send("success")
+    }
+  });
+  // console.log(req.body)
+  // res.send("heello")
+})
 router.get('/user/me', isLoggedIn, async function (req, res, next) {
   try {
     console.log(req.user)
