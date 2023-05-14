@@ -36,7 +36,7 @@ router.beforeEach((to, from, next) => {
     alert("You've already logged in")
     next({ path: '/' })
   }
-  if ((to.name == "OrderDetail" || to.name == "ProfilePage") && !isLoggedIn) {
+  if ((to.name == "OrderDetail" || to.name == "AdminPage" || to.name == "ProfilePage") && !isLoggedIn) {
     alert("You are not logged in")
     next({ path: '/' })
   }
