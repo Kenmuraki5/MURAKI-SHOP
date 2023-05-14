@@ -103,7 +103,7 @@
     </div>
     <div class="orderline" v-if="show == false">
         <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 overflow-x-auto">
-            <button @click="show = true" class="font-bold py-3 hover:text-rose-600">Back</button>
+            <button @click="show = true" class="font-bold py-3 px-3 hover:text-rose-600">Back</button>
             <table class="min-w-full leading-normal">
                 <thead>
                     <tr>
