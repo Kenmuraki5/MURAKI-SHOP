@@ -11,6 +11,7 @@ import DetailPage from '../pages/DetailPage.vue'
 import ProfilePage from '../pages/ProfilePage.vue'
 import OrderDetail from '../pages/OrderDetail.vue'
 import ResetPassword from '../pages/ResetPassword.vue'
+import ChangePassword from '../pages/ChangePassword.vue'
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -25,14 +26,15 @@ const router = createRouter({
         {path:'/DetailPage/:id', name:"DetailPage", component: DetailPage },
         {path:'/ProfilePage', name:"ProfilePage", component: ProfilePage },
         {path:'/OrderDetail', name:"OrderDetail", component: OrderDetail },
-        {path:'/ResetPassword', name:"ResetPassword", component: ResetPassword }
+        {path:'/ResetPassword', name:"ResetPassword", component: ResetPassword },
+        {path:'/ResetPassword/:token', name:"ChangePassword", component: ChangePassword },
     ]
 })
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem('token')
 
 
-  if (to.name == "LoginPage" && isLoggedIn) {
+  if ((to.name == "LoginPage" || to.name == "ChangePassword") && isLoggedIn) {
     alert("You've already logged in")
     next({ path: '/' })
   }

@@ -161,32 +161,67 @@ router.post("/signin", async function (req, res, next) {
     conn.release()
   }
 });
-router.post("/forgot-password",function(req, res, next){
-  var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'murakishopp@gmail.com',
-      pass: 'fjtwhzpyfvwiktrv'
-    }
-  });
-  
-  var mailOptions = {
-    from: 'murakishopp@gmail.com',
-    to: req.body.email,
-    subject: 'Password Reset',
-    text: 'That was easy!'
-  };
-  transporter.sendMail(mailOptions, function(error, info){
-    if (error) {
-      console.log(error);
-      res.status(400).send("error")
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.send("success")
-    }
-  });
+router.post("/forgot-password", async function (req, res, next) {
+  try {
+    var transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'murakishopp@gmail.com',
+        pass: 'fjtwhzpyfvwiktrv'
+      }
+    });
+    var token = jwt.sign(req.body.email, "hangessapwodr", { algorithm: 'HS256' });
+    var mailOptions = {
+      from: 'murakishopp@gmail.com',
+      to: req.body.email,
+      subject: 'Password Reset',
+      text: "http://localhost:8080/ResetPassword/" + token
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+      if (error) {
+        console.log(error);
+        res.status(400).send("error")
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.send("success")
+      }
+    });
+  } catch (error) {
+    next(error)
+  }
   // console.log(req.body)
   // res.send("heello")
+})
+
+router.put("/ResetPassword/:token/", async function (req, res, next) {
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+  jwt.verify(req.params.token, "hangessapwodr", async function (err, decoded) {
+    if (err) {
+      console.log('JWT verification failed:', err.message);
+      res.status(400).send("you cannot change password")
+    } else {
+      console.log('JWT verification succeeded:', decoded);
+      try {
+        const password = await argon2.hash(req.body.password)
+        const [customer] = await conn.query("select customer_id, c_username from customer where c_email = ?", [decoded])
+        const [admin] = await conn.query("select admin_id, a_username from admin where a_email = ?", [decoded])
+        if (customer[0]) {
+          await conn.query("update customer set c_password = ? where customer_id = ?", [password, customer[0].customer_id])
+        }
+        else if (admin[0]) {
+          await conn.query("update admin set a_password = ? where admin_id = ?", [password, admin[0].a_username])
+        }
+        conn.commit()
+        res.send("success")
+      } catch (error) {
+        conn.rollback()
+        next(error)
+      }finally{
+        conn.release()
+      }
+    }
+  });
 })
 router.get('/user/me', isLoggedIn, async function (req, res, next) {
   try {
