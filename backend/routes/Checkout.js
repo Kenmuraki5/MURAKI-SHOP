@@ -44,8 +44,8 @@ router.post("/addPayment", isLoggedIn, upload.single('image'), async function (r
 
 
     let addOrder = await conn.query("INSERT INTO cust_order \
-    (order_date, customer_id, shipping_id, address, total_price, status_value) value(current_timestamp(),?,?,'blank',?,'pending')",
-      [req.user.customer_id, req.body.shipping, req.body.totalPrice]);
+    (order_date, customer_id, shipping_id, address, total_price, status_value) value(current_timestamp(),?,?,?,?,'pending')",
+      [req.user.customer_id, req.body.shipping, req.body.address, req.body.totalPrice]);
     cart.forEach(item => {
       let addOrderLine = conn.query('insert into order_line (order_id, isbn, quantity, price) value (?,?,?,?)',
         [addOrder[0].insertId, item.isbn, item.quantity, item.quantity * item.book_price])

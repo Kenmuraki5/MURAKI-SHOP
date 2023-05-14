@@ -1,5 +1,6 @@
 <template>
-    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart" :clear="clearCart"/>
+    <MainNavbar :add="addtoCart" :totalCart="totalCart" :totalPrice="totalPrice" :remove="removefromCart" :cart="cart"
+        :clear="clearCart" />
     <div class="container px-6 py-20">
         <div class="row">
             <div class="col-md-8">
@@ -65,7 +66,7 @@
                         <img src="https://cdn.discordapp.com/attachments/399896332187336704/1098272137195831469/Moment_1681918864643.jpg"
                             alt="">
                         <br>
-                        <div class="">
+                        <div class="flex">
                             Slip image:
                             <input type="file" id="file" ref="file" accept="image/png, image/jpeg"
                                 @change="handleFileUpload()">
@@ -74,11 +75,26 @@
                         <br>
                         <div class="flex">
                             Shipping methods:
-                            <select id="countries" class="form-control" v-model="selected">
+                            <select id="shipping" class="form-control" v-model="selected">
                                 <option v-if="!selected" value="">Select Shipping</option>
                                 <option :value="val" v-for="val in shipping" :key="val.shipping_id">
                                     {{ val.shipping_name }}</option>
                             </select>
+                        </div>
+                        <br>
+                        <div class="flex">
+                            Address:
+                            <select id="address" class="form-control" v-model="addressSelected">
+                                <option value=0>Select Address</option>
+                                <option :value=address>{{ address }}</option>
+                                <option value=2>New Address</option>
+                            </select>
+
+                        </div>
+                        <br>
+                        <div class="flex" v-if="addressSelected == 2">
+                            New Address:
+                            <input  class="form-control" v-model="newAddress" type="text">
                         </div>
                         <br>
                         <hr>
@@ -121,12 +137,15 @@ export default {
             cart: [],
             shipping: null,
             selected: "",
-
+            addressSelected: 0,
+            address: null,
             file: null,
+            addSelected: "",
+            newAddress:null
         }
     },
     methods: {
-        clearCart(){
+        clearCart() {
             localStorage.removeItem("cart")
             this.cart = []
         },
@@ -141,6 +160,9 @@ export default {
             if (!this.selected) {
                 errors.push('Please select shipping.')
             }
+            if (this.addressSelected == 0 || (this.addressSelected == 2 && !this.newAddress)) {
+                errors.push('Please select address.')
+            }
             if (errors.length) {
                 // Display error messages to user or handle them however you wish
                 alert(errors)
@@ -152,6 +174,7 @@ export default {
         submit() {
             const form = new FormData()
             form.append("cart", JSON.stringify(this.cart))
+            form.append("address", this.newAddress || this.address)
             form.append("shipping", this.selected.shipping_id)
             form.append("totalPrice", this.totalPrice)
             form.append("image", this.file)
@@ -207,6 +230,13 @@ export default {
             this.$router.push("/")
             console.log(error)
         }
+        axios.get(`http://localhost:3000/user/me`)
+            .then((res) => {
+                this.address = res.data.c_address || res.data.a_address
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 }
 </script>
