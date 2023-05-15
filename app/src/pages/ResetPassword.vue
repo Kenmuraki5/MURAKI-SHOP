@@ -15,7 +15,9 @@
                             class="w-full py-3 border border-slate-200 rounded-lg px-3 focus:outline-none focus:border-slate-500 hover:shadow"
                             placeholder="Enter email address" v-model="email">
                     </label>
-
+                    <span v-if="show == 'A link to change the password has been sent to your email.'" 
+                    class="text-green-400">{{show}}</span>
+                    <span v-else class="text-rose-500">{{show}}</span>
                     <button @click="sendmail()"
                         class="w-full py-3 font-medium text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg border-indigo-500 hover:shadow inline-flex space-x-2 items-center justify-center">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -43,14 +45,22 @@ import axios from 'axios';
     export default{
         data(){
             return {
-                email:''
+                email:'',
+                show:"",
             }
         },
         methods:{
             sendmail(){
+                this.show = "wait 1 minute";
                 axios.post("http://localhost:3000/forgot-password", {email:this.email})
-                .then(res => alert(res.data))
-                .catch(err => alert(err.response.data))
+                .then((res) => {
+                    alert(res.data)
+                    this.show = "A link to change the password has been sent to your email."
+                })
+                .catch((err) => {
+                    alert(err.response.data)
+                    this.show = err.response.data
+                })
             }
         }
     }

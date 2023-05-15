@@ -163,29 +163,37 @@ router.post("/signin", async function (req, res, next) {
 });
 router.post("/forgot-password", async function (req, res, next) {
   try {
-    var transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: 'murakishopp@gmail.com',
-        pass: 'fjtwhzpyfvwiktrv'
-      }
-    });
-    var token = jwt.sign(req.body.email, "hangessapwodr", { algorithm: 'HS256' });
-    var mailOptions = {
-      from: 'murakishopp@gmail.com',
-      to: req.body.email,
-      subject: 'Password Reset',
-      text: "http://localhost:8080/ResetPassword/" + token
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
-      if (error) {
-        console.log(error);
-        res.status(400).send("error")
-      } else {
-        console.log('Email sent: ' + info.response);
-        res.send("success")
-      }
-    });
+    const [check_customer] = await pool.query("select * from customer where c_email = ?", [req.body.email])
+    const [check_admin] = await pool.query("select * from customer where c_email = ?", [req.body.email])
+    if (!check_customer[0] && !check_admin[0]) {
+      res.status(409).send("This email does not exist in the system.")
+    }
+    else {
+      var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'murakishopp@gmail.com',
+          pass: 'vuxjtsqgsipzdobh'
+        }
+      });
+      var token = jwt.sign(req.body.email, "hangessapwodr", { algorithm: 'HS256' });
+      var mailOptions = {
+        from: 'murakishopp@gmail.com',
+        to: req.body.email,
+        subject: 'Password Reset',
+        text: "http://localhost:8080/ResetPassword/" + token
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+          res.status(400).send("error")
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.send("success")
+        }
+      });
+    }
+
   } catch (error) {
     next(error)
   }
@@ -208,16 +216,18 @@ router.put("/ResetPassword/:token/", async function (req, res, next) {
         const [admin] = await conn.query("select admin_id, a_username from admin where a_email = ?", [decoded])
         if (customer[0]) {
           await conn.query("update customer set c_password = ? where customer_id = ?", [password, customer[0].customer_id])
+          await conn.query("DELETE FROM tokens_c WHERE user_id = ?",[customer[0].customer_id])
         }
         else if (admin[0]) {
           await conn.query("update admin set a_password = ? where admin_id = ?", [password, admin[0].a_username])
+          await conn.query("DELETE FROM tokens_a WHERE user_id = ?",[admin[0].a_username])
         }
         conn.commit()
         res.send("success")
       } catch (error) {
         conn.rollback()
         next(error)
-      }finally{
+      } finally {
         conn.release()
       }
     }
