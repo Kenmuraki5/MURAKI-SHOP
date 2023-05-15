@@ -197,14 +197,13 @@
                 <div class="mx-auto max-w-2xl  rounded-md py-3 px-4 sm:py-24 sm:px-6 lg:max-w-7xl lg:px-8 bg-zinc-100">
                   <span class="group relative grid justify-center font-bold text-xl" v-if="newFilteredManga.length == 0">No results found.</span>
                   <div class="my-3 grid grid-cols-2 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 overflow-y-auto max-h-screen">
-                    <div v-for="product in newFilteredManga" :key="product.isbn" class="group relative grid justify-center" :style="{opacity:product.in_stock == 0 ? 0.5 : 1 }">
+                    <div v-for="product in newFilteredManga" :key="product.isbn" class="group relative grid justify-center">
                       <RouterLink :to="`/DetailPage/${product.isbn}`">
                         <div
                           class="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80
                           my-2">
-                          <img :src="`http://localhost:3000/uploads/${product.book_img}`"
+                          <img :src="`http://localhost:3000/uploads/${product.book_img}`" :style="{opacity:product.in_stock == 0 ? 0.25 : 1 }"
                             class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
-                            <h3 v-show="product.in_stock == 0" class="absolute top-28 left-24 text-rose-800">out of stock</h3>
                         </div>
                         <div class="mt-4 flex justify-between">
                           <div>

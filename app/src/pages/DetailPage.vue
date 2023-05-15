@@ -5,7 +5,7 @@
         <div class="container px-5 py-24 mx-auto">
             <div class="lg:w-4/5 mx-auto flex flex-wrap justify-center">
                 <div class="basis-1/2">
-                    <img class="w-96 object-cover object-center rounded border border-gray-200"
+                    <img class="w-96 object-cover object-center rounded border border-gray-200" :style="{ opacity: products.in_stock == 0 ? 0.25 : 1 }"
                         :src="products.book_img?`http://localhost:3000/uploads/${products.book_img}`:'http://localhost:3000/uploads/noneprofile.png'">
                 </div>
                 <div class="lg:basis-1/2">
