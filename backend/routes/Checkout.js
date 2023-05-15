@@ -39,7 +39,12 @@ router.post("/addPayment", isLoggedIn, upload.single('image'), async function (r
 
   try {
     const cart = JSON.parse(req.body.cart)
-
+    for (const item of cart) {
+      const [checkstock] = await pool.query("SELECT in_stock, book_name FROM book WHERE isbn=?", [item.isbn])
+      if (item.quantity > checkstock[0].in_stock) {
+        return res.status(409).send(`${item.book_name} is out of stock`)
+      }
+    }
     await conn.beginTransaction();
 
 

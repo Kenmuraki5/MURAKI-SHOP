@@ -107,6 +107,7 @@ router.post("/signin", async function (req, res, next) {
     const admin = admins[0] == undefined ? "" : admins[0]
     // Check if username is correct
     if (!customer && !admin) {
+      console.log(1)
       throw new Error('Incorrect username or password')
     }
     // Check if password is correct
@@ -150,9 +151,9 @@ router.post("/signin", async function (req, res, next) {
       conn.commit()
       res.status(200).json({ 'token': token })
     }
-    else {
-      throw new Error('Incorrect username or password')
-    }
+    // else {
+    //   throw new Error('Incorrect username or password')
+    // }
 
   } catch (error) {
     conn.rollback()

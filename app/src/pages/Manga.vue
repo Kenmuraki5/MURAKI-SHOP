@@ -29,16 +29,18 @@ export default {
       localStorage.removeItem("cart")
       this.cart = []
     },
-    addtoCart(value){
-      for(let i = 0 ;i<this.cart.length;i++){
-          if(this.cart[i].isbn == value.isbn){
-            this.cart[i].quantity++
-            return localStorage.setItem("cart", JSON.stringify(this.cart))
-          }
+    addtoCart(value) {
+      for (let i = 0; i < this.cart.length; i++) {
+        if (this.cart[i].isbn == value.isbn && this.cart[i].quantity < value.in_stock) {
+          this.cart[i].quantity++
+          return localStorage.setItem("cart", JSON.stringify(this.cart))
+        }
       }
-      Object.assign(value, {quantity:0});
-      value.quantity = 1
-      this.cart.push(value)
+      if (!this.cart.find(x => x.isbn == value.isbn)) {
+        Object.assign(value, { quantity: 0 });
+        value.quantity = 1
+        this.cart.push(value)
+      }
       localStorage.setItem("cart", JSON.stringify(this.cart))
     },
     removefromCart(value){

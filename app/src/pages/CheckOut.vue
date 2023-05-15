@@ -94,7 +94,7 @@
                         <br>
                         <div class="flex" v-if="addressSelected == 2">
                             New Address:
-                            <input  class="form-control" v-model="newAddress" type="text">
+                            <input class="form-control" v-model="newAddress" type="text">
                         </div>
                         <br>
                         <hr>
@@ -141,7 +141,7 @@ export default {
             address: null,
             file: null,
             addSelected: "",
-            newAddress:null
+            newAddress: null
         }
     },
     methods: {
@@ -188,18 +188,21 @@ export default {
                 localStorage.removeItem("cart")
                 alert("payment success")
                 this.$router.push("/")
-            }).catch(err => console.log(err))
+            }).catch(err => alert(err.response.data))
         },
         addtoCart(value) {
+
             for (let i = 0; i < this.cart.length; i++) {
-                if (this.cart[i].isbn == value.isbn) {
+                if (this.cart[i].isbn == value.isbn && this.cart[i].quantity < value.in_stock) {
                     this.cart[i].quantity++
                     return localStorage.setItem("cart", JSON.stringify(this.cart))
                 }
             }
-            Object.assign(value, { quantity: 0 });
-            value.quantity = 1
-            this.cart.push(value)
+            if (!this.cart.find(x => x.isbn == value.isbn)) {
+                Object.assign(value, { quantity: 0 });
+                value.quantity = 1
+                this.cart.push(value)
+            }
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
         removefromCart(value) {
