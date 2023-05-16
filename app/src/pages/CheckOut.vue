@@ -221,7 +221,7 @@ export default {
     },
     async created() {
         try {
-            this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart);
+            this.cart = JSON.parse(localStorage.cart == undefined ? [] : localStorage.cart);
             const res = await axios.get("http://localhost:3000/CheckOut", { params: { cart: this.cart } })
             this.shipping = res.data
 
@@ -229,9 +229,9 @@ export default {
             const result = this.cart.filter(val => res1.data.find(val2 => val.isbn == val2.isbn))
             console.log(result)
         } catch (error) {
-            alert("Product out of stock")
-            this.$router.push("/")
             console.log(error)
+            alert(error.response.data)
+            this.$router.push("/")
         }
         axios.get(`http://localhost:3000/user/me`)
             .then((res) => {

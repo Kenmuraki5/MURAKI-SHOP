@@ -32,16 +32,23 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const isLoggedIn = localStorage.getItem('token')
-
-
-  if ((to.name == "LoginPage" || to.name == "ChangePassword") && isLoggedIn) {
+  const cart = localStorage.getItem('cart')
+  let checkcart = JSON.parse(cart)
+  if ((to.name === "LoginPage" || to.name === "ChangePassword") && isLoggedIn) {
     alert("You've already logged in")
     next({ path: '/' })
-  }
-  if ((to.name == "OrderDetail" || to.name == "AdminPage" || to.name == "ProfilePage" || to.name == "CheckOutPage") && !isLoggedIn) {
+  } 
+  else if ((to.name === "OrderDetail" || to.name === "AdminPage" || to.name === "ProfilePage" || to.name === "CheckOutPage") && !isLoggedIn) {
     alert("You are not logged in")
     next({ path: '/' })
   }
-  next()
+  else if(to.name == "CheckOutPage" && (cart == undefined || checkcart.length == 0)){
+    alert("You are not product in cart")
+    next({ path: '/' })
+  }
+  else {
+    next()
+  }
 })
+
 export default router

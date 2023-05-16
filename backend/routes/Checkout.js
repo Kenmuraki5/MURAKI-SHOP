@@ -19,6 +19,9 @@ const upload = multer({ storage: storage })
 
 router.get("/CheckOut", async function (req, res, next) {
   try {
+    // if(!req.query.cart){
+    //   return res.status(400).send("None product in cart");
+    // }
     let result = await pool.query("SELECT * FROM `Shipping_Method`");
     let instock = await pool.query('select isbn, in_stock from book')
     for (let incart of req.query.cart) {
@@ -39,10 +42,13 @@ router.post("/addPayment", isLoggedIn, upload.single('image'), async function (r
 
   try {
     const cart = JSON.parse(req.body.cart)
+    if (cart.length == 0) {
+      return res.status(400).send("None product in cart.")
+    }
     for (const item of cart) {
       const [checkstock] = await pool.query("SELECT in_stock, book_name FROM book WHERE isbn=?", [item.isbn])
       if (item.quantity > checkstock[0].in_stock) {
-        return res.status(409).send(`${item.book_name} is out of stock`)
+        return res.status(409).send(`${item.book_name} is out of stock.`)
       }
     }
     await conn.beginTransaction();
