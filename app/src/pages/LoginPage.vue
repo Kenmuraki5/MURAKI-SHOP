@@ -30,7 +30,7 @@
                 </div>
 
                 <div class="text-center">
-                    <RouterLink to="/ResetPassword" class="hover:underline">Forgot password?</RouterLink>
+                    <RouterLink to="/VerificationUser" class="hover:underline">Forgot password?</RouterLink>
                 </div>
                 <div class="text-center mt-12">
                     <span>
@@ -92,7 +92,6 @@ export default {
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
-                console.log(response.data.token)
                 this.$store.commit('login', [response.data.token])
                 this.$store.commit('getprofileuser')
                 this.$router.push({ name: "HomePage" })

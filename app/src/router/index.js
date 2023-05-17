@@ -10,7 +10,7 @@ import AdminPage from '../pages/AdminPage.vue'
 import DetailPage from '../pages/DetailPage.vue'
 import ProfilePage from '../pages/ProfilePage.vue'
 import OrderDetail from '../pages/OrderDetail.vue'
-import ResetPassword from '../pages/ResetPassword.vue'
+import VerificationUser from '../pages/VerificationUser.vue'
 import ChangePassword from '../pages/ChangePassword.vue'
 const router = createRouter({
     history: createWebHistory(),
@@ -26,7 +26,7 @@ const router = createRouter({
         {path:'/DetailPage/:id', name:"DetailPage", component: DetailPage },
         {path:'/ProfilePage', name:"ProfilePage", component: ProfilePage },
         {path:'/OrderDetail', name:"OrderDetail", component: OrderDetail },
-        {path:'/ResetPassword', name:"ResetPassword", component: ResetPassword },
+        {path:'/VerificationUser', name:"VerificationUser", component: VerificationUser },
         {path:'/ResetPassword/:token', name:"ChangePassword", component: ChangePassword },
     ]
 })

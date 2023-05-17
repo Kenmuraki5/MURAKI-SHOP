@@ -171,7 +171,7 @@ router.post("/signin", async function (req, res, next) {
 
 
 
-router.post("/forgot-password", async function (req, res, next) {
+router.post("/verification", async function (req, res, next) {
   try {
     const [check_customer] = await pool.query("select * from customer where c_email = ?", [req.body.email])
     const [check_admin] = await pool.query("select * from customer where c_email = ?", [req.body.email])

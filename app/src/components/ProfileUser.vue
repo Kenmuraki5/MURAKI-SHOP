@@ -4,61 +4,65 @@
             <div class="col-md-4 border-right">
                 <div class="relative flex flex-column align-items-center text-center p-3 lg:py-5">
                     <img class="rounded-full mt-5 w-56 h-56 lg:w-72 lg:h-72"
-                    :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: `http://localhost:3000/uploads/noneprofile.png`"/>
+                        :src="img_user ? `http://localhost:3000/uploads/${this.img_user}` : `http://localhost:3000/uploads/noneprofile.png`" />
                     <div class="flex mt-3">
                         <div class="row">
-                            <input type="file"
-                            id="file" ref="file"
-                            accept="image/png, image/jpeg" @change="handleFileUpload()">
-                            <button v-if="file" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-2 rounded-full" 
-                            @click="changepicture()">uploads</button>
+                            <input type="file" id="file" ref="file" accept="image/png, image/jpeg"
+                                @change="handleFileUpload()">
+                            <button v-if="file"
+                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 my-2 rounded-full"
+                                @click="changepicture()">uploads</button>
                         </div>
-                        
+
                     </div>
                     <span class="font-semibold mt-3">{{ username }}</span>
-                    <span
-                        class="text-black-50">{{ email}}
+                    <span class="text-black-50">{{ email }}
                     </span>
                 </div>
             </div>
             <div class="col-md-8 border-right">
                 <div class="p-3 py-5">
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h4 class="text-right font-semibold">Profile Settings</h4>
+                        <h4 class="text-right text-2xl font-semibold">Your Profile</h4>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-md-6"><label class="labels">Username</label><input type="text" class="form-control"
-                                placeholder="first name" v-model="username" :readonly="showsubmit"></div>
+                        <div class="col-md-6"><label class="labels font-medium">Username</label>
+                            <input type="text" class="form-control" placeholder="first name" v-model="username"
+                                :readonly="showsubmit">
+                        </div>
                     </div>
                     <div class="row mt-2">
-                        <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control"
-                                placeholder="first name" v-model="name" :readonly="showsubmit"></div>
-                        <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control"
-                                v-model="surname" placeholder="surname" :readonly="showsubmit"></div>
+                        <div class="col-md-6"><label class="labels font-medium">Name</label><input type="text"
+                                class="form-control" placeholder="first name" v-model="name" :readonly="showsubmit"></div>
+                        <div class="col-md-6"><label class="labels font-medium">Surname</label><input type="text"
+                                class="form-control" v-model="surname" placeholder="surname" :readonly="showsubmit"></div>
                     </div>
                     <div class="row mt-3">
-                        <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text"
+                        <div class="col-md-12"><label class="labels font-medium">Mobile Number</label><input type="text"
                                 class="form-control" placeholder="enter phone number" v-model="phonenumber"
                                 :readonly="showsubmit"></div>
-                        <div class="col-md-12"><label class="labels">Address</label><textarea type="text"
+                        <div class="col-md-12"><label class="labels font-medium">Address</label><textarea type="text"
                                 class="form-control" placeholder="enter address line 1" v-model="address"
                                 :readonly="showsubmit" /></div>
-                        <!-- <div class="col-md-12"><label class="labels">Postcode</label><input type="text" class="form-control"
+                        <!-- <div class="col-md-12"><label class="labels font-medium">Postcode</label><input type="text" class="form-control"
                                 placeholder="enter postcode" v-model="postcode"></div>
-                        <div class="col-md-12"><label class="labels">State</label><input type="text" class="form-control"
+                        <div class="col-md-12"><label class="labels font-medium">State</label><input type="text" class="form-control"
                                 placeholder="enter state" v-model=""></div>
-                        <div class="col-md-12"><label class="labels">Area</label><input type="text" class="form-control"
+                        <div class="col-md-12"><label class="labels font-medium">Area</label><input type="text" class="form-control"
                                 placeholder="enter area" v-model=""></div> -->
-                        <div class="col-md-12"><label class="labels">Email</label><input type="text" class="form-control"
-                                placeholder="enter email id" v-model="email" :readonly="showsubmit"></div>
+                        <div class="col-md-12 py-2"><label class="labels font-medium">Email</label>
+                            <p class="control">{{ email }}
+                            </p>
+                            <a class="underline text-blue-600 cursor-pointer" @click="changeemail()">change email</a>
+                        </div>
                     </div>
                     <button v-if="showsubmit"
-                        class="mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                        class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded"
                         @click="editprofile()">
                         {{ edit }}
                     </button>
                     <button v-else
-                        class="mt-5 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"
+                        class="mt-4 bg-emerald-400 hover:bg-emerald-600 text-white font-bold py-2 px-4 border border-blue-700 rounded"
                         @click="submit()">
                         SAVE
                     </button>
@@ -74,7 +78,7 @@ export default {
     name: "ProfileUser",
     data() {
         return {
-            img_user:"",
+            img_user: "",
             name: "",
             surname: "",
             email: "",
@@ -85,14 +89,14 @@ export default {
             // encodepassword:"",
             edit: "Edit Profile",
             showsubmit: true,
-            file:null
+            file: null
         }
     },
     methods: {
         handleFileUpload() {
-        this.file = this.$refs.file.files[0];
+            this.file = this.$refs.file.files[0];
         },
-        changepicture(){
+        changepicture() {
             const formData = new FormData()
             formData.append("img", this.file);
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
@@ -106,18 +110,18 @@ export default {
         editprofile() {
             let person = prompt("Please enter your password:", "");
             axios.get("http://localhost:3000/verifyuser", { params: { password: person } })
-            .then((res) => {
-                if (res.data) {
-                    this.showsubmit = false
-                }
-                else if(person == "" || person == null){
-                    this.showsubmit = true
-                }
-                else {
-                    alert("password is invalid")
-                }
-            })
-            .catch(err => console.log(err))
+                .then((res) => {
+                    if (res.data) {
+                        this.showsubmit = false
+                    }
+                    else if (person == "" || person == null) {
+                        this.showsubmit = true
+                    }
+                    else {
+                        alert("password is invalid")
+                    }
+                })
+                .catch(err => console.log(err))
         },
         submit() {
             if (!this.name) {
@@ -144,21 +148,29 @@ export default {
             else {
                 this.showsubmit = true
                 const formData = new FormData()
-                formData.append("id", this.$store.state.id)
+                // formData.append("id", this.$store.state.id)
                 formData.append("fname", this.name)
                 formData.append("lname", this.surname)
                 formData.append("username", this.username)
                 // formData.append("password", this.password)
-                formData.append("email", this.email)
+                // formData.append("email", this.email)
                 formData.append("address", this.address)
                 formData.append("phonenumber", this.phonenumber)
                 axios.put(`http://localhost:3000/EditProfile`, formData, { headers: { 'Content-Type': 'application/json' } })
                     .then((res) => {
                         alert("update success")
-                        console.log(res.data)
+                        if (res.data.token) {
+                            console.log(res.data.token)
+                            this.$store.commit('login', [res.data.token])
+                        }
                     })
-                    .catch((err) => { console.log(err) })
+                    .catch((err) => { alert(err.response.data) })
             }
+        },
+        changeemail(){
+            let route = this.$router.resolve({path: '/VerificationUser'});
+            // let route = this.$router.resolve('/link/to/page'); // This also works.
+            window.open(route.href, '_blank');
         }
     },
     created() {
@@ -175,9 +187,9 @@ export default {
                 this.data = res.data
                 // this.encodepassword = this.password.substring(0, 3) + this.password.substring(3).replace(/./g, '*')
             })
-            .catch((err) => { 
+            .catch((err) => {
                 console.log(err)
-                this.$store.commit("logout") 
+                this.$store.commit("logout")
             })
     }
 }
