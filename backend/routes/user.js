@@ -173,8 +173,8 @@ router.post("/signin", async function (req, res, next) {
 
 router.post("/verification", async function (req, res, next) {
   try {
-    const [check_customer] = await pool.query("select * from customer where c_email = ?", [req.body.email])
-    const [check_admin] = await pool.query("select * from customer where c_email = ?", [req.body.email])
+    const [check_customer] = await pool.query("select c_email from customer where c_email = ?", [req.body.email])
+    const [check_admin] = await pool.query("select a_email from customer where c_email = ?", [req.body.email])
     if (!check_customer[0] && !check_admin[0]) {
       res.status(409).send("This email does not exist in the system.")
     }
@@ -211,7 +211,20 @@ router.post("/verification", async function (req, res, next) {
   // res.send("heello")
 })
 
+
+const ResetPasswordSchema = Joi.object({
+  password: Joi.string().required().custom(passwordValidator),
+  confirm_password: Joi.string().required().valid(Joi.ref('password')),
+})
+
 router.put("/ResetPassword/:token/", async function (req, res, next) {
+  try {
+    //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
+    await ResetPasswordSchema.validateAsync(req.body, { abortEarly: false })
+  } catch (err) {
+    return res.status(400).json(err.toString())
+  }
+
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   jwt.verify(req.params.token, "hangessapwodr", async function (err, decoded) {
