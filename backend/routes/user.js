@@ -7,6 +7,19 @@ const { isLoggedIn } = require('../middlewares/index')
 const nodemailer = require('nodemailer');
 router = express.Router();
 
+const generatetoken = async (type, id) => {
+  try {
+    const secretKey = "miraki";
+    const [result] = await pool.query(`SELECT ${type}_id FROM ${type} WHERE ${type}_id = ?`, [id]);
+    result[0].type = type
+    const token = jwt.sign(result[0], secretKey, { algorithm: 'HS256' });
+    console.log(token);
+    return token;
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
 const usernameValidator = async (value, helpers) => {
   const [customer, _] = await pool.query("select c_username from Customer where c_username = ?", [value])
   const [admin] = await pool.query(`select a_username from Admin where a_username = ?`, [value])
@@ -81,6 +94,9 @@ const loginSchema = Joi.object({
   username: Joi.string().required(),
   password: Joi.string().required()
 })
+
+
+
 router.post("/signin", async function (req, res, next) {
   try {
     //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
@@ -95,73 +111,66 @@ router.post("/signin", async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
-    const [customers] = await conn.query(
+    const [check_customers] = await conn.query(
       'SELECT * FROM Customer WHERE (c_username = ? or c_email = ?)',
       [username, username]
     )
-    const [admins] = await conn.query(
+    const [check_admins] = await conn.query(
       'SELECT * FROM Admin WHERE (a_username = ? or a_email = ?)',
       [username, username]
     )
-    const customer = customers[0] == undefined ? "" : customers[0]
-    const admin = admins[0] == undefined ? "" : admins[0]
+    const ck_customer = check_customers[0] == undefined ? "" : check_customers[0]
+    const ck_admin = check_admins[0] == undefined ? "" : check_admins[0]
     // Check if username is correct
-    if (!customer && !admin) {
-      console.log(1)
-      throw new Error('Incorrect username or password')
+    if (!ck_customer && !ck_admin) {
+      throw new Error('Incorrect username or email')
     }
     // Check if password is correct
-    if (customer && await argon2.verify(customer.c_password, password)) {
-      customer.type = "customer"
+    if (ck_customer && await argon2.verify(ck_customer.c_password, password)) {
       const [tokens] = await conn.query(
         'SELECT * FROM tokens_c WHERE user_id=?',
-        [customer.customer_id]
+        [ck_customer.customer_id]
       )
       // Check if token already existed
       let token = tokens[0]?.token
       if (!token) {
-        const secretKey = "miraki";
         // Generate and save token into database
-        token = jwt.sign(customer, secretKey, { algorithm: 'HS256' });
-        await conn.query(
-          'INSERT INTO tokens_c(user_id, token) VALUES (?, ?)',
-          [customer.customer_id, token]
-        )
+        token = await generatetoken("customer", ck_customer.customer_id)
+        await conn.query('INSERT INTO tokens_c(user_id, token) VALUES (?, ?)', [ck_customer.customer_id, token])
       }
       conn.commit()
       res.status(200).json({ 'token': token })
     }
-    else if (admin && await argon2.verify(admin.a_password, password)) {
-      admin.type = "admin"
+    else if (ck_admin && await argon2.verify(ck_admin.a_password, password)) {
       const [tokens] = await conn.query(
         'SELECT * FROM tokens_a WHERE user_id=?',
-        [admin.admin_id]
+        [ck_admin.admin_id]
       )
       // Check if token already existed
       let token = tokens[0]?.token
       if (!token) {
-        const secretKey = "miraki";
         // Generate and save token into database
-        token = jwt.sign(admin, secretKey, { algorithm: 'HS256' });
-        await conn.query(
-          'INSERT INTO tokens_a(user_id, token) VALUES (?, ?)',
-          [admin.admin_id, token]
-        )
+        token = await generatetoken("admin", ck_admin.admin_id)
+        await conn.query('INSERT INTO tokens_a(user_id, token) VALUES (?, ?)', [ck_admin.admin_id, token])
       }
       conn.commit()
       res.status(200).json({ 'token': token })
     }
-    // else {
-    //   throw new Error('Incorrect username or password')
-    // }
+    else {
+      throw new Error('Incorrect password')
+    }
 
   } catch (error) {
     conn.rollback()
+    next(error)
     res.status(400).json(error.toString())
   } finally {
     conn.release()
   }
 });
+
+
+
 router.post("/forgot-password", async function (req, res, next) {
   try {
     const [check_customer] = await pool.query("select * from customer where c_email = ?", [req.body.email])
@@ -217,11 +226,11 @@ router.put("/ResetPassword/:token/", async function (req, res, next) {
         const [admin] = await conn.query("select admin_id, a_username from admin where a_email = ?", [decoded])
         if (customer[0]) {
           await conn.query("update customer set c_password = ? where customer_id = ?", [password, customer[0].customer_id])
-          await conn.query("DELETE FROM tokens_c WHERE user_id = ?",[customer[0].customer_id])
+          await conn.query("DELETE FROM tokens_c WHERE user_id = ?", [customer[0].customer_id])
         }
         else if (admin[0]) {
           await conn.query("update admin set a_password = ? where admin_id = ?", [password, admin[0].a_username])
-          await conn.query("DELETE FROM tokens_a WHERE user_id = ?",[admin[0].a_username])
+          await conn.query("DELETE FROM tokens_a WHERE user_id = ?", [admin[0].a_username])
         }
         conn.commit()
         res.send("success")

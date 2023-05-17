@@ -37,20 +37,22 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
   await conn.beginTransaction()
   try {
     if (req.user.type == 'customer') {
+      
       await conn.query(`UPDATE CUSTOMER SET c_username = ?, c_first_name = ?, c_last_name = ?,\
     c_address = ?, c_email = ?, c_phone = ? where customer_id = ?`, [req.body.username, req.body.fname,
       req.body.lname, req.body.address, req.body.email, req.body.phonenumber, req.user.customer_id]);
+      
       const [customer] = await conn.query(`select * from customer  where customer_id = ${req.user.customer_id}`)
       customer[0].type = "customer"
-      const secretKey = "miraki";
-      token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
-      await conn.query(
-        'update tokens_c set token = ? where user_id = ?',
-        [token, customer[0].customer_id]
-      )
+      // const secretKey = "miraki";
+      // token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
+      // await conn.query(
+      //   'update tokens_c set token = ? where user_id = ?',
+      //   [token, customer[0].customer_id]
+      // )
       conn.commit()
-      console.log("success")
-      res.send(token)
+      console.log("update success")
+      res.send("update success")
     }
     else if (req.user.type == 'admin') {
       await conn.query(`UPDATE admin SET a_username = ?, a_first_name = ?, a_last_name = ?,\
@@ -58,15 +60,15 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
       req.body.lname, req.body.address, req.body.email, req.body.phonenumber, req.user.admin_id]);
       const [admin] = await conn.query(`select * from admin where admin_id = ${req.user.admin_id}`)
       admin[0].type = "admin"
-      const secretKey = "miraki";
-      token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
-      await conn.query(
-        'update tokens_a set token = ? where user_id = ?',
-        [token, admin[0].admin_id,]
-      )
+      // const secretKey = "miraki";
+      // token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
+      // await conn.query(
+      //   'update tokens_a set token = ? where user_id = ?',
+      //   [token, admin[0].admin_id,]
+      // )
       conn.commit()
-      console.log("success")
-      res.send(token)
+      console.log("update success")
+      res.send("update success")
     }
   } catch (err) {
     conn.rollback()
@@ -86,29 +88,29 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
       await conn.query(`UPDATE CUSTOMER SET c_image = ? where customer_id = ?`, [file.filename, req.user.customer_id])
       const [customer] = await conn.query(`select * from customer  where customer_id = ${req.user.customer_id}`)
       customer[0].type = "customer"
-      const secretKey = "miraki";
-      token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
-      await conn.query(
-        'update tokens_c set token = ? where user_id = ?',
-        [token, customer[0].customer_id]
-      )
+      // const secretKey = "miraki";
+      // token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
+      // await conn.query(
+      //   'update tokens_c set token = ? where user_id = ?',
+      //   [token, customer[0].customer_id]
+      // )
       conn.commit()
       console.log("success")
-      res.send(token)
+      res.status(200).send("update success")
     }
     if (req.user.type == 'admin') {
       await conn.query(`UPDATE admin SET a_image = ? where admin_id = ?`, [file.filename, req.user.admin_id])
       const [admin] = await conn.query(`select * from admin where admin_id = ${req.user.admin_id}`)
       admin[0].type = "admin"
-      const secretKey = "miraki";
-      token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
-      await conn.query(
-        'update tokens_a set token = ? where user_id = ?',
-        [token, admin[0].admin_id,]
-      )
+      // const secretKey = "miraki";
+      // token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
+      // await conn.query(
+      //   'update tokens_a set token = ? where user_id = ?',
+      //   [token, admin[0].admin_id,]
+      // )
       conn.commit()
       console.log("success")
-      res.send(token)
+      res.status(200).send("update success")
     }
 
   } catch (err) {

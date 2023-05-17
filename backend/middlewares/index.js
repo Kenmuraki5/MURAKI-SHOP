@@ -20,9 +20,22 @@ async function isLoggedIn(req, res, next) {
     if (!token_c && !token_a) {
         return res.status(401).send('You are not logged in')
     }
-
+    if(token_c){
+        const [user1] = await pool.query(
+            'SELECT * FROM customer WHERE customer_id = ?', [token_c.user_id]
+        )
+        user1[0].type = "customer"
+        req.user = user1[0];
+    }
+    else if(token_a){
+        const [user2] = await pool.query(
+            'SELECT * FROM admin WHERE admin_id = ?', [token_a.user_id]
+        )
+        user2[0].type = "admin"
+        req.user = user2[0];
+    }
     // Set user
-    req.user = jwt.verify(part2, "miraki");
+    // req.user = jwt.verify(part2, "miraki");
     next()
 }
 

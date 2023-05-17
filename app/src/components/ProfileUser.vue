@@ -97,7 +97,8 @@ export default {
             formData.append("img", this.file);
             axios.put(`http://localhost:3000/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
-                    this.$store.commit('login',[res.data])
+                    console.log(res.data)
+                    // this.$store.commit('login',[res.data])
                     location.reload()
                 })
                 .catch((err) => { console.log(err) })
@@ -155,7 +156,6 @@ export default {
                     .then((res) => {
                         alert("update success")
                         console.log(res.data)
-                        this.$store.commit('login',[res.data])
                     })
                     .catch((err) => { console.log(err) })
             }
