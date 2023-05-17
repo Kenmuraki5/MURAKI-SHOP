@@ -25,7 +25,7 @@
                         </div>
                         <div class="flex">
                             <span class="title-font font-medium text-2xl text-gray-900">฿ {{ products.book_price }}</span>
-                            <button
+                            <button v-if="products.in_stock > 0"
                                 class="flex ml-auto text-white bg-red-500 border-0 py-2 px-6 focus:outline-none hover:bg-red-600 rounded"
                                 @click="addtoCart(products)">Button</button>
 
@@ -122,7 +122,7 @@ export default {
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },
         removefromCart(value) {
-            this.cart[this.cart.indexOf(value)].quantity-- == 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
+            this.cart[this.cart.indexOf(value)].quantity-- <= 1 ? this.cart.splice(this.cart.indexOf(value), 1) : 1
             // this.cart.splice(this.cart.indexOf(value), 1)
             localStorage.setItem("cart", JSON.stringify(this.cart))
         },

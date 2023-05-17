@@ -348,23 +348,9 @@ ALTER TABLE `tokens_c`
   ADD UNIQUE KEY `tokens_c_UN` (`token`) USING BTREE,
   ADD KEY `token_c_FK` (`user_id`) USING BTREE;
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `tokens_c`
---
 ALTER TABLE `tokens_c`
   MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1;
 
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `tokens_c`
---
 ALTER TABLE `tokens_c`
   ADD FOREIGN KEY (`user_id`) REFERENCES `Customer` (`customer_id`) ON DELETE CASCADE;
 COMMIT;
