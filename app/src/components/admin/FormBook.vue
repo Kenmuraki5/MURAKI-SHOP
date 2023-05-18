@@ -215,7 +215,7 @@ export default {
             if (!this.author && this.author !== -1 || (this.author == -1 && !this.newAuthor)) {
                 errors.push('Author is something wrong.')
             }
-            if (this.author == 'x' && !this.newAuthorAlias) {
+            if (this.author == '-1' && !this.newAuthorAlias) {
                 errors.push('Author alias is something wrong.')
             }
             if (!this.selectedGenres.length) {

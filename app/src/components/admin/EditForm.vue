@@ -35,18 +35,14 @@ export default {
             formData.append("publisherDate", book.publisherDate)
             if (book.publisher == -1) {
                 formData.append("publisher", book.newPublisher)
-                formData.append("newPublisher", 1)
             } else {
                 formData.append("publisher", book.publisher)
-                formData.append("newPublisher", 0)
             }
             if (book.author == -1) {
                 formData.append("author", book.newAuthor)
                 formData.append("newAuthorAlias", book.newAuthorAlias)
-                formData.append("newAuthor", 1)
             } else {
                 formData.append("author", book.author)
-                formData.append("newAuthor", 0)
             }
             formData.append("genres", book.selectedGenres)
             formData.append("image", book.image)
@@ -60,7 +56,10 @@ export default {
                 console.log(res.data)
                 this.$emit('book', null);
             })
-                .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err)
+                alert("Edit Book Failed")
+            })
         },
     },
 }

@@ -5,7 +5,6 @@ const { isLoggedIn } = require('../middlewares/index')
 
 router = express.Router();
 const multer = require('multer');
-const e = require("express");
 // SET STORAGE
 var storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -38,8 +37,6 @@ router.get("/CheckOut", async function (req, res, next) {
 
 router.post("/addPayment", isLoggedIn, upload.single('image'), async function (req, res, next) {
   const conn = await pool.getConnection()
-
-
   try {
     const cart = JSON.parse(req.body.cart)
     if (cart.length == 0) {
