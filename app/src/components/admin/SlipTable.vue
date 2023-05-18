@@ -42,7 +42,7 @@
                     <td class="px-6 py-4">
                         <button @click="showDetail(slip)">Show Detail</button>
                         <br>
-                        <div class="" v-if="slip.status_value != 'shipping' && slip.status_value != 'cancel'">
+                        <div class="" v-if="slip.status_value == 'pending'">
                             <button @click="approve(slip)">Approve</button>
                             <br>
                             <button @click="decline(slip)">Decline</button>
@@ -67,7 +67,7 @@
                                 }}฿
                             </p>
                         </div>
-                        <p><strong>Total price:</strong> {{ selectedSlip.total_price }}</p>
+                        <p><strong>Total price:</strong> {{ selectedSlip.total_price }} ฿</p>
                         <p><strong>Date:</strong> {{ selectedSlip.order_date }}</p>
                         <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4"
                             @click="closeDetailModal">Close</button>

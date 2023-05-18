@@ -1,7 +1,7 @@
 <template>
-    <section class="min-h-screen flex flex-col">
-        <div class="flex flex-1 items-center justify-center">
-            <div class="rounded-lg sm:border-2 px-4 lg:px-24 py-16 lg:max-w-xl sm:max-w-md w-full text-center">
+    <section class="min-h-screen flex flex-col ">
+        <div class="flex flex-1 items-center justify-center ">
+            <div class="rounded-lg sm:border-2 px-4 lg:px-24 py-16 lg:max-w-xl sm:max-w-md w-full text-center bg-white">
                 <section>
                     <h1 class="font-bold tracking-wider text-3xl mb-8 w-full text-gray-600">
                         {{ name }}
@@ -100,6 +100,7 @@
                             class="border-2 border-gray-100 focus:outline-none bg-purple-600 text-white font-bold tracking-wider block w-full p-2 rounded-lg focus:border-gray-700 hover:bg-purple-700">
                             Submit
                         </button>
+                        
                     </div>
                 </section>
             </div>
@@ -142,15 +143,13 @@ export default {
             image: this.fimage,
             imageName: this.fimageName,
             inStock: this.finStock,
-
-
-
             publisherList: null,
             authorList: null,
             genres: null,
             newPublisher: null,
             newAuthor: null,
             newAuthorAlias: null,
+            modal:false
         }
     },
     methods: {
@@ -158,6 +157,7 @@ export default {
             this.image = this.$refs.file.files[0];
             this.imageName = this.image.name
         },
+
         submitForm() {
             // emit a submit-form event with the form data
             this.$emit('submit-form', {
@@ -224,7 +224,7 @@ export default {
             if (!this.image) {
                 errors.push('Please upload file.')
             }
-            if (this.inStock < 0) {
+            if (this.inStock < 0 || !this.inStock) {
                 errors.push('Amount is something wrong.')
             }
             if (errors.length) {

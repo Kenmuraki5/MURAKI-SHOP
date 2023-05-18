@@ -23,6 +23,9 @@
                   : 'text-gray-300 hover:bg-gray-700 hover:text-white',
                 'px-3 py-2 rounded-md text-sm font-medium',
               ]" :aria-current="item.current ? 'page' : undefined">{{ item.name }}</RouterLink>
+            <router-link v-if="role == 'admin'" class="bg-gray-900 text-white text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium "  to="/AdminPage">
+              AdminPage
+            </router-link>
             </div>
           </div>
         </div>
@@ -121,10 +124,11 @@
             <div>
               <MenuButton
                 class="flex rounded-full  text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                <RouterLink to="/LoginPage" v-if="$store.state.token == ''" class="text-gray-200 hover:text-gray-200">Log in</RouterLink>
+                <RouterLink to="/LoginPage" v-if="$store.state.token == ''" class="text-gray-200 hover:text-gray-200">Log
+                  in</RouterLink>
                 <img v-else class="h-8 w-8 rounded-full"
                   :src="$store.state.image ? `http://localhost:3000/uploads/${$store.state.image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
-                  alt="Profile Image"/>
+                  alt="Profile Image" />
               </MenuButton>
             </div>
             <transition enter-active-class="transition ease-out duration-100"
@@ -173,6 +177,7 @@
 </template>
 
 <script setup>
+import axios from '@/plugins/axios'
 import { ref } from "vue";
 import {
   Dialog,
@@ -212,13 +217,13 @@ export default {
   name: "MainNavbar",
   data() {
     return {
-      
+      role: null
     }
   },
   props: {
     cart: Array,
     add: Function,
-    clear:Function,
+    clear: Function,
     remove: Function,
     totalPrice: Number,
     totalCart: Number,
@@ -228,6 +233,15 @@ export default {
     logout() {
       this.$store.commit("logout")
     }
+  },
+  created() {
+    axios.get(`http://localhost:3000/user/me`)
+      .then((res) => {
+        this.role = res.data.type
+      })
+      .catch((err) => {
+        console.log(err)
+      })
   }
 };
 </script>

@@ -1,4 +1,5 @@
 <template>
+
     <FormBook name="Edit Book" @submit-form="submit" fname="Edit Book" :fisbn=this.book.isbn :ftitle="this.book.book_name"
         :fprice="this.book.book_price" :fdescription="this.book.book_description" :fcategory="this.book.book_category"
         :fpublisherDate="this.book.publisher_date.slice(0, 10)" :fpublisher="this.book.publisher_id"

@@ -175,6 +175,20 @@ router.get('/allSlip/', async (req, res, next) => {
     }
 })
 
+router.get('/getAllCustomer/', async (req, res, next) => {
+
+    try {
+        // select * from payment join cust_order using(order_id) join order_line using(order_id)
+        const customers = await pool.query("")
+        res.json(customers[0])
+    } catch (err) {
+        next(err)
+    }
+    finally {
+        console.log('finally')
+    }
+})
+
 router.put('/approve/', async (req, res, next) => {
     const conn = await pool.getConnection()
     await conn.beginTransaction();
