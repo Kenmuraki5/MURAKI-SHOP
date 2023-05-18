@@ -54,7 +54,7 @@ const signupSchema = Joi.object({
   username: Joi.string().required().min(5).max(20).external(usernameValidator),
   password: Joi.string().required().custom(passwordValidator),
   confirm_password: Joi.string().required().valid(Joi.ref('password')),
-  email: Joi.string().required().external(emailValidator),
+  email: Joi.string().email().required().external(emailValidator),
   phonenumber: Joi.string().required().pattern(/0[0-9]{9}/),
   fname: Joi.string().required().max(150),
   lname: Joi.string().required().max(150),
@@ -169,24 +169,35 @@ router.post("/signin", async function (req, res, next) {
   }
 });
 
+const emailSchema = Joi.object({
+  email: Joi.string().email().required(),
+})
 
 
 router.post("/verification", async function (req, res, next) {
   try {
-    const [check_customer] = await pool.query("select c_email from customer where c_email = ?", [req.body.email])
-    const [check_admin] = await pool.query("select a_email from customer where c_email = ?", [req.body.email])
+    //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
+    await emailSchema.validateAsync(req.body, { abortEarly: false })
+  } catch (err) {
+    return res.status(400).json(err.toString())
+  }
+
+  try {
+    const [check_customer] = await pool.query("select customer_id from customer where c_email = ?", [req.body.email])
+    const [check_admin] = await pool.query("select admin_id from admin where a_email = ?", [req.body.email])
     if (!check_customer[0] && !check_admin[0]) {
       res.status(409).send("This email does not exist in the system.")
     }
-    else {
-      var transporter = nodemailer.createTransport({
+    else if(check_customer[0]){
+      const transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
           user: 'murakishopp@gmail.com',
           pass: 'vuxjtsqgsipzdobh'
         }
       });
-      var token = jwt.sign(req.body.email, "hangessapwodr", { algorithm: 'HS256' });
+      check_customer[0].type = "customer"
+      const token = jwt.sign(check_customer[0], "hangessapwodr", {expiresIn: 180000});
       var mailOptions = {
         from: 'murakishopp@gmail.com',
         to: req.body.email,
@@ -203,12 +214,35 @@ router.post("/verification", async function (req, res, next) {
         }
       });
     }
-
+    else if(check_admin[0]){
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: 'murakishopp@gmail.com',
+          pass: 'vuxjtsqgsipzdobh'
+        }
+      });
+      check_admin[0].type = "admin"
+      const token = jwt.sign(check_admin[0], "@hangessapwodradf/>>.afdfa@12murakicomic", {expiresIn: 180000});
+      var mailOptions = {
+        from: 'murakishopp@gmail.com',
+        to: req.body.email,
+        subject: 'Password Reset',
+        text: "http://localhost:8080/ResetPassword/" + token
+      };
+      transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+          console.log(error);
+          res.status(400).send("error")
+        } else {
+          console.log('Email sent: ' + info.response);
+          res.send("success")
+        }
+      });
+    }
   } catch (error) {
     next(error)
   }
-  // console.log(req.body)
-  // res.send("heello")
 })
 
 
@@ -224,26 +258,24 @@ router.put("/ResetPassword/:token/", async function (req, res, next) {
   } catch (err) {
     return res.status(400).json(err.toString())
   }
-
-  const conn = await pool.getConnection()
-  await conn.beginTransaction()
-  jwt.verify(req.params.token, "hangessapwodr", async function (err, decoded) {
+  jwt.verify(req.params.token, "@hangessapwodradf/>>.afdfa@12murakicomic", async function (err, decoded) {
     if (err) {
       console.log('JWT verification failed:', err.message);
-      res.status(400).send("you cannot change password")
-    } else {
-      console.log('JWT verification succeeded:', decoded);
+      res.status(400).send("you cannot change password : "+ err.message)
+    }
+    else {
+      console.log('JWT verification succeeded:', decoded.email);
+      const conn = await pool.getConnection()
+      await conn.beginTransaction()
       try {
         const password = await argon2.hash(req.body.password)
-        const [customer] = await conn.query("select customer_id, c_username from customer where c_email = ?", [decoded])
-        const [admin] = await conn.query("select admin_id, a_username from admin where a_email = ?", [decoded])
-        if (customer[0]) {
-          await conn.query("update customer set c_password = ? where customer_id = ?", [password, customer[0].customer_id])
+        if (decoded.type == "customer") {
+          await conn.query("update customer set c_password = ? where customer_id = ?", [password, decoded.customer_id])
           await conn.query("DELETE FROM tokens_c WHERE user_id = ?", [customer[0].customer_id])
         }
-        else if (admin[0]) {
-          await conn.query("update admin set a_password = ? where admin_id = ?", [password, admin[0].a_username])
-          await conn.query("DELETE FROM tokens_a WHERE user_id = ?", [admin[0].a_username])
+        else if (decoded.type == "admin") {
+          await conn.query("update admin set a_password = ? where admin_id = ?", [password, decoded.admin_id])
+          await conn.query("DELETE FROM tokens_a WHERE user_id = ?", [admin[0].admin_id])
         }
         conn.commit()
         res.send("success")
@@ -256,6 +288,7 @@ router.put("/ResetPassword/:token/", async function (req, res, next) {
     }
   });
 })
+
 router.get('/user/me', isLoggedIn, async function (req, res, next) {
   try {
     console.log(req.user)
