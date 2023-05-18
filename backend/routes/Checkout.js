@@ -53,25 +53,30 @@ router.post("/addPayment", isLoggedIn, upload.single('image'), async function (r
     }
     await conn.beginTransaction();
 
-
-    let addOrder = await conn.query("INSERT INTO cust_order \
+    if (req.user.type == "customer") {
+      let addOrder = await conn.query("INSERT INTO cust_order \
     (order_date, customer_id, shipping_id, address, total_price, status_value) value(current_timestamp(),?,?,?,?,'pending')",
-      [req.user.customer_id, req.body.shipping, req.body.address, req.body.totalPrice]);
-    cart.forEach(item => {
-      let addOrderLine = conn.query('insert into order_line (order_id, isbn, quantity, price) value (?,?,?,?)',
-        [addOrder[0].insertId, item.isbn, item.quantity, item.quantity * item.book_price])
-      let updateBook = conn.query('update book set in_stock = in_stock - ? where isbn = ?',
-        [item.quantity, item.isbn])
-    });
+        [req.user.customer_id, req.body.shipping, req.body.address, req.body.totalPrice]);
+      cart.forEach(item => {
+        let addOrderLine = conn.query('insert into order_line (order_id, isbn, quantity, price) value (?,?,?,?)',
+          [addOrder[0].insertId, item.isbn, item.quantity, item.quantity * item.book_price])
+        let updateBook = conn.query('update book set in_stock = in_stock - ? where isbn = ?',
+          [item.quantity, item.isbn])
+      });
 
-    let addSlip = await conn.query('insert into payment (order_id, payment_status, slip_img) value (?,?,?)',
-      [addOrder[0].insertId, 'pending', req.file.filename])
+      let addSlip = await conn.query('insert into payment (order_id, payment_status, slip_img) value (?,?,?)',
+        [addOrder[0].insertId, 'pending', req.file.filename])
+    }
+    else if(req.user.type == "admin"){
+      return res.status(409).send("You are not customer")
+    }
 
-    await conn.commit()
+
+    conn.commit()
     res.json("success!")
   }
   catch (err) {
-    await conn.rollback();
+    conn.rollback();
     next(err)
   }
   finally {
