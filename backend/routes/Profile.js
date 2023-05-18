@@ -7,6 +7,7 @@ router = express.Router();
 // Require multer for file upload
 const multer = require('multer');
 const { isLoggedIn } = require("../middlewares");
+const { sendEmail } = require("../middlewares/sendemail");
 
 
 // SET STORAGE
@@ -44,6 +45,19 @@ const usernameValidator = async (value, helpers) => {
   return value
 }
 
+const emailValidator = async (value, helpers) => {
+  const [customer, _] = await pool.query("select c_email from Customer where c_email = ?", [value])
+  const [admin] = await pool.query(`select a_email from Admin where a_email = ?`, [value])
+  if (customer.length > 0 || admin.length > 0) {
+    throw new Joi.ValidationError('This email is already taken')
+  }
+  return value
+}
+
+const emailSchema = Joi.object({
+  email: Joi.string().email().required().external(emailValidator),
+})
+
 const signupSchema = Joi.object({
   username: Joi.string().optional().min(5).max(20).external(usernameValidator),
   phonenumber: Joi.string().required().pattern(/0[0-9]{9}/),
@@ -71,8 +85,11 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
     }
     await signupSchema.validateAsync(req.body, { abortEarly: false })
   } catch (err) {
+    conn.rollback()
     console.log(err.message)
     return res.status(400).send(err.message)
+  } finally{
+    conn.release()
   }
 
   try {
@@ -154,4 +171,42 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
     console.log("finally")
   }
 });
+
+router.get("/changeemail", isLoggedIn, sendEmail, async function (req, res, next) {
+  try {
+    res.send(req.otp)
+  } catch (error) {
+    next(error)
+  }
+});
+
+router.put("/changeemail", isLoggedIn, async function (req, res, next) {
+  try {
+    //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
+    await emailSchema.validateAsync(req.body, { abortEarly: false })
+  } catch (err) {
+    return res.status(400).json(err.toString())
+  }
+  const conn = await pool.getConnection()
+  await conn.beginTransaction()
+  try {
+    if(req.user.type == "customer"){
+      await conn.query("update customer set c_email = ? where customer_id = ?", [req.body.email, req.user.customer_id])
+    }
+    else if (req.user.type == "admin"){
+      await conn.query("update admin set a_email = ? where admin_id = ?", [req.body.email, req.user.admin_id])
+    }
+    conn.commit()
+    res.send(req.body.email)
+  } catch (error) {
+    conn.rollback()
+    next(error)
+    res.status(409).send(error.message)
+  } finally{
+    conn.release()
+    console.log("finally")
+  }
+});
+
+
 exports.router = router;

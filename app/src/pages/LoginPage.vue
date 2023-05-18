@@ -48,6 +48,8 @@
 <script>
 import axios from '@/plugins/axios'
 import MainNavbar from '../components/Navbar.vue'
+import swal from 'sweetalert';
+
 export default {
     components: {
         MainNavbar,
@@ -92,11 +94,22 @@ export default {
                     'Content-Type': 'application/json'
                 }
             }).then((response) => {
-                this.$store.commit('login', [response.data.token])
-                this.$store.commit('getprofileuser')
-                this.$router.push({ name: "HomePage" })
+                swal({
+                    title: "Login success!",
+                    icon: "success",
+                }).then(() => {
+                    this.$store.commit('login', [response.data.token])
+                    this.$store.commit('getprofileuser')
+                    this.$router.push({ name: "HomePage" })
+                });
+
             }).catch((error) => {
-                alert(error.response.data)
+                swal({
+                    title: "Error!",
+                    text: error.response.data,
+                    icon: "warning",
+                    dangerMode: true,
+                })
             });
         },
     },

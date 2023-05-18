@@ -53,7 +53,7 @@
                         <div class="col-md-12 py-2"><label class="labels font-medium">Email</label>
                             <p class="control">{{ email }}
                             </p>
-                            <a class="underline text-blue-600 cursor-pointer" @click="changeemail()">change email</a>
+                            <a class="underline text-blue-600 cursor-pointer" @click="verifyemail()">change email</a>
                         </div>
                     </div>
                     <button v-if="showsubmit"
@@ -73,6 +73,7 @@
 </template>
 <script>
 import axios from '@/plugins/axios'
+import swal from 'sweetalert';
 
 export default {
     name: "ProfileUser",
@@ -167,10 +168,64 @@ export default {
                     .catch((err) => { alert(err.response.data) })
             }
         },
-        changeemail(){
-            let route = this.$router.resolve({path: '/VerificationUser'});
-            // let route = this.$router.resolve('/link/to/page'); // This also works.
-            window.open(route.href, '_blank');
+        changeemail() {
+            swal("Please new email:", {
+                content: "input",
+            })
+                .then((value) => {
+                    if (value == this.email) {
+                        swal({
+                            title: "change mail success!",
+                            icon: "success",
+                        });
+                    }
+                    else {
+                        axios.put(`http://localhost:3000/changeemail/`, { email: value })
+                            .then((res) => {
+
+                                this.email = res.data
+                            })
+                            .catch((err) => {
+                                swal({
+                                    title: "Error?",
+                                    text: err.response.data,
+                                    icon: "warning",
+                                    dangerMode: true,
+                                })
+                            })
+                    }
+
+                });
+        },
+        verifyemail() {
+            swal({
+                title: "mail send success!",
+                text: "Please check your mail!",
+                icon: "success",
+            });
+            axios.get(`http://localhost:3000/changeemail/`)
+                .then((res) => {
+                    swal("Please enter your otp:", {
+                        content: "input",
+                    })
+                        .then((value) => {
+                            if (res.data == value) {
+                                alert("success")
+                                this.changeemail()
+                            }
+                            else {
+                                swal("otp invalid")
+                            }
+                        });
+                })
+                .catch((err) => {
+                    swal({
+                        title: "Error",
+                        text: err.response.data,
+                        icon: "warning",
+                        dangerMode: true,
+                    })
+                })
         }
     },
     created() {

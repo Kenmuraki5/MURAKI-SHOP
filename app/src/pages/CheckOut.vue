@@ -127,6 +127,9 @@
 import MainNavbar from '../components/Navbar.vue'
 import MainFooter from '../components/MainFooter.vue'
 import axios from '@/plugins/axios'
+import swal from 'sweetalert';
+
+
 export default {
     components: {
         MainFooter,
@@ -183,12 +186,19 @@ export default {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
-            }).then(res => {
+            }).then((res) => {
                 console.log(res)
                 localStorage.removeItem("cart")
-                alert("payment success")
+                swal("Payment success!", "thank you very much!", "success");
                 this.$router.push("/")
-            }).catch(err => alert(err.response.data))
+            }).catch((err) => {
+                swal({
+                    title: "Error",
+                    text: err.response.data,
+                    icon: "warning",
+                    dangerMode: true,
+                })
+            })
         },
         addtoCart(value) {
 
