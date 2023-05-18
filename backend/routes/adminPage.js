@@ -1,6 +1,8 @@
 const express = require("express");
 const path = require("path")
 const pool = require("../config/db.config");
+const Joi = require('joi');
+
 router = express.Router();
 
 // Require multer for file upload
@@ -32,18 +34,25 @@ router.get("/formBook", async function (req, res, next) {
 });
 
 router.post('/addBook', upload.single('image'), async function (req, res, next) {
+    const { error } = bookSchema.validate(req.body);
+    if (error) {
+        const errors = error.details.map((detail) => detail.message);
+        console.log(errors);
+    } else {
+        console.log('Validation passed successfully.');
+    }
     const form = req.body
     const image = req.file.filename
     const conn = await pool.getConnection()
     await conn.beginTransaction();
-    console.log(form)
     try {
-        if (form.newPublisher == 1) {
+        if (isNaN(parseFloat(form.publisher))) {
             let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
                 [form.publisher])
             form.publisher = insertPublisher[0].insertId
         }
-        if (form.newAuthor == 1) {
+
+        if (isNaN(parseFloat(form.author))) {
             let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
                 [form.author, form.newAuthorAlias])
             form.author = insertAuthor[0].insertId
@@ -57,10 +66,14 @@ router.post('/addBook', upload.single('image'), async function (req, res, next) 
         let insertBookAuthor = await conn.query('INSERT INTO `Book_Author` (isbn,author_id) value(?,?)',
             [form.isbn, form.author])
         await conn.commit()
-        res.json("success!")
+        return res.json("success!")
     }
     catch (err) {
+
         await conn.rollback();
+        return res.status(409).json({
+            message: "Add Book Failed"
+        })
         next(err)
     }
     finally {
@@ -91,23 +104,29 @@ router.get("/editBook", async function (req, res, next) {
 // POST - create new blog with single upload file
 
 router.put("/editBook", upload.single('image'), async function (req, res, next) {
+    const { error } = bookSchema.validate(req.body);
+    if (error) {
+        const errors = error.details.map((detail) => detail.message);
+        console.log(errors);
+    } else {
+        console.log('Validation passed successfully.');
+    }
     const form = req.body;
     const image = req.file.filename;
     const conn = await pool.getConnection()
     await conn.beginTransaction();
-    console.log(req.body)
-    console.log(image)
     try {
         if (image != "sameasbefore.png") {
             await conn.query('update book set book_img = ? where isbn = ?',
                 [image, form.oldIsbn])
         }
-        if (form.newPublisher == 1) {
+        if (isNaN(parseFloat(form.publisher))) {
             let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
                 [form.publisher])
             form.publisher = insertPublisher[0].insertId
         }
-        if (form.newAuthor == 1) {
+
+        if (isNaN(parseFloat(form.author))) {
             let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
                 [form.author, form.newAuthorAlias])
             form.author = insertAuthor[0].insertId
@@ -122,9 +141,12 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
         let insertBookAuthor = await conn.query('update `Book_Author` set author_id = ? where isbn = ?',
             [form.author, form.isbn])
         await conn.commit()
-        res.json("success!")
+        return res.json("success!")
     } catch (err) {
         await conn.rollback();
+        return res.status(409).json({
+            message: "Has same ISBN"
+        })
         next(err)
     }
     finally {
@@ -219,7 +241,7 @@ router.put('/decline/', async (req, res, next) => {
     try {
         await conn.query('update payment set payment_status = "cancel" WHERE order_id = ?', [req.body.order_id])
         await conn.query('update cust_order set status_value = "cancel" WHERE order_id = ?', [req.body.order_id])
-        isbn.forEach(async (x,index)=>{
+        isbn.forEach(async (x, index) => {
             await conn.query('update book set in_stock = in_stock+? WHERE isbn = ?', [quantity[index], x])
 
         })
@@ -235,4 +257,62 @@ router.put('/decline/', async (req, res, next) => {
         conn.release();
     }
 })
+
+
+const bookSchema = Joi.object({
+    isbn: Joi.string().length(13).required().messages({
+      'string.base': 'ISBN must be a string.',
+      'string.length': 'ISBN length must be 13 characters.',
+      'any.required': 'ISBN is required.',
+    }),
+    title: Joi.string().required().messages({
+      'string.base': 'Title must be a string.',
+      'any.required': 'Title is required.',
+    }),
+    price: Joi.number().min(0).required().messages({
+      'number.base': 'Price must be a number.',
+      'number.min': 'Price cannot be negative.',
+      'any.required': 'Price is required.',
+    }),
+    description: Joi.string().required().messages({
+      'string.base': 'Description must be a string.',
+      'any.required': 'Description is required.',
+    }),
+    category: Joi.string().required().messages({
+      'string.base': 'Category must be a string.',
+      'any.required': 'Category is required.',
+    }),
+    publisher: Joi.alternatives().try(
+      Joi.string().required(),
+      Joi.number().valid(-1).required(),
+    ).messages({
+      'any.required': 'Publisher is required.',
+    }),
+    publisherDate: Joi.string().required().messages({
+      'string.base': 'Publisher date must be a string.',
+      'any.required': 'Publisher date is required.',
+    }),
+    author: Joi.alternatives().try(
+      Joi.string().required(),
+      Joi.number().valid(-1).required(),
+    ).messages({
+      'any.required': 'Author is required.',
+    }),
+    newAuthorAlias: Joi.string().when('author', {
+      is: '-1',
+      then: Joi.required().messages({
+        'string.base': 'Author alias must be a string.',
+        'any.required': 'Author alias is required.',
+      }),
+    }),
+    genres: Joi.required().messages({
+      'any.required': 'At least one genre must be selected.',
+    }),
+    inStock: Joi.number().min(0).required().messages({
+      'number.base': 'Amount must be a number.',
+      'number.min': 'Amount cannot be negative.',
+      'any.required': 'Amount is required.',
+    }),
+  });
+
 exports.router = router;
