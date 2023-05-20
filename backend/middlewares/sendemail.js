@@ -1,9 +1,7 @@
-const pool = require("../config/db.config");
-const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer');
 
-function sendEmail(req, res, next) {
+function sendotp(req, res, next) {
     var email
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
     if(req.user.type == "customer"){
@@ -38,5 +36,5 @@ function sendEmail(req, res, next) {
 }
 
 module.exports = {
-    sendEmail
+    sendotp
 }

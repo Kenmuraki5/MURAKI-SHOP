@@ -60,10 +60,13 @@
             aliquam sequi voluptate quas.
           </p>
         </div>
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-4">
+        <div class="flex justify-center mb-3"><img src="https://www.ppro.com/wp-content/uploads/2021/06/PromptPay-logo.png" alt="cards" width="238.67px" height="24.36px"></div>
+        <p class="font-bold uppercase">
+          MURAKI COMIC LTD.
+        </p>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3">
           <div class="mb-6">
-            <h5 class="mb-2.5 font-bold uppercase">Links</h5>
+            <!-- <h5 class="mb-2.5 font-bold uppercase">Links</h5>
 
             <ul class="mb-0 list-none">
               <li>
@@ -78,7 +81,7 @@
               <li>
                 <a href="#!" class="text-white">Link 4</a>
               </li>
-            </ul>
+            </ul> -->
           </div>
         </div>
       </div>

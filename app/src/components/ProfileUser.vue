@@ -53,7 +53,7 @@
                         <div class="col-md-12 py-2"><label class="labels font-medium">Email</label>
                             <p class="control">{{ email }}
                             </p>
-                            <a class="underline text-blue-600 cursor-pointer" @click="verifyemail()">change email</a>
+                            <a class="underline text-blue-600 cursor-pointer" @click="sendOtp()">change email</a>
                         </div>
                     </div>
                     <button v-if="showsubmit"
@@ -109,20 +109,22 @@ export default {
                 .catch((err) => { console.log(err) })
         },
         editprofile() {
-            let person = prompt("Please enter your password:", "");
-            axios.get("http://localhost:3000/verifyuser", { params: { password: person } })
-                .then((res) => {
-                    if (res.data) {
-                        this.showsubmit = false
-                    }
-                    else if (person == "" || person == null) {
-                        this.showsubmit = true
-                    }
-                    else {
-                        alert("password is invalid")
-                    }
-                })
-                .catch(err => console.log(err))
+            swal("Please enter your otp:", {
+                content: "input",
+                buttons: true,
+            })
+                .then((value) => {
+                    axios.get("http://localhost:3000/verifyuser", { params: { password: value } })
+                        .then((res) => {
+                            if (res.data) {
+                                this.showsubmit = false
+                            }
+                            else {
+                                alert("password is invalid")
+                            }
+                        })
+                        .catch(err => console.log(err))
+                });
         },
         submit() {
             if (!this.name) {
@@ -168,55 +170,64 @@ export default {
                     .catch((err) => { alert(err.response.data) })
             }
         },
-        changeemail() {
-            swal("Please new email:", {
+        changeemail(otp) {
+            swal("Please enter your otp:", {
                 content: "input",
+                buttons: true,
             })
                 .then((value) => {
-                    if (value == this.email) {
-                        swal({
-                            title: "change mail success!",
-                            icon: "success",
-                        });
-                    }
-                    else {
-                        axios.put(`http://localhost:3000/changeemail/`, { email: value })
+                    if (value) {
+                        axios.post("http://localhost:3000/verifyOtp/", { otp: otp, ck_otp: value })
                             .then((res) => {
-
-                                this.email = res.data
+                                console.log(res.data)
                             })
                             .catch((err) => {
-                                swal({
+                                return swal({
                                     title: "Error?",
                                     text: err.response.data,
                                     icon: "warning",
                                     dangerMode: true,
                                 })
                             })
-                    }
+                        swal("Please new email:", {
+                            content: "input",
+                        })
+                            .then((value) => {
+                                if (value == this.email) {
+                                    swal({
+                                        title: "change mail success!",
+                                        icon: "success",
+                                    });
+                                }
+                                else {
+                                    axios.put(`http://localhost:3000/changeemail/`, { email: value })
+                                        .then((res) => {
 
+                                            this.email = res.data
+                                        })
+                                        .catch((err) => {
+                                            swal({
+                                                title: "Error?",
+                                                text: err.response.data,
+                                                icon: "warning",
+                                                dangerMode: true,
+                                            })
+                                        })
+                                }
+
+                            });
+                    }
                 });
         },
-        verifyemail() {
+        sendOtp() {
             swal({
                 title: "mail send success!",
                 text: "Please check your mail!",
                 icon: "success",
             });
-            axios.get(`http://localhost:3000/changeemail/`)
+            axios.get(`http://localhost:3000/sendOtp/`)
                 .then((res) => {
-                    swal("Please enter your otp:", {
-                        content: "input",
-                    })
-                        .then((value) => {
-                            if (res.data == value) {
-                                alert("success")
-                                this.changeemail()
-                            }
-                            else {
-                                swal("otp invalid")
-                            }
-                        });
+                    this.changeemail(res.data)
                 })
                 .catch((err) => {
                     swal({

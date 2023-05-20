@@ -7,7 +7,7 @@ router = express.Router();
 // Require multer for file upload
 const multer = require('multer');
 const { isLoggedIn } = require("../middlewares");
-const { sendEmail } = require("../middlewares/sendemail");
+const { sendotp } = require("../middlewares/sendemail");
 
 
 // SET STORAGE
@@ -69,17 +69,17 @@ const signupSchema = Joi.object({
 router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
-  
+
   try {
-    if (req.body.username && req.user.type == "customer"){
+    if (req.body.username && req.user.type == "customer") {
       const [check_customer] = await conn.query("select * from customer where customer_id = ? and c_username = ?", [req.user.customer_id, req.body.username])
-      if(check_customer[0]){
+      if (check_customer[0]) {
         delete req.body.username
       }
     }
-    else if (req.body.username && req.user.type == "admin"){
-      const [check_username] = await conn.query("select * from customer where admin_id = ? and a_username = ?", [req.user.admin_id, req.body.username])
-      if(check_username[0]){
+    else if (req.body.username && req.user.type == "admin") {
+      const [check_username] = await conn.query("select * from admin where admin_id = ? and a_username = ?", [req.user.admin_id, req.body.username])
+      if (check_username[0]) {
         delete req.body.username
       }
     }
@@ -88,7 +88,7 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
     conn.rollback()
     console.log(err.message)
     return res.status(400).send(err.message)
-  } finally{
+  } finally {
     conn.release()
   }
 
@@ -96,48 +96,53 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
     const secretKey = "miraki";
     let token
     if (req.user.type == 'customer') {
-      
+
       await conn.query(`UPDATE CUSTOMER SET c_first_name = ?, c_last_name = ?,\
     c_address = ?, c_phone = ? where customer_id = ?`, [req.body.fname,
       req.body.lname, req.body.address, req.body.phonenumber, req.user.customer_id]);
-    
-      if(req.body.username){
+
+      if (req.body.username) {
         await conn.query(`UPDATE CUSTOMER SET c_username = ? where customer_id = ?`, [req.body.username, req.user.customer_id]);
-        
+
         const [customer] = await conn.query(`select customer_id from customer  where customer_id = ?`,
-        [req.user.customer_id])
+          [req.user.customer_id])
         customer[0].type = "customer"
         token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
         await conn.query(
           'update tokens_c set token = ? where user_id = ?',
-          [token,req.user.customer_id,]
+          [token, req.user.customer_id,]
         )
       }
       conn.commit()
       console.log("update success")
-      res.json({status:"update success", token:token || ""})
+      res.json({ status: "update success", token: token || "" })
     }
     else if (req.user.type == 'admin') {
+      console.log()
       await conn.query(`UPDATE admin SET a_first_name = ?, a_last_name = ?,\
     a_address = ?, a_phone = ? where admin_id = ?`, [req.body.fname,
       req.body.lname, req.body.address, req.body.phonenumber, req.user.admin_id]);
 
-      if(req.body.username){
+      if (req.body.username) {
         await conn.query(`UPDATE CUSTOMER SET a_username = ? where admin_id = ?`, [req.body.username, req.user.admin_id]);
-        
+
         const [admin] = await conn.query(`select admin_id from admin  where admin_id = ?`,
-        [req.user.admin_id])
+          [req.user.admin_id])
         admin[0].type = "admin"
         token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
+        await conn.query(
+          'update tokens_a set token = ? where user_id = ?',
+          [token, req.user.admin_id,]
+        )
       }
       conn.commit()
       console.log("update success")
-      res.json({status:"update success", token:token||""})
+      res.json({ status: "update success", token: token || "" })
     }
   } catch (err) {
     conn.rollback()
     return next(err)
-  } finally{
+  } finally {
     conn.release()
     console.log("finally")
   }
@@ -172,15 +177,33 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
   }
 });
 
-router.get("/changeemail", isLoggedIn, sendEmail, async function (req, res, next) {
+router.get("/sendOtp", isLoggedIn, sendotp, async function (req, res, next) {
   try {
-    res.send(req.otp)
+    const otp = await argon2.hash(req.otp)
+    console.log(otp)
+    res.send(otp)
   } catch (error) {
     next(error)
+    res.status(400).send(error.message)
+  }
+});
+
+router.post("/verifyOtp", isLoggedIn, async function (req, res, next) {
+  try {
+    console.log(req.body)
+    if (await argon2.verify(req.body.otp, req.body.ck_otp)) {
+      res.send("success");
+    } else {
+      res.status(400).json('Invalid OTP');
+    }
+  } catch (error) {
+    next(error)
+    res.status(400).send(error.message)
   }
 });
 
 router.put("/changeemail", isLoggedIn, async function (req, res, next) {
+  const secretKey = "miraki";
   try {
     //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
     await emailSchema.validateAsync(req.body, { abortEarly: false })
@@ -190,11 +213,27 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
   const conn = await pool.getConnection()
   await conn.beginTransaction()
   try {
-    if(req.user.type == "customer"){
+    if (req.user.type == "customer") {
       await conn.query("update customer set c_email = ? where customer_id = ?", [req.body.email, req.user.customer_id])
+      const [customer] = await conn.query(`select customer_id from customer  where customer_id = ?`,
+        [req.user.customer_id])
+      customer[0].type = "customer"
+      token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
+      await conn.query(
+        'update tokens_c set token = ? where user_id = ?',
+        [token, req.user.customer_id,]
+      )
     }
-    else if (req.user.type == "admin"){
+    else if (req.user.type == "admin") {
       await conn.query("update admin set a_email = ? where admin_id = ?", [req.body.email, req.user.admin_id])
+      const [admin] = await conn.query(`select admin_id from admin  where admin_id = ?`,
+        [req.user.admin_id])
+      admin[0].type = "admin"
+      token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
+      await conn.query(
+        'update tokens_a set token = ? where user_id = ?',
+        [token, req.user.admin_id,]
+      )
     }
     conn.commit()
     res.send(req.body.email)
@@ -202,7 +241,7 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
     conn.rollback()
     next(error)
     res.status(409).send(error.message)
-  } finally{
+  } finally {
     conn.release()
     console.log("finally")
   }
