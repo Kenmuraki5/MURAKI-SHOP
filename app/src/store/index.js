@@ -16,7 +16,7 @@ export default createStore({
     token: localStorage.getItem('token') || '',
     products: [],
     image:"",
-    prevtoken: '' // New state property to store the previous id value
+   
   },
   mutations: {
     login(state, token) {
@@ -39,9 +39,6 @@ export default createStore({
         console.log(err)
         this.commit('logout')
       })
-    },
-    setPrevId(state, token) {
-      state.prevtoken = token
     }
   },
   actions: {},

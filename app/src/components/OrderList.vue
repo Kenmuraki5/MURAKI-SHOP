@@ -1,8 +1,33 @@
 <template>
-    <header class="bg-white shadow">
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{show ? "Order detail" : "Order Line"}}</h1>
+    <header class="bg-white shadow flex justify-between">
+        <div class="px-4 py-6 sm:px-6 lg:px-8">
+            <h1 class="text-3xl font-bold tracking-tight text-gray-900">{{ show ? "Order detail" : "Order Line" }}</h1>
+        </div>
+        <Menu as="div" class="relative inline-block text-left px-4 py-6 sm:px-6 lg:px-8">
+            <div>
+                <MenuButton
+                    class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                    sort
+                    <ChevronDownIcon class="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
+                </MenuButton>
             </div>
+
+            <transition enter-active-class="transition ease-out duration-100"
+                enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+                leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+                leave-to-class="transform opacity-0 scale-95">
+                <MenuItems 
+                  class="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-white shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <div class="py-1">
+                    <MenuItem v-for="sta in statuss"  :key="sta.status" v-slot="{ active }" >
+                    <a  @click="sort(sta.value)"
+                      :class="[sta.current ? 'font-medium text-gray-900' : 'text-gray-500', active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm']">{{
+                        sta.status }}</a>
+                    </MenuItem>
+                  </div>
+                </MenuItems>
+            </transition>
+        </Menu>
     </header>
     <div class="min-h-full" v-if="show">
         <main v-if="orders">
@@ -67,7 +92,7 @@
                             <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                 <p class="text-gray-900 whitespace-no-wrap">
                                     <!-- value price -->
-                                    {{ order.total_price }}
+                                    {{ order.total_price }} ฿
                                 </p>
                             </td>
                             <td class="px-5 py-5 border-b border-gray-200 text-sm">
@@ -138,7 +163,8 @@
                             </div>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">
+                            <img class="w-20 h-30" :src="`http://localhost:3000/uploads/${orderlines.book_img}`" alt="">
+                            <p class="text-gray-900 whitespace-no-wrap mt-3">
                                 <!-- order date -->
                                 {{ orderlines.isbn }}
                             </p>
@@ -152,7 +178,7 @@
                         <td class="px-5 py-5 border-b border-gray-200 text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">
                                 <!-- value price -->
-                                {{ orderlines.price }}
+                                {{ orderlines.price }} ฿
                             </p>
                         </td>
                     </tr>
@@ -162,7 +188,17 @@
         </div>
     </div>
 </template>
-
+<script setup>
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/vue'
+import { ChevronDownIcon } from '@heroicons/vue/20/solid'
+const statuss = [
+      {status: 'AllOrder', value: null},
+      {status: 'Shipping', value: "shipping"},
+      {status: 'Cancel', value: "cancel"},
+      {status: 'Success', value: "success"},
+      {status: 'Pending', value: "pending"},
+    ]
+</script>
 <script>
 import axios from '@/plugins/axios'
 
@@ -191,6 +227,18 @@ export default {
                 .catch(err => {
                     alert(err.response.data)
                 })
+        },
+        sort(value){
+            console.log(value)
+            axios.get(`http://localhost:3000/orderDetails`, {params:{status:value}})
+            .then(res => {
+                this.orders = res.data
+                console.log(this.orders)
+            })
+            .catch(err => {
+                alert(err.response.data)
+                this.$router.push("/")
+            })
         }
     },
     created() {
