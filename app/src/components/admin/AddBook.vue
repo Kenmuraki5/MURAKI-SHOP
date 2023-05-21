@@ -50,6 +50,7 @@ export default {
             }).then((res) => {
                 console.log(res.data)
                 alert("Add Book success")
+                this.$emit('book');
             }).catch(err => {
                 console.log(err)
                 alert("Add Book Failed")

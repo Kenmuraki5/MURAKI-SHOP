@@ -45,7 +45,7 @@
                             <option value=0>-- Select Publisher --</option>
                             <option v-for="pu in publisherList" :key="pu.publisher_id" :value="pu.publisher_id">{{
                                 pu.publisher_name }}</option>
-                            <option value=-1>Add New</option>
+                            <option value=-1>Add New Publisher</option>
                         </select>
                         <br>
                         <input v-if="publisher == -1" type="text"
@@ -66,7 +66,7 @@
                             <option value=0>-- Select Author --</option>
                             <option v-for="au in authorList" :key="au.author_id" :value="au.author_id">{{ au.author_name }}
                             </option>
-                            <option value=-1>Add New</option>
+                            <option value=-1>Add New Author</option>
                         </select>
                         <br>
                         <input v-if="author == -1" type="text"
@@ -187,7 +187,10 @@ export default {
             this.publisherDate = null
             this.publisher = 0
             this.author = 0
-            this.selectedGenres = null
+            this.selectedGenres = []
+            this.newAuthor = null
+            this.newAuthorAlias = null
+            this.newPublisher = null
             this.image = null
             this.imageName = null
             this.inStock = null

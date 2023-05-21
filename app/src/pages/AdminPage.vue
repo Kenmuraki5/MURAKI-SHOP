@@ -14,7 +14,7 @@
       </div>
     </div>
 
-    <AddBook v-if="showAddBook" />
+    <AddBook v-if="showAddBook" @book="addForm" :key="re"/>
     <div v-if="showBookTable">
       <BookTable @button-clicked="bookFromEdit" :key="re" @book="save" />
       <EditForm v-if="bookEditing" :book="bookEditing" :key="bookEditing.isbn" @book="save" />
@@ -67,7 +67,9 @@ export default {
       console.log(x)
       this.reSlip++
     },
-
+    addForm(){
+      this.re++
+    },
     toggleComponent(component) {
       if (component === 'add') {
         this.showAddBook = !this.showAddBook;
@@ -87,7 +89,9 @@ export default {
     bookFromEdit(book) {
       this.bookEditing = book
       console.log(this.bookEditing)
-    }
+    },
+
+    
   },
   created() {
     axios.get(`http://localhost:3000/user/me`)
