@@ -39,7 +39,8 @@
                         {{ book.book_name }}
                     </td>
                     <td class="px-6 py-4 ">
-                        {{ book.book_description }}
+                        {{ book.book_description.substring(0, 50) }}
+                        {{ book.book_description.length > 50 ? "..." : "" }}
                     </td>
                     <td class="px-6 py-4 ">
                         {{ book.book_price }}
