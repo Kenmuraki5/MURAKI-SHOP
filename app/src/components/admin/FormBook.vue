@@ -198,31 +198,31 @@ export default {
         validateForm() {
             let errors = []
             if (!this.isbn || this.isbn.length != 13) {
-                errors.push('ISBN is something wrong.')
+                errors.push('Something wrong in ISBN.')
             }
             if (!this.title) {
-                errors.push('Title is something wrong.')
+                errors.push('Something wrong in Title.')
             }
             if (this.price < 0) {
-                errors.push('Price is something wrong.')
+                errors.push('Something wrong in Price.')
             }
             if (!this.description) {
-                errors.push('Description is something wrong.')
+                errors.push('Something wrong in Description.')
             }
             if (!this.category) {
-                errors.push('Category is something wrong.')
+                errors.push('Something wrong in Category.')
             }
             if (!this.publisher && this.publisher !== -1 || (this.publisher == -1 && !this.newPublisher)) {
-                errors.push('Publisher is something wrong.')
+                errors.push('Something wrong in Publisher.')
             }
             if (!this.publisherDate) {
-                errors.push('Publisher date is something wrong.')
+                errors.push('Something wrong in Publisher date.')
             }
             if (!this.author && this.author !== -1 || (this.author == -1 && !this.newAuthor)) {
-                errors.push('Author is something wrong.')
+                errors.push('Something wrong in Author.')
             }
             if (this.author == '-1' && !this.newAuthorAlias) {
-                errors.push('Author alias is something wrong.')
+                errors.push('Something wrong in Author alias. ')
             }
             if (!this.selectedGenres.length) {
                 errors.push('At least one genre must be selected.')
@@ -231,7 +231,7 @@ export default {
                 errors.push('Please upload file.')
             }
             if (this.inStock < 0 || !this.inStock) {
-                errors.push('Amount is something wrong.')
+                errors.push('Something wrong in Amount')
             }
             if (errors.length) {
                 // Display error messages to user or handle them however you wish
