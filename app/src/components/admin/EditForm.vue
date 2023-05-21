@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from '@/plugins/axios'
 import FormBook from './FormBook.vue';
 
 export default {

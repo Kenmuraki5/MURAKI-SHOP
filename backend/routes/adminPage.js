@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path")
 const pool = require("../config/db.config");
 const Joi = require('joi');
+const { isLoggedIn } = require('../middlewares/index')
 
 router = express.Router();
 
@@ -33,95 +34,190 @@ router.get("/formBook", async function (req, res, next) {
     }
 });
 
-router.post('/addBook', upload.single('image'), async function (req, res, next) {
-    const { error } = bookSchema.validate(req.body);
-    if (error) {
-        const errors = error.details.map((detail) => detail.message);
-        return res.status(500).json(errors);
-    } else {
-        console.log('Validation passed successfully.');
-    }
-    if (!req.file) {
-        return res.status(500).json(
-            "Please upload file."
-        )
-    }
-    const form = req.body
-    const image = req.file.filename
-    const conn = await pool.getConnection()
-    await conn.beginTransaction();
-    try {
-        let selectBook = await conn.query('select * from book where isbn = ?', [form.isbn])
-        if (selectBook[0].length == 1) {
-            return res.status(409).json("Has Same Book ISBN " + form.isbn)
-        }
-        if (isNaN(parseFloat(form.publisher))) {
-            let selectPublisher = await conn.query('select * from Publisher where publisher_name = ?', [form.publisher])
-            if (selectPublisher[0].length >= 1) {
-                form.publisher = selectPublisher[0][0].publisher_id
-            } else {
-                let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
-                    [form.publisher])
-                form.publisher = insertPublisher[0].insertId
-            }
-        }
-
-        if (isNaN(parseFloat(form.author))) {
-            let selectAuthor = await conn.query('select * from author where author_name = ?', [form.author])
-            if (selectAuthor[0].length >= 1) {
-                form.author = selectAuthor[0][0].author_id
-            } else {
-                let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
-                    [form.author, form.newAuthorAlias])
-                form.author = insertAuthor[0].insertId
-            }
-        }
-
-        let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
-        if (selectAuthor[0].length == 0) {
-            return res.status(409).json("Can't Find Author ID " + form.author)
-        }
-        let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
-        if (selectPublisher[0].length == 0) {
-            return res.status(409).json("Can't Find Publisher ID " + form.publisher)
-        }
-        let insertBook = await conn.query('INSERT INTO `Book` (`isbn`, `book_name`, `book_description`, `book_price`, `book_category`, `publisher_id`, `publisher_date`, `book_img`, `in_stock`) value(?,?,?,?,?,?,?,?,?)',
-            [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, image, form.inStock])
-        let genreNotFound = false;
-        let NotFoundGenre = null;
-        for (const genreId of form.genres.split(",")) {
-            let selectGenre = await conn.query('SELECT * FROM genres WHERE genre_id = ?', genreId);
-            if (selectGenre[0].length === 0) {
-                genreNotFound = true;
-                NotFoundGenre = genreId
-                break;
-            }
-        }
-        if (genreNotFound) {
-            return res.status(409).json("Can't Find Genre ID " + NotFoundGenre);
+router.post('/addBook', isLoggedIn, upload.single('image'), async function (req, res, next) {
+    if (req.user.type == "admin") {
+        const { error } = bookSchema.validate(req.body);
+        if (error) {
+            const errors = error.details.map((detail) => detail.message);
+            return res.status(500).json(errors);
         } else {
-            form.genres.split(",").forEach(async x => {
-                let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
-                    [form.isbn, x])
-            });
+            console.log('Validation passed successfully.');
         }
-        let insertBookAuthor = await conn.query('INSERT INTO `Book_Author` (isbn,author_id) value(?,?)',
-            [form.isbn, form.author])
-        await conn.commit()
-        return res.json("Add Book Success!")
+        if (!req.file) {
+            return res.status(500).json(
+                "Please upload file."
+            )
+        }
+        const form = req.body
+        const image = req.file.filename
+        const conn = await pool.getConnection()
+        await conn.beginTransaction();
+        try {
+            let selectBook = await conn.query('select * from book where isbn = ?', [form.isbn])
+            if (selectBook[0].length == 1) {
+                return res.status(409).json("Has Same Book ISBN " + form.isbn)
+            }
+            if (isNaN(parseFloat(form.publisher))) {
+                let selectPublisher = await conn.query('select * from Publisher where publisher_name = ?', [form.publisher])
+                if (selectPublisher[0].length >= 1) {
+                    form.publisher = selectPublisher[0][0].publisher_id
+                } else {
+                    let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
+                        [form.publisher])
+                    form.publisher = insertPublisher[0].insertId
+                }
+            }
+            if (isNaN(parseFloat(form.author))) {
+                let selectAuthor = await conn.query('select * from author where author_name = ?', [form.author])
+                if (selectAuthor[0].length >= 1) {
+                    form.author = selectAuthor[0][0].author_id
+                } else {
+                    let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
+                        [form.author, form.newAuthorAlias])
+                    form.author = insertAuthor[0].insertId
+                }
+            }
+            let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
+            if (selectAuthor[0].length == 0) {
+                return res.status(409).json("Can't Find Author ID " + form.author)
+            }
+            let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
+            if (selectPublisher[0].length == 0) {
+                return res.status(409).json("Can't Find Publisher ID " + form.publisher)
+            }
+            let insertBook = await conn.query('INSERT INTO `Book` (`isbn`, `book_name`, `book_description`, `book_price`, `book_category`, `publisher_id`, `publisher_date`, `book_img`, `in_stock`) value(?,?,?,?,?,?,?,?,?)',
+                [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, image, form.inStock])
+            let genreNotFound = false;
+            let NotFoundGenre = null;
+            for (const genreId of form.genres.split(",")) {
+                let selectGenre = await conn.query('SELECT * FROM genres WHERE genre_id = ?', genreId);
+                if (selectGenre[0].length === 0) {
+                    genreNotFound = true;
+                    NotFoundGenre = genreId
+                    break;
+                }
+            }
+            if (genreNotFound) {
+                return res.status(409).json("Can't Find Genre ID " + NotFoundGenre);
+            } else {
+                form.genres.split(",").forEach(async x => {
+                    let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
+                        [form.isbn, x])
+                });
+            }
+            let insertBookAuthor = await conn.query('INSERT INTO `Book_Author` (isbn,author_id) value(?,?)',
+                [form.isbn, form.author])
+            await conn.commit()
+            return res.json("Add Book Success!")
+        }
+        catch (err) {
+            await conn.rollback();
+            return res.status(409).json(err)
+        }
+        finally {
+            console.log('finally')
+            conn.release();
+        }
     }
-    catch (err) {
-
-        await conn.rollback();
-        return res.status(409).json(err)
-        next(err)
-    }
-    finally {
-        console.log('finally')
-        conn.release();
+    else {
+        return res.status(409).json("You are not Admin")
     }
 });
 
+
+
+router.put("/editBook", isLoggedIn, upload.single('image'), async function (req, res, next) {
+    if (req.user.type == "admin") {
+        const { error } = bookSchema.validate(req.body);
+        if (error) {
+            const errors = error.details.map((detail) => detail.message);
+            return res.status(500).json(errors);
+        } else {
+            console.log('Validation passed successfully.');
+        }
+        if (!req.file) {
+            return res.status(500).json(
+                "Please upload file."
+            )
+        }
+        const form = req.body;
+        const image = req.file.filename;
+        const conn = await pool.getConnection()
+        await conn.beginTransaction();
+        try {
+            let selectBook = await conn.query('select * from book where isbn = ?', [form.oldIsbn])
+            if (selectBook[0].length == 0) {
+                return res.status(409).json("Can't Find Book ISBN " + form.oldIsbn)
+            }
+            if (image != "sameasbefore.png") {
+                await conn.query('update book set book_img = ? where isbn = ?',
+                    [image, form.oldIsbn])
+            }
+            if (isNaN(parseFloat(form.publisher))) {
+                let selectPublisher = await conn.query('select * from Publisher where publisher_name = ?', [form.publisher])
+                if (selectPublisher[0].length >= 1) {
+                    form.publisher = selectPublisher[0][0].publisher_id
+                } else {
+                    let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
+                        [form.publisher])
+                    form.publisher = insertPublisher[0].insertId
+                }
+            }
+            if (isNaN(parseFloat(form.author))) {
+                let selectAuthor = await conn.query('select * from author where author_name = ?', [form.author])
+                if (selectAuthor[0].length >= 1) {
+                    form.author = selectAuthor[0][0].author_id
+                } else {
+                    let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
+                        [form.author, form.newAuthorAlias])
+                    form.author = insertAuthor[0].insertId
+                }
+            }
+            let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
+            if (selectAuthor[0].length == 0) {
+                return res.status(409).json("Can't Find Author ID " + form.author)
+            }
+            let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
+            if (selectPublisher[0].length == 0) {
+                throw res.status(409).json("Can't Find Publisher ID " + form.publisher)
+            }
+            await conn.query('delete from book_genres where isbn = ?', [form.oldIsbn])
+            await conn.query('update book set isbn = ?, book_name = ?, book_description = ?, book_price = ?, book_category = ?, publisher_id = ?, publisher_date = ?, in_stock = ? where isbn = ?',
+                [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, form.inStock, form.oldIsbn])
+            let genreNotFound = false;
+            let NotFoundGenre = null;
+            for (const genreId of form.genres.split(",")) {
+                let selectGenre = await conn.query('SELECT * FROM genres WHERE genre_id = ?', genreId);
+                if (selectGenre[0].length === 0) {
+                    genreNotFound = true;
+                    NotFoundGenre = genreId
+                    break;
+                }
+            }
+            if (genreNotFound) {
+                return res.status(409).json("Can't Find Genre ID " + NotFoundGenre);
+            } else {
+                form.genres.split(",").forEach(async x => {
+                    let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
+                        [form.isbn, x])
+                });
+            }
+            let insertBookAuthor = await conn.query('update `Book_Author` set author_id = ? where isbn = ?',
+                [form.author, form.isbn])
+            await conn.commit()
+            return res.json("Edit Book Success!")
+        } catch (err) {
+            await conn.rollback();
+            return res.status(409).json(err)
+        }
+        finally {
+            console.log('finally')
+            conn.release();
+        }
+    } else {
+        return res.status(409).json("You are not Admin")
+    }
+});
 router.get("/editBook", async function (req, res, next) {
     try {
         let result = await pool.query(`SELECT a.*, c.*, d.*, g.genres, g.genres_id
@@ -140,116 +236,24 @@ router.get("/editBook", async function (req, res, next) {
         next(error)
     }
 });
-
-// POST - create new blog with single upload file
-
-router.put("/editBook", upload.single('image'), async function (req, res, next) {
-    const { error } = bookSchema.validate(req.body);
-    if (error) {
-        const errors = error.details.map((detail) => detail.message);
-        return res.status(500).json(errors);
+router.delete('/editBook/', isLoggedIn, async (req, res, next) => {
+    if (req.user.type == "admin") {
+        const conn = await pool.getConnection()
+        await conn.beginTransaction();
+        try {
+            await conn.query('DELETE FROM book WHERE isbn = ?', [req.query.isbn])
+            await conn.commit()
+            res.json("success!")
+        } catch (err) {
+            await conn.rollback();
+            next(err)
+        }
+        finally {
+            console.log('finally')
+            conn.release();
+        }
     } else {
-        console.log('Validation passed successfully.');
-    }
-    if (!req.file) {
-        return res.status(500).json(
-            "Please upload file."
-        )
-    }
-    const form = req.body;
-    const image = req.file.filename;
-    const conn = await pool.getConnection()
-    await conn.beginTransaction();
-    try {
-        let selectBook = await conn.query('select * from book where isbn = ?', [form.oldIsbn])
-        if (selectBook[0].length == 0) {
-            return res.status(409).json("Can't Find Book ISBN " + form.oldIsbn)
-        }
-        if (image != "sameasbefore.png") {
-            await conn.query('update book set book_img = ? where isbn = ?',
-                [image, form.oldIsbn])
-        }
-        if (isNaN(parseFloat(form.publisher))) {
-            let selectPublisher = await conn.query('select * from Publisher where publisher_name = ?', [form.publisher])
-            if (selectPublisher[0].length >= 1) {
-                form.publisher = selectPublisher[0][0].publisher_id
-            } else {
-                let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
-                    [form.publisher])
-                form.publisher = insertPublisher[0].insertId
-            }
-        }
-
-        if (isNaN(parseFloat(form.author))) {
-            let selectAuthor = await conn.query('select * from author where author_name = ?', [form.author])
-            if (selectAuthor[0].length >= 1) {
-                form.author = selectAuthor[0][0].author_id
-            } else {
-                let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
-                    [form.author, form.newAuthorAlias])
-                form.author = insertAuthor[0].insertId
-            }
-        }
-
-
-        let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
-        if (selectAuthor[0].length == 0) {
-            return res.status(409).json("Can't Find Author ID " + form.author)
-        }
-        let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
-        if (selectPublisher[0].length == 0) {
-            throw res.status(409).json("Can't Find Publisher ID " + form.publisher)
-        }
-        await conn.query('delete from book_genres where isbn = ?', [form.oldIsbn])
-        await conn.query('update book set isbn = ?, book_name = ?, book_description = ?, book_price = ?, book_category = ?, publisher_id = ?, publisher_date = ?, in_stock = ? where isbn = ?',
-            [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, form.inStock, form.oldIsbn])
-        let genreNotFound = false;
-        let NotFoundGenre = null;
-        for (const genreId of form.genres.split(",")) {
-            let selectGenre = await conn.query('SELECT * FROM genres WHERE genre_id = ?', genreId);
-            if (selectGenre[0].length === 0) {
-                genreNotFound = true;
-                NotFoundGenre = genreId
-                break;
-            }
-        }
-        if (genreNotFound) {
-            return res.status(409).json("Can't Find Genre ID " + NotFoundGenre);
-        } else {
-            form.genres.split(",").forEach(async x => {
-                let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
-                    [form.isbn, x])
-            });
-        }
-        let insertBookAuthor = await conn.query('update `Book_Author` set author_id = ? where isbn = ?',
-            [form.author, form.isbn])
-        await conn.commit()
-        return res.json("Edit Book Success!")
-    } catch (err) {
-        await conn.rollback();
-        return res.status(409).json(err)
-        next(err)
-    }
-    finally {
-        console.log('finally')
-        conn.release();
-    }
-});
-
-router.delete('/editBook/', async (req, res, next) => {
-    const conn = await pool.getConnection()
-    await conn.beginTransaction();
-    try {
-        await conn.query('DELETE FROM book WHERE isbn = ?', [req.query.isbn])
-        await conn.commit()
-        res.json("success!")
-    } catch (err) {
-        await conn.rollback();
-        next(err)
-    }
-    finally {
-        console.log('finally')
-        conn.release();
+        return res.status(409).json("You are not Admin")
     }
 });
 
