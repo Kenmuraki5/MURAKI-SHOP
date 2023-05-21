@@ -109,7 +109,7 @@ export default {
                 .catch((err) => { console.log(err) })
         },
         editprofile() {
-            swal("Please enter your otp:", {
+            swal("Please enter your password:", {
                 content: "input",
                 buttons: true,
             })
