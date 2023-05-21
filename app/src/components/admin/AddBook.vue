@@ -40,7 +40,7 @@ export default {
                 formData.append("author", book.author)
             }
             formData.append("genres", book.selectedGenres)
-            formData.append("image", book.image)
+            formData.append("image", book.file)
             formData.append("inStock", book.inStock)
 
             axios.post('http://localhost:3000/addBook', formData, {

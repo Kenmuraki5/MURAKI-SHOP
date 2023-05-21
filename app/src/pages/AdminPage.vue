@@ -50,7 +50,7 @@ export default {
   },
   data() {
     return {
-      showAddBook: false,
+      showAddBook: true,
       showBookTable: false,
       showSlipTable: false,
       bookEditing: null,

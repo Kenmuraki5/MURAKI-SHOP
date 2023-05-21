@@ -2,7 +2,7 @@
     <section class="min-h-screen flex flex-col ">
         <div class="flex flex-1 items-center justify-center ">
             <div class="rounded-lg sm:border-2 px-4 lg:px-24 py-16 lg:max-w-xl sm:max-w-md w-full text-center bg-white">
-                <section>
+                <form @submit.prevent="submit">
                     <h1 class="font-bold tracking-wider text-3xl mb-8 w-full text-gray-600">
                         {{ name }}
                     </h1>
@@ -100,10 +100,9 @@
                             class="border-2 border-gray-100 focus:outline-none bg-purple-600 text-white font-bold tracking-wider block w-full p-2 rounded-lg focus:border-gray-700 hover:bg-purple-700">
                             Submit
                         </button>
-                        
                     </div>
                     
-                </section>
+                </form>
             </div>
         </div>
     </section>
@@ -124,13 +123,13 @@ export default {
         fpublisher: Number,
         fauthor: Number,
         fselectedGenres: Array,
-        fimage: File,
+        fimage: String,
         fimageName: String,
         finStock: Number,
-
     },
     data() {
         return {
+            file:null,
             name: this.fname,
             isbn: this.fisbn,
             title: this.ftitle,
@@ -155,10 +154,12 @@ export default {
     },
     methods: {
         handleFileUpload() {
-            this.image = this.$refs.file.files[0];
-            this.imageName = this.image.name
+            this.file = this.$refs.file.files[0];
+            this.imageName = this.file.name
         },
-
+        showImage() {
+            console.log(this.image)
+        },
         submitForm() {
             // emit a submit-form event with the form data
             this.$emit('submit-form', {
@@ -175,6 +176,7 @@ export default {
                 newAuthorAlias: this.newAuthorAlias,
                 selectedGenres: this.selectedGenres,
                 image: this.image,
+                file: this.file,
                 inStock: this.inStock,
             });
             this.isbn = null
@@ -222,7 +224,7 @@ export default {
             if (!this.selectedGenres.length) {
                 errors.push('At least one genre must be selected.')
             }
-            if (!this.image) {
+            if (!this.file && !this.image) {
                 errors.push('Please upload file.')
             }
             if (this.inStock < 0 || !this.inStock) {

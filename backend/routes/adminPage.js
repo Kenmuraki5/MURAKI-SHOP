@@ -124,8 +124,6 @@ router.post('/addBook', isLoggedIn, upload.single('image'), async function (req,
     }
 });
 
-
-
 router.put("/editBook", isLoggedIn, upload.single('image'), async function (req, res, next) {
     if (req.user.type == "admin") {
         const { error } = bookSchema.validate(req.body);
@@ -135,13 +133,14 @@ router.put("/editBook", isLoggedIn, upload.single('image'), async function (req,
         } else {
             console.log('Validation passed successfully.');
         }
-        if (!req.file) {
+        if (!req.file && !req.body.sameImage) {
             return res.status(500).json(
                 "Please upload file."
             )
         }
         const form = req.body;
-        const image = req.file.filename;
+        const image = req.file ? req.file.filename: req.body.sameImage
+        console.log(image)
         const conn = await pool.getConnection()
         await conn.beginTransaction();
         try {
@@ -343,6 +342,9 @@ const bookSchema = Joi.object({
     oldIsbn: Joi.string().length(13).optional().messages({
         'string.base': 'Old ISBN must be a string.',
         'string.length': 'Old ISBN length must be 13 characters.',
+    }),
+    sameImage: Joi.string().optional().messages({
+        'string.base': 'Image must be a string.',
     }),
     isbn: Joi.string().length(13).required().messages({
         'string.base': 'ISBN must be a string.',

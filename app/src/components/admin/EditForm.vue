@@ -3,8 +3,9 @@
     <FormBook name="Edit Book" @submit-form="submit" fname="Edit Book" :fisbn=this.book.isbn :ftitle="this.book.book_name"
         :fprice="this.book.book_price" :fdescription="this.book.book_description" :fcategory="this.book.book_category"
         :fpublisherDate="this.book.publisher_date.slice(0, 10)" :fpublisher="this.book.publisher_id"
-        :fauthor="this.book.author_id" :fselectedGenres="this.book.genres_id.split(',')" :fimage="image"
+        :fauthor="this.book.author_id" :fselectedGenres="this.book.genres_id.split(',')" :fimage="this.book.book_img"
         :fimageName="this.book.book_img" :finStock="this.book.in_stock" />
+    
 </template>
 
 <script>
@@ -20,7 +21,7 @@ export default {
     },
     data() {
         return {
-            image: new File([], "sameasbefore.png")
+            // image: new File([], "sameasbefore.png")
         }
     },
     methods: {
@@ -45,9 +46,13 @@ export default {
                 formData.append("author", book.author)
             }
             formData.append("genres", book.selectedGenres)
-            formData.append("image", book.image)
+            if(book.file){
+                formData.append("image", book.file)
+            }else{
+                formData.append("sameImage", book.image)
+            }
             formData.append("inStock", book.inStock)
-
+            console.log(formData)
             axios.put('http://localhost:3000/editBook', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
