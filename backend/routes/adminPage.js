@@ -56,15 +56,25 @@ router.post('/addBook', upload.single('image'), async function (req, res, next) 
             return res.status(409).json("Has Same Book ISBN " + form.isbn)
         }
         if (isNaN(parseFloat(form.publisher))) {
-            let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
-                [form.publisher])
-            form.publisher = insertPublisher[0].insertId
+            let selectPublisher = await conn.query('select * from Publisher where publisher_name = ?', [form.publisher])
+            if (selectPublisher[0].length >= 1) {
+                form.publisher = selectPublisher[0][0].publisher_id
+            } else {
+                let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
+                    [form.publisher])
+                form.publisher = insertPublisher[0].insertId
+            }
         }
 
         if (isNaN(parseFloat(form.author))) {
-            let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
-                [form.author, form.newAuthorAlias])
-            form.author = insertAuthor[0].insertId
+            let selectAuthor = await conn.query('select * from author where author_name = ?', [form.author])
+            if (selectAuthor[0].length >= 1) {
+                form.author = selectAuthor[0][0].author_id
+            } else {
+                let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
+                    [form.author, form.newAuthorAlias])
+                form.author = insertAuthor[0].insertId
+            }
         }
 
         let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
@@ -73,7 +83,7 @@ router.post('/addBook', upload.single('image'), async function (req, res, next) 
         }
         let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
         if (selectPublisher[0].length == 0) {
-            throw res.status(409).json("Can't Find Publisher ID " + form.publisher)
+            return res.status(409).json("Can't Find Publisher ID " + form.publisher)
         }
         let insertBook = await conn.query('INSERT INTO `Book` (`isbn`, `book_name`, `book_description`, `book_price`, `book_category`, `publisher_id`, `publisher_date`, `book_img`, `in_stock`) value(?,?,?,?,?,?,?,?,?)',
             [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, image, form.inStock])
@@ -160,16 +170,27 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
                 [image, form.oldIsbn])
         }
         if (isNaN(parseFloat(form.publisher))) {
-            let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
-                [form.publisher])
-            form.publisher = insertPublisher[0].insertId
+            let selectPublisher = await conn.query('select * from Publisher where publisher_name = ?', [form.publisher])
+            if (selectPublisher[0].length >= 1) {
+                form.publisher = selectPublisher[0][0].publisher_id
+            } else {
+                let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
+                    [form.publisher])
+                form.publisher = insertPublisher[0].insertId
+            }
         }
 
         if (isNaN(parseFloat(form.author))) {
-            let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
-                [form.author, form.newAuthorAlias])
-            form.author = insertAuthor[0].insertId
+            let selectAuthor = await conn.query('select * from author where author_name = ?', [form.author])
+            if (selectAuthor[0].length >= 1) {
+                form.author = selectAuthor[0][0].author_id
+            } else {
+                let insertAuthor = await conn.query('INSERT INTO `author` (`author_name`, `author_alias`) VALUES (?, ?)',
+                    [form.author, form.newAuthorAlias])
+                form.author = insertAuthor[0].insertId
+            }
         }
+
 
         let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
         if (selectAuthor[0].length == 0) {
