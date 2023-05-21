@@ -37,15 +37,24 @@ router.post('/addBook', upload.single('image'), async function (req, res, next) 
     const { error } = bookSchema.validate(req.body);
     if (error) {
         const errors = error.details.map((detail) => detail.message);
-        console.log(errors);
+        return res.status(500).json(errors);
     } else {
         console.log('Validation passed successfully.');
+    }
+    if (!req.file) {
+        return res.status(500).json(
+            "Please upload file."
+        )
     }
     const form = req.body
     const image = req.file.filename
     const conn = await pool.getConnection()
     await conn.beginTransaction();
     try {
+        let selectBook = await conn.query('select * from book where isbn = ?', [form.isbn])
+        if (selectBook[0].length == 1) {
+            return res.status(409).json("Has Same Book ISBN " + form.isbn)
+        }
         if (isNaN(parseFloat(form.publisher))) {
             let insertPublisher = await conn.query('INSERT INTO `Publisher` (`publisher_name`) VALUES (?)',
                 [form.publisher])
@@ -57,23 +66,44 @@ router.post('/addBook', upload.single('image'), async function (req, res, next) 
                 [form.author, form.newAuthorAlias])
             form.author = insertAuthor[0].insertId
         }
+
+        let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
+        if (selectAuthor[0].length == 0) {
+            return res.status(409).json("Can't Find Author ID " + form.author)
+        }
+        let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
+        if (selectPublisher[0].length == 0) {
+            throw res.status(409).json("Can't Find Publisher ID " + form.publisher)
+        }
         let insertBook = await conn.query('INSERT INTO `Book` (`isbn`, `book_name`, `book_description`, `book_price`, `book_category`, `publisher_id`, `publisher_date`, `book_img`, `in_stock`) value(?,?,?,?,?,?,?,?,?)',
             [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, image, form.inStock])
-        form.genres.split(",").forEach(async x => {
-            let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
-                [form.isbn, x])
-        });
+        let genreNotFound = false;
+        let NotFoundGenre = null;
+        for (const genreId of form.genres.split(",")) {
+            let selectGenre = await conn.query('SELECT * FROM genres WHERE genre_id = ?', genreId);
+            if (selectGenre[0].length === 0) {
+                genreNotFound = true;
+                NotFoundGenre = genreId
+                break;
+            }
+        }
+        if (genreNotFound) {
+            return res.status(409).json("Can't Find Genre ID " + NotFoundGenre);
+        } else {
+            form.genres.split(",").forEach(async x => {
+                let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
+                    [form.isbn, x])
+            });
+        }
         let insertBookAuthor = await conn.query('INSERT INTO `Book_Author` (isbn,author_id) value(?,?)',
             [form.isbn, form.author])
         await conn.commit()
-        return res.json("success!")
+        return res.json("Add Book Success!")
     }
     catch (err) {
 
         await conn.rollback();
-        return res.status(409).json({
-            message: "Add Book Failed"
-        })
+        return res.status(409).json(err)
         next(err)
     }
     finally {
@@ -107,15 +137,24 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
     const { error } = bookSchema.validate(req.body);
     if (error) {
         const errors = error.details.map((detail) => detail.message);
-        console.log(errors);
+        return res.status(500).json(errors);
     } else {
         console.log('Validation passed successfully.');
+    }
+    if (!req.file) {
+        return res.status(500).json(
+            "Please upload file."
+        )
     }
     const form = req.body;
     const image = req.file.filename;
     const conn = await pool.getConnection()
     await conn.beginTransaction();
     try {
+        let selectBook = await conn.query('select * from book where isbn = ?', [form.oldIsbn])
+        if (selectBook[0].length == 0) {
+            return res.status(409).json("Can't Find Book ISBN " + form.oldIsbn)
+        }
         if (image != "sameasbefore.png") {
             await conn.query('update book set book_img = ? where isbn = ?',
                 [image, form.oldIsbn])
@@ -131,33 +170,49 @@ router.put("/editBook", upload.single('image'), async function (req, res, next) 
                 [form.author, form.newAuthorAlias])
             form.author = insertAuthor[0].insertId
         }
+
+        let selectAuthor = await conn.query('select * from author where author_id = ?', [form.author])
+        if (selectAuthor[0].length == 0) {
+            return res.status(409).json("Can't Find Author ID " + form.author)
+        }
+        let selectPublisher = await conn.query('select * from Publisher where Publisher_id = ?', [form.publisher])
+        if (selectPublisher[0].length == 0) {
+            throw res.status(409).json("Can't Find Publisher ID " + form.publisher)
+        }
         await conn.query('delete from book_genres where isbn = ?', [form.oldIsbn])
         await conn.query('update book set isbn = ?, book_name = ?, book_description = ?, book_price = ?, book_category = ?, publisher_id = ?, publisher_date = ?, in_stock = ? where isbn = ?',
             [form.isbn, form.title, form.description, form.price, form.category, form.publisher, form.publisherDate, form.inStock, form.oldIsbn])
-        form.genres.split(",").forEach(async x => {
-            let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
-                [form.isbn, x])
-        });
+        let genreNotFound = false;
+        let NotFoundGenre = null;
+        for (const genreId of form.genres.split(",")) {
+            let selectGenre = await conn.query('SELECT * FROM genres WHERE genre_id = ?', genreId);
+            if (selectGenre[0].length === 0) {
+                genreNotFound = true;
+                NotFoundGenre = genreId
+                break;
+            }
+        }
+        if (genreNotFound) {
+            return res.status(409).json("Can't Find Genre ID " + NotFoundGenre);
+        } else {
+            form.genres.split(",").forEach(async x => {
+                let insertGenre = await conn.query('INSERT INTO `book_genres` (`isbn`, `genre_id`) VALUES (?, ?)',
+                    [form.isbn, x])
+            });
+        }
         let insertBookAuthor = await conn.query('update `Book_Author` set author_id = ? where isbn = ?',
             [form.author, form.isbn])
         await conn.commit()
-        return res.json("success!")
+        return res.json("Edit Book Success!")
     } catch (err) {
         await conn.rollback();
-        return res.status(409).json({
-            message: "Has same ISBN"
-        })
+        return res.status(409).json(err)
         next(err)
     }
     finally {
         console.log('finally')
         conn.release();
     }
-});
-
-//update blogs
-router.put('/blogs/:id', async (req, res, next) => {
-
 });
 
 router.delete('/editBook/', async (req, res, next) => {
@@ -260,59 +315,65 @@ router.put('/decline/', async (req, res, next) => {
 
 
 const bookSchema = Joi.object({
+    oldIsbn: Joi.string().length(13).optional().messages({
+        'string.base': 'Old ISBN must be a string.',
+        'string.length': 'Old ISBN length must be 13 characters.',
+    }),
     isbn: Joi.string().length(13).required().messages({
-      'string.base': 'ISBN must be a string.',
-      'string.length': 'ISBN length must be 13 characters.',
-      'any.required': 'ISBN is required.',
+        'string.base': 'ISBN must be a string.',
+        'string.length': 'ISBN length must be 13 characters.',
+        'any.required': 'ISBN is required.',
     }),
     title: Joi.string().required().messages({
-      'string.base': 'Title must be a string.',
-      'any.required': 'Title is required.',
+        'string.base': 'Title must be a string.',
+        'any.required': 'Title is required.',
     }),
     price: Joi.number().min(0).required().messages({
-      'number.base': 'Price must be a number.',
-      'number.min': 'Price cannot be negative.',
-      'any.required': 'Price is required.',
+        'number.base': 'Price must be a number.',
+        'number.min': 'Price cannot be negative.',
+        'any.required': 'Price is required.',
     }),
     description: Joi.string().required().messages({
-      'string.base': 'Description must be a string.',
-      'any.required': 'Description is required.',
+        'string.base': 'Description must be a string.',
+        'any.required': 'Description is required.',
     }),
-    category: Joi.string().required().messages({
-      'string.base': 'Category must be a string.',
-      'any.required': 'Category is required.',
-    }),
+    category: Joi.string()
+        .valid('manga', 'novel')
+        .required()
+        .messages({
+            'string.base': 'Category must be a string.',
+            'any.required': 'Category is required.',
+            'any.only': 'Category must be either "manga" or "novel".',
+        }),
     publisher: Joi.alternatives().try(
-      Joi.string().required(),
-      Joi.number().valid(-1).required(),
+        Joi.string().required(),
     ).messages({
-      'any.required': 'Publisher is required.',
+        'any.required': 'Publisher is required.',
     }),
     publisherDate: Joi.string().required().messages({
-      'string.base': 'Publisher date must be a string.',
-      'any.required': 'Publisher date is required.',
+        'string.base': 'Publisher date must be a string.',
+        'any.required': 'Publisher date is required.',
     }),
     author: Joi.alternatives().try(
-      Joi.string().required(),
-      Joi.number().valid(-1).required(),
+        Joi.string().required(),
     ).messages({
-      'any.required': 'Author is required.',
+        'any.required': 'Author is required.',
     }),
     newAuthorAlias: Joi.string().when('author', {
-      is: '-1',
-      then: Joi.required().messages({
-        'string.base': 'Author alias must be a string.',
-        'any.required': 'Author alias is required.',
-      }),
+        is: !Joi.number(),
+        then: Joi.required().messages({
+            'string.base': 'Author alias must be a string.',
+            'any.required': 'Author alias is required.',
+        }),
     }),
     genres: Joi.required().messages({
-      'any.required': 'At least one genre must be selected.',
+        'any.required': 'At least one genre must be selected.',
     }),
     inStock: Joi.number().min(0).required().messages({
-      'number.base': 'Amount must be a number.',
-      'number.min': 'Amount cannot be negative.',
-      'any.required': 'Amount is required.',
+        'number.base': 'Amount must be a number.',
+        'number.min': 'Amount cannot be negative.',
+        'any.required': 'Amount is required.',
     }),
-  });
+});
 
 exports.router = router;
