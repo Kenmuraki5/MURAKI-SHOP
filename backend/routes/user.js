@@ -9,7 +9,7 @@ router = express.Router();
 
 const generatetoken = async (type, id) => {
   try {
-    const secretKey = "miraki";
+    const secretKey = "MRa@uakinuthatke.murai2024laer@gadf////";
     const [result] = await pool.query(`SELECT ${type}_id FROM ${type} WHERE ${type}_id = ?`, [id]);
     // result[0].type = type
     const token = jwt.sign(result[0], secretKey, { algorithm: 'HS256' });

@@ -240,7 +240,11 @@ router.delete('/editBook/', isLoggedIn, async (req, res, next) => {
         const conn = await pool.getConnection()
         await conn.beginTransaction();
         try {
+            await conn.query('SET FOREIGN_KEY_CHECKS = 0');
+
             await conn.query('DELETE FROM book WHERE isbn = ?', [req.query.isbn])
+
+            await conn.query('SET FOREIGN_KEY_CHECKS = 1');
             await conn.commit()
             res.json("success!")
         } catch (err) {
@@ -260,7 +264,7 @@ router.get('/allSlip/', async (req, res, next) => {
 
     try {
         // select * from payment join cust_order using(order_id) join order_line using(order_id)
-        const payment = await pool.query("SELECT c_username, order_id, GROUP_CONCAT(isbn) AS isbn, GROUP_CONCAT(book_name) AS name, \
+        const payment = await pool.query("SELECT c_username, order_id, GROUP_CONCAT(isbn) AS isbn, GROUP_CONCAT(order_line.book_name) AS name, \
         GROUP_CONCAT(quantity) AS quantity, GROUP_CONCAT(price) AS price, shipping_name, total_price AS total_price,\
         DATE_FORMAT(order_date,'%m/%d/%Y, %H:%i:%s') AS order_date, slip_img, status_value \
         FROM payment JOIN cust_order USING(order_id) \

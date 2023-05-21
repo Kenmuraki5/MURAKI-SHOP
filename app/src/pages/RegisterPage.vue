@@ -60,7 +60,7 @@
                     </div>
 
                     <button type="submit" @click="submit()"
-                        class="mt-3 w-full inline-flex items-center justify-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold capitalize text-white hover:bg-orange-600 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 disabled:opacity-25 transition">Create
+                        class="mt-3 w-full inline-flex items-center justify-center px-4 py-2 bg-purple-500 border border-transparent rounded-md font-semibold capitalize text-white hover:bg-purple-700 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 disabled:opacity-25 transition">Create
                         Account</button>
 
                 </Form>

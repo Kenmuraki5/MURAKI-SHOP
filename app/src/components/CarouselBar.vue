@@ -7,6 +7,8 @@
           class="btn btn-light ml-2" aria-label="Slide 2"></button>
         <button type="button" style="padding:3px;" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
           class="btn btn-light ml-2" aria-label="Slide 3"></button>
+        <button type="button" style="padding:3px;" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3"
+          class="btn btn-light ml-2" aria-label="Slide 3"></button>
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active" style="max-height: 500px;" data-bs-interval="10000">
@@ -20,7 +22,12 @@
           </div>
         </div>
         <div class="carousel-item" style="max-height: 500px;" data-bs-interval="9000">
-          <img src="https://www.phoenixnext.com/pub/media/banner/tmp/_LN_Kanojo_NTR_Vol.2_EC.jpg" class="d-block w-100" alt="...">
+          <img src="http://localhost:3000/uploads/event3.jpeg" class="d-block w-100" alt="...">
+          <div class="carousel-caption d-none d-md-block">
+          </div>
+        </div>
+        <div class="carousel-item" style="max-height: 500px;" data-bs-interval="2000">
+          <img src="http://localhost:3000/uploads/event4.jpg" class="d-block w-100" alt="...">
           <div class="carousel-caption d-none d-md-block">
           </div>
         </div>

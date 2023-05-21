@@ -142,6 +142,10 @@
                         </th>
                         <th
                             class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                            book name
+                        </th>
+                        <th
+                            class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                             quantity
                         </th>
                         <th
@@ -160,10 +164,16 @@
                             </div>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                            <img class="w-20 h-30" :src="`http://localhost:3000/uploads/${orderlines.book_img}`" alt="">
                             <p class="text-gray-900 whitespace-no-wrap mt-3">
                                 <!-- order date -->
+                                <img class="w-20 h-30" :src="`http://localhost:3000/uploads/${orderlines.book_img}`" alt="">
                                 {{ orderlines.isbn }}
+                            </p>
+                        </td>
+                        <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap mt-3">
+                                <!-- order date -->
+                                {{ orderlines.book_name }}
                             </p>
                         </td>
                         <td class="px-5 py-5 border-b border-gray-200 text-sm">

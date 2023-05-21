@@ -93,7 +93,7 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
   }
 
   try {
-    const secretKey = "miraki";
+    const secretKey = "MRa@uakinuthatke.murai2024laer@gadf////";
     let token
     if (req.user.type == 'customer') {
 
@@ -191,7 +191,6 @@ router.post("/verifyOtp", isLoggedIn, async function (req, res, next) {
     let checkuser
     if (req.user.type == "customer") {
       [checkuser] = await pool.query("select otp from customer where customer_id = ?", [req.user.customer_id])
-      console.log(checkuser[0].otp)
       if (await argon2.verify(checkuser[0].otp, req.body.otp)) {
         res.send('success')
       } else {
@@ -213,7 +212,7 @@ router.post("/verifyOtp", isLoggedIn, async function (req, res, next) {
 });
 
 router.put("/changeemail", isLoggedIn, async function (req, res, next) {
-  const secretKey = "miraki";
+  const secretKey = "MRa@uakinuthatke.murai2024laer@gadf////";
   try {
     //ตรวจสอบความถูกต้องของข้อมูลด้วยคำสั่ง validate()
     await emailSchema.validateAsync(req.body, { abortEarly: false })

@@ -30,7 +30,7 @@ router.get("/orderDetails", isLoggedIn, async function (req, res, next) {
 router.post("/orderline", isLoggedIn, async function (req, res, next){
   try {
     const order_id = req.body.order_id
-    const [orderline] = await pool.query("select * from Order_Line join book using(isbn) where order_id = ?",[order_id])
+    const [orderline] = await pool.query("select * from Order_Line where order_id = ?",[order_id])
     res.send(orderline)
   } catch (error) {
     next(error)

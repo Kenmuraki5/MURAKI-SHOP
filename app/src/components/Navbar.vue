@@ -86,7 +86,7 @@
                                     {{ item.book_name }}
                                   </h1>
                                   <p class="mt-2 text-gray-600 text-sm">
-                                    {{ item.book_description }}
+                                    {{ item.book_description.substring(0, 50) }}{{ item.book_description.length > 50 ? "..." : "" }}
                                   </p>
                                   <div class="flex justify-between mt-3">
 

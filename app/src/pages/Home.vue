@@ -70,7 +70,10 @@ export default {
 
       })
     axios.get(`http://localhost:3000/recommended`)
-      .then(res => this.$store.state.recommended = res.data)
+      .then((res) => {
+        console.log(res.data)
+        this.$store.state.recommended = res.data
+      })
       .catch(err => {
         console.log(err)
 

@@ -17,7 +17,7 @@
                 {{ product.book_name }}
               </h3>
             </div>
-            <p class="text-sm font-medium text-gray-900">{{ product.book_price }}</p>
+            <p class="text-sm font-medium text-gray-900">{{ product.book_price }} ฿</p>
           </div>
           
           <button v-if="product.in_stock > 0"
@@ -48,7 +48,7 @@
                 {{ product.book_name }}
               </h3>
             </div>
-            <p class="text-sm font-medium text-gray-900">{{ product.book_price }}</p>
+            <p class="text-sm font-medium text-gray-900">{{ product.book_price }} ฿</p>
           </div>
           
           <button v-if="product.in_stock > 0"
