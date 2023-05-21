@@ -261,11 +261,12 @@ router.get('/allSlip/', async (req, res, next) => {
     try {
         // select * from payment join cust_order using(order_id) join order_line using(order_id)
         const payment = await pool.query("SELECT c_username, order_id, GROUP_CONCAT(isbn) AS isbn, GROUP_CONCAT(book_name) AS name, \
-        GROUP_CONCAT(quantity) AS quantity, GROUP_CONCAT(price) AS price, SUM(total_price) AS total_price,\
+        GROUP_CONCAT(quantity) AS quantity, GROUP_CONCAT(price) AS price, shipping_name, total_price AS total_price,\
         DATE_FORMAT(order_date,'%m/%d/%Y, %H:%i:%s') AS order_date, slip_img, status_value \
         FROM payment JOIN cust_order USING(order_id) \
         JOIN order_line USING(order_id) \
-        JOIN customer USING(customer_id)JOIN book USING(isbn) GROUP BY c_username, \
+        JOIN customer USING(customer_id)JOIN book USING(isbn)\
+		JOIN shipping_method USING(shipping_id) GROUP BY c_username, \
         order_id, slip_img, status_value, DATE_FORMAT(order_date,'%m/%d/%Y, %H:%i:%s')")
         res.json(payment[0])
     } catch (err) {

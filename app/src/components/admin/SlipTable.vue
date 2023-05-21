@@ -61,12 +61,13 @@
                     <img class="max-h-[40rem]" :src='`http://localhost:3000/uploads/${selectedSlip.slip_img}`' alt="">
                     <div class="h-3/12">
                         <p><strong>List:</strong></p>
-                        <div v-for="(list, index) in selectedSlip.isbn.split(',')" :key="index">
-                            <p> {{ list }} {{ selectedSlip.name.split(',')[index] }}:
-                                x {{ selectedSlip.quantity.split(',')[index] }}pc {{ selectedSlip.price.split(',')[index]
+                        <div v-for="(list, index) in selectedSlip.name.split(',')" :key="index">
+                            <p> {{ list }} :
+                                {{ selectedSlip.quantity.split(',')[index] }}pc    {{ selectedSlip.price.split(',')[index]
                                 }}฿
                             </p>
                         </div>
+                        <p><strong>Shipping Method:</strong> {{ selectedSlip.shipping_name }}</p>
                         <p><strong>Total price:</strong> {{ selectedSlip.total_price }} ฿</p>
                         <p><strong>Date:</strong> {{ selectedSlip.order_date }}</p>
                         <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded mt-4"
