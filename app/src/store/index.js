@@ -15,6 +15,7 @@ export default createStore({
   state: {
     token: localStorage.getItem('token') || '',
     products: [],
+    recommended: [],
     image:"",
    
   },

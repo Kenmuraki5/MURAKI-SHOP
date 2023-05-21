@@ -106,7 +106,7 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
 
         const [customer] = await conn.query(`select customer_id from customer  where customer_id = ?`,
           [req.user.customer_id])
-        customer[0].type = "customer"
+        // customer[0].type = "customer"
         token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
         await conn.query(
           'update tokens_c set token = ? where user_id = ?',
@@ -128,7 +128,7 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
 
         const [admin] = await conn.query(`select admin_id from admin  where admin_id = ?`,
           [req.user.admin_id])
-        admin[0].type = "admin"
+        // admin[0].type = "admin"
         token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
         await conn.query(
           'update tokens_a set token = ? where user_id = ?',
@@ -179,9 +179,7 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
 
 router.get("/sendOtp", isLoggedIn, sendotp, async function (req, res, next) {
   try {
-    const otp = await argon2.hash(req.otp)
-    console.log(otp)
-    res.send(otp)
+    res.send("success")
   } catch (error) {
     next(error)
     res.status(400).send(error.message)
@@ -190,11 +188,23 @@ router.get("/sendOtp", isLoggedIn, sendotp, async function (req, res, next) {
 
 router.post("/verifyOtp", isLoggedIn, async function (req, res, next) {
   try {
-    console.log(req.body)
-    if (await argon2.verify(req.body.otp, req.body.ck_otp)) {
-      res.send("success");
-    } else {
-      res.status(400).json('Invalid OTP');
+    let checkuser
+    if (req.user.type == "customer") {
+      [checkuser] = await pool.query("select otp from customer where customer_id = ?", [req.user.customer_id])
+      console.log(checkuser[0].otp)
+      if (await argon2.verify(checkuser[0].otp, req.body.otp)) {
+        res.send('success')
+      } else {
+        res.status(409).json('Invalid OTP');
+      }
+    }
+    if (req.user.type == "admin") {
+      [checkuser] = await pool.query("select otp from admin where admin_id = ?", [req.user.admin_id])
+      if (await argon2.verify(checkuser[0].otp, req.body.otp)) {
+        res.send('success')
+      } else {
+        res.status(400).json('Invalid OTP');
+      }
     }
   } catch (error) {
     next(error)
@@ -223,6 +233,10 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
         'update tokens_c set token = ? where user_id = ?',
         [token, req.user.customer_id,]
       )
+      await conn.query(
+        'update customer set otp = ? where user_id = ?',
+        ["", req.user.customer_id,]
+      )
     }
     else if (req.user.type == "admin") {
       await conn.query("update admin set a_email = ? where admin_id = ?", [req.body.email, req.user.admin_id])
@@ -233,6 +247,10 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
       await conn.query(
         'update tokens_a set token = ? where user_id = ?',
         [token, req.user.admin_id,]
+      )
+      await conn.query(
+        'update admin set otp = ? where user_id = ?',
+        ["", req.user.customer_id,]
       )
     }
     conn.commit()

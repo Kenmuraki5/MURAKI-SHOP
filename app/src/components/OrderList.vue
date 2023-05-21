@@ -5,7 +5,7 @@
         </div>
         <Menu as="div" class="relative inline-block text-left px-4 py-6 sm:px-6 lg:px-8">
             <div>
-                <MenuButton
+                <MenuButton v-if="show"
                     class="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                     sort
                     <ChevronDownIcon class="-mr-1 h-5 w-5 text-gray-400" aria-hidden="true" />
@@ -30,7 +30,7 @@
         </Menu>
     </header>
     <div class="min-h-full" v-if="show">
-        <main v-if="orders">
+        <main>
             <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 overflow-x-auto">
                 <table class="min-w-full leading-normal">
                     <thead>
@@ -122,9 +122,6 @@
                 </table>
             </div>
         </main>
-        <div v-else>
-            <h1>none order</h1>
-        </div>
     </div>
     <div class="orderline" v-if="show == false">
         <div class="mx-auto max-w-7xl py-6 sm:px-6 lg:px-8 overflow-x-auto">

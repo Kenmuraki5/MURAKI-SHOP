@@ -1,14 +1,19 @@
 const otpGenerator = require('otp-generator')
 const nodemailer = require('nodemailer');
-
-function sendotp(req, res, next) {
+const argon2 = require('argon2');
+const pool = require("../config/db.config");
+async function sendotp(req, res, next) {
     var email
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false });
     if(req.user.type == "customer"){
         email = req.user.c_email
+        let otp2 = await argon2.hash(otp)
+        await pool.query("update customer set otp = ? where customer_id = ? ",[otp2, req.user.customer_id])
     }
     if(req.user.type == "admin"){
         email = req.user.a_admin
+        let otp2 = await argon2.hash(otp)
+        await pool.query("update admin set otp = ? where admin_id = ? ",[otp2, req.user.admin_id])
     }
     const transporter = nodemailer.createTransport({
         service: 'gmail',
@@ -29,7 +34,6 @@ function sendotp(req, res, next) {
           return res.status(400).send("error")
         } else {
           console.log('Email sent: ' + info.response);
-          req.otp = otp
           next()
         }
       });

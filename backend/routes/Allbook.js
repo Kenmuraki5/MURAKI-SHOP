@@ -15,7 +15,7 @@ router.get("/AllBook/", async function (req, res, next) {
     }
 });
 
-router.post("/AllBook/:sortby", async function (req, res, next) {
+// router.post("/AllBook/:sortby", async function (req, res, next) {
 //    try {
 //         let result = req.params.sortby == "0" ? await pool.query(`SELECT * FROM BOOK ORDER BY publisher_date desc`) :
 //         await pool.query(`SELECT * FROM BOOK ORDER BY book_price ${req.params.sortby}`)
@@ -23,30 +23,30 @@ router.post("/AllBook/:sortby", async function (req, res, next) {
 //    } catch (error) {
 //         next(error)
 //    }
-});
+// });
 
-router.get("/blogs/create", async function (req, res, next) {
+// router.get("/blogs/create", async function (req, res, next) {
 
-});
+// });
 
-// POST - create new blog with single upload file
-router.post('/blogs', async function (req, res, next) {
+// // POST - create new blog with single upload file
+// router.post('/blogs', async function (req, res, next) {
     
-});
+// });
 
-// show detail
-router.get("/blogs/:id", async function (req, res, next) {
+// // show detail
+// router.get("/blogs/:id", async function (req, res, next) {
   
-});
+// });
 
-//update blogs
-router.put('/blogs/:id', async (req, res, next) => {
+// //update blogs
+// router.put('/blogs/:id', async (req, res, next) => {
 
-});
+// });
 
-router.delete('/blogs/:id', async (req, res, next) => {
+// router.delete('/blogs/:id', async (req, res, next) => {
 
   
-});
+// });
 
 exports.router = router;

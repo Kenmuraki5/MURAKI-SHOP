@@ -1,156 +1,269 @@
 <template>
-    <div class="flex justify-center items-center min-h-screen bg-gray-100">
-        <div class="w-full max-w-md">
-            <div class="bg-white rounded-lg shadow-lg px-10 py-8">
-                    <h2 class="text-2xl font-semibold mb-6">Register</h2>
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                        <div class="w-full md:w-1/2 px-3 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                for="grid-first-name">
-                                First Name
-                            </label>
-                            <input
-                                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                id="grid-first-name" type="text" placeholder="Jane" v-model="fname" required>
+    <!-- component -->
+    <div class="bg-grey-lighter min-h-screen flex flex-col">
+        <div class="container max-w-sm mx-auto flex-1 flex flex-col items-center justify-center px-2">
+            <div class="bg-white px-6 py-8 rounded shadow-md text-black w-full">
+                <h1 class="mb-8 text-3xl text-center">Register</h1>
+                <Form @submit.prevent="submitForm">
+                    <div class="flex gap-x-2">
+                        <div class="mb-4">
+                            <Field v-model="fname" type="text" class=" border border-grey-light w-full p-1.5 rounded "
+                                name="fname" placeholder="Full Name" :rules="validateName" />
+                            <ErrorMessage class="text-red-600" name="fname" />
                         </div>
-                        <div class="w-full md:w-1/2 px-3">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2"
-                                for="grid-last-name">
-                                Last Name
-                            </label>
-                            <input
-                                class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                                id="grid-last-name" type="text" placeholder="Doe" v-model="lname" required>
+                        <div class="mb-4">
+                            <Field v-model="lname" type="text" class=" border border-grey-light w-full p-1.5 rounded "
+                                name="lname" placeholder="Last Name" :rules="validateName" />
+                            <ErrorMessage class="text-red-600" name="lname" />
                         </div>
                     </div>
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2" for="name">
-                            Username
-                        </label>
-                        <input
-                            class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
-                            id="name" type="text" v-model="username" required />
+                        <Field v-model="username" type="text" class=" border border-grey-light w-full p-1.5 rounded "
+                            name="username" placeholder="Username" :rules="validateUsername" />
+                        <ErrorMessage class="text-red-600" name="username" />
                     </div>
                     <div class="mb-4">
-                        <label class="block text-gray-700 font-semibold mb-2" for="password">
-                            password
-                        </label>
-                        <input
-                            class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
-                            id="password" type="password"  v-model="password" required />
-                            <label class="block text-gray-700 font-semibold mb-2" for="password">
-                           confirm password
-                        </label>
-                        <input
-                            class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
-                            id="password" type="password"  v-model="confirm_password" required />
+                        <Field v-model="email" type="email" class="block border border-grey-light w-full p-1.5 rounded "
+                            name="email" placeholder="Email" :rules="validateEmail" />
+                        <ErrorMessage class="text-red-600" name="email" />
                     </div>
-                    <div class="mb-6">
-                        <label class="block text-gray-700 font-semibold mb-2" for="email">
-                            Email
-                        </label>
-                        <input
-                            class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
-                            id="email" type="email"  v-model="email" required />
+                    <div class="mb-4">
+                        <Field v-model="pnum" type="text" class="block border border-grey-light w-full p-1.5 rounded"
+                            name="pnum" placeholder="Phone Number" :rules="validatePhone" />
+                        <ErrorMessage class="text-red-600" name="pnum" />
                     </div>
-                    <div class="w-full">
-                        <label class="block text-gray-700 font-semibold mb-2" for="message">
-                            address
-                        </label>
-                        <textarea
-                            class="w-full px-3 py-2 rounded-lg border border-gray-400 focus:outline-none focus:border-blue-500"
-                            id="address" name="address" rows="5" v-model="address" required></textarea>
+                    <div class="mb-4">
+                        <Field v-model="password" type="password"
+                            class="block border border-grey-light w-full p-1.5 rounded " name="password"
+                            placeholder="Password" :rules="validatePassword" />
+                        <ErrorMessage class="text-red-600" name="password" />
                     </div>
-                    <div class="w-full">
-                        <label class="block text-gray-700 font-semibold mb-2" for="phone">
-                            Phone Number
-                        </label>
-                        <div class="flex">
-                            <input
-                                class="w-full px-3 py-2 rounded-r-lg border border-gray-400 focus:outline-none focus:border-blue-500"
-                                id="phone" type="tel"  placeholder="123-456-7890" v-model="phonenumber"
-                                required />
-                        </div>
+                    <div class="mb-4">
+                        <Field v-model="conpassword" type="password"
+                            class="block border border-grey-light w-full p-1.5 rounded " name="conpassword"
+                            placeholder="Confirm Password" :rules="validateConPassword" />
+                        <ErrorMessage class="text-red-600" name="conpassword" />
                     </div>
-                    <div>
-                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-semibold my-3 py-2 px-4 rounded-lg"
-                            type="submit" @click="submit()">
-                            Register
-                        </button>
+                    <div class="mb4">
+                        <Field as="textarea" v-model="address" type="textarea"
+                            class="block border border-grey-light w-full p-1.5 rounded" name="address" placeholder="Address"
+                            :rules="validateAddress">
+                        </Field>
+                        <ErrorMessage class="text-red-600" name="address" />
                     </div>
+                    <div class="mb4 mt-3">
+                        <Field v-model="postal_code" type="input"
+                            class="block border border-grey-light w-full p-1.5 rounded" name="postal_code"
+                            placeholder="postal_code" :rules="validatePostal">
+                        </Field>
+                        <ErrorMessage class="text-red-600" name="postal_code" />
+                    </div>
+
+                    <button type="submit" @click="submit()"
+                        class="mt-3 w-full inline-flex items-center justify-center px-4 py-2 bg-orange-500 border border-transparent rounded-md font-semibold capitalize text-white hover:bg-orange-600 active:bg-red-700 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 disabled:opacity-25 transition">Create
+                        Account</button>
+
+                </Form>
+
+
+
+            </div>
+
+            <div class="text-grey-dark mt-6">
+                Already have an account?
+                <router-link class="no-underline border-b border-blue text-blue" to="/LoginPage">
+                    Sign In
+                </router-link> here
             </div>
         </div>
     </div>
 </template>
-  
-
+    
 <script>
-import axios from 'axios';
+import { Form, Field, ErrorMessage } from 'vee-validate';
 
+import axios from 'axios'
 export default {
+    components: {
+        Form,
+        Field,
+        ErrorMessage,
+    },
     data() {
         return {
             fname: "",
             lname: "",
-            username: "",
-            password: "",
-            confirm_password: "",
             email: "",
+            password: "",
+            conpassword: "",
+            pnum: "",
             address: "",
-            phonenumber: ""
+            showModal: false,
+            postal_code: "",
+            username: "",
         }
-    },
-    methods: {
-        async submit() {
-            try {
-                if (!this.fname) {
-                    alert('please fill firstname')
-                }
-                else if (!this.lname) {
-                    alert('please fill lastname.')
-                }
-                else if (!this.username) {
-                    alert('Please fill username.')
-                }
-                else if (!this.password) {
-                    alert('Please fill password.')
-                }
-                else if (!this.confirm_password) {
-                    alert('Please confirm password.')
-                }
-                else if (this.confirm_password != this.password) {
-                    alert('confirm password is invalid.')
-                }
-                else if (!this.email) {
-                    alert('Please fill email.')
-                }
-                else if (!this.email.includes("@")) {
-                    alert('Email is invalid.')
-                }
-                else if (!this.address) {
-                    alert('Please fill address.')
-                }
-                else if (!this.phonenumber) {
-                    alert('Please fill phone number')
-                }
-                else {
-                    const formData = new FormData()
-                    formData.append("fname", this.fname)
-                    formData.append("lname", this.lname)
-                    formData.append("username", this.username)
-                    formData.append("password", this.password)
-                    formData.append("confirm_password", this.confirm_password)
-                    formData.append("email", this.email)
-                    formData.append("address", this.address)
-                    formData.append("phonenumber", this.phonenumber)
-                    let res = await axios.post("http://localhost:3000/register", formData, { headers: { 'Content-Type': 'application/json' } })
-                    alert(res.data)
-                    this.$router.push("/LoginPage")
-                }
-            } catch (error) {
-                alert(error.response.data)
+    }, methods: {
+        validateUsername(value) {
+
+            if (!value) {
+                return 'This field is required';
             }
-        }
-    }
+            if (value.length < 8 || value.length > 20) {
+                return 'Username must be between 8 and 20 characters';
+            }
+            return true;
+        },
+        validateName(value) {
+
+            if (!value) {
+                return 'This field is required';
+            }
+
+            // All is good
+            return true;
+        },
+        validatePhone(value) {
+
+            if (!value) {
+                return 'This field is required';
+            }
+
+            if (!value.match(/0[0-9]{9}/)) {
+                return 'Invalid Mobile Number';
+            }
+            // All is good
+            return true;
+        },
+        validatePassword(value) {
+
+            if (!value) {
+                return 'This field is required';
+            }
+
+            if (!(value.match(/[a-z]/) && value.match(/[A-Z]/) && value.match(/[0-9]/))) {
+                return 'Password is Too Easy';
+            }
+            // All is good
+            return true;
+        },
+        validateConPassword(value) {
+
+            if (!value) {
+                return 'This field is required';
+            }
+
+            if (!value.match(this.password)) {
+                return 'Password not match';
+            }
+            // All is good
+            return true;
+        },
+        validateEmail(value) {
+
+            if (!value) {
+                return 'This field is required';
+            }
+
+            const regex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+            if (!regex.test(value)) {
+                return 'This field must be a valid email';
+            }
+            // All is good
+            return true;
+        },
+        validateAddress(value) {
+
+            if (!value) {
+                return 'This field is required';
+            }
+
+            return true;
+        },
+        validatePostal(value) {
+            if (!value) {
+                return 'This field is required';
+            }
+
+            if (!/^\d{5}$/.test(value)) {
+                return 'Postal code must be a 5-digit number';
+            }
+
+            return true;
+        },
+        validateForm() {
+            let errors = [];
+            if (!this.fname) {
+                errors.push('please fill firstname')
+            }
+            if (!this.lname) {
+                errors.push('please fill lastname.')
+            }
+            if (!this.username) {
+                errors.push('Please fill username.')
+            }
+            if (this.username.length < 8 || this.username > 20){
+                errors.push('Username is invalid.')
+            }
+            if (!this.password) {
+                errors.push('Please fill password.')
+            }
+            if (!this.conpassword) {
+                errors.push('Please confirm password.')
+            }
+            if (this.conpassword != this.password) {
+                errors.push('confirm password is invalid.')
+            }
+            if (!this.email) {
+                errors.push('Please fill email.')
+            }
+            if (!this.email.includes("@")) {
+                errors.push('Email is invalid.')
+            }
+            if (!this.address) {
+                errors.push('Please fill address.')
+            }
+            if (!this.postal_code) {
+                errors.push('Please fill address.')
+            }
+            if (!this.pnum) {
+                errors.push('Please fill phone number')
+            }
+            return errors;
+        },
+        submit() {
+            let errors = this.validateForm();
+
+            // If there are errors, display them and stop the form from submitting
+            if (errors.length > 0) {
+                alert(errors.join("\n"));
+                return;
+            }
+            const formData = new FormData();
+            formData.append("username", this.username);
+            formData.append("fname", this.fname);
+            formData.append("lname", this.lname);
+            formData.append("email", this.email);
+            formData.append("password", this.password);
+            formData.append("confirm_password", this.conpassword);
+            formData.append("phonenumber", this.pnum);
+            formData.append("address", this.address + " " + this.postal_code);
+            axios
+                .post("http://localhost:3000/register", formData, {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                })
+                .then((response) => {
+                    this.$router.push({ name: "LoginPage" })
+                    console.log(response.data)
+                })
+                .catch((error) => {
+                    alert(error.response.data)
+                });
+
+
+        },
+
+    },
 }
 </script>

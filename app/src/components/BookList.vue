@@ -200,7 +200,7 @@
                     <div v-for="product in newFilteredManga" :key="product.isbn" class="group relative grid justify-center">
                       <RouterLink :to="`/DetailPage/${product.isbn}`">
                         <div
-                          class="min-h-80 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80
+                          class="min-h-80 w-52 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80
                           my-2">
                           <img :src="`http://localhost:3000/uploads/${product.book_img}`" :style="{opacity:product.in_stock == 0 ? 0.25 : 1 }"
                             class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
@@ -215,7 +215,7 @@
                             </h3>
                             <p class="mt-1 text-sm text-gray-500">{{ product.book_color }}</p>
                           </div>
-                          <p class="text-sm font-medium text-gray-900">{{ product.book_price }}</p>
+                          <p class="text-sm font-medium text-gray-900">{{ product.book_price }} ฿</p>
                           
                         </div>
                       </RouterLink>

@@ -11,7 +11,7 @@ const generatetoken = async (type, id) => {
   try {
     const secretKey = "miraki";
     const [result] = await pool.query(`SELECT ${type}_id FROM ${type} WHERE ${type}_id = ?`, [id]);
-    result[0].type = type
+    // result[0].type = type
     const token = jwt.sign(result[0], secretKey, { algorithm: 'HS256' });
     console.log(token);
     return token;
@@ -51,7 +51,7 @@ const emailValidator = async (value, helpers) => {
 }
 
 const signupSchema = Joi.object({
-  username: Joi.string().required().min(5).max(20).external(usernameValidator),
+  username: Joi.string().required().min(8).max(20).external(usernameValidator),
   password: Joi.string().required().custom(passwordValidator),
   confirm_password: Joi.string().required().valid(Joi.ref('password')),
   email: Joi.string().email().required().external(emailValidator),
@@ -62,6 +62,7 @@ const signupSchema = Joi.object({
 })
 
 router.post("/register", async function (req, res, next) {
+  console.log(req.body)
   try {
     console.log(req.body)
     await signupSchema.validateAsync(req.body, { abortEarly: false })

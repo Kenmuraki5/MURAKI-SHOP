@@ -170,16 +170,42 @@ export default {
                     .catch((err) => { alert(err.response.data) })
             }
         },
-        changeemail(otp) {
+        changeemail() {
             swal("Please enter your otp:", {
                 content: "input",
                 buttons: true,
             })
                 .then((value) => {
-                    if (value) {
-                        axios.post("http://localhost:3000/verifyOtp/", { otp: otp, ck_otp: value })
+                    if (value || value=="") {
+                        axios.post("http://localhost:3000/verifyOtp/", { otp: value, })
                             .then((res) => {
                                 console.log(res.data)
+                                swal("Please new email:", {
+                                    content: "input",
+                                })
+                                    .then((value) => {
+                                        if (value == this.email) {
+                                            swal({
+                                                title: "change mail success!",
+                                                icon: "success",
+                                            });
+                                        }
+                                        else {
+                                            axios.put(`http://localhost:3000/changeemail/`, { email: value })
+                                                .then((res) => {
+                                                    this.email = res.data
+                                                })
+                                                .catch((err) => {
+                                                    swal({
+                                                        title: "Error?",
+                                                        text: err.response.data,
+                                                        icon: "warning",
+                                                        dangerMode: true,
+                                                    })
+                                                })
+                                        }
+
+                                    });
                             })
                             .catch((err) => {
                                 return swal({
@@ -189,33 +215,6 @@ export default {
                                     dangerMode: true,
                                 })
                             })
-                        swal("Please new email:", {
-                            content: "input",
-                        })
-                            .then((value) => {
-                                if (value == this.email) {
-                                    swal({
-                                        title: "change mail success!",
-                                        icon: "success",
-                                    });
-                                }
-                                else {
-                                    axios.put(`http://localhost:3000/changeemail/`, { email: value })
-                                        .then((res) => {
-
-                                            this.email = res.data
-                                        })
-                                        .catch((err) => {
-                                            swal({
-                                                title: "Error?",
-                                                text: err.response.data,
-                                                icon: "warning",
-                                                dangerMode: true,
-                                            })
-                                        })
-                                }
-
-                            });
                     }
                 });
         },
@@ -227,7 +226,8 @@ export default {
             });
             axios.get(`http://localhost:3000/sendOtp/`)
                 .then((res) => {
-                    this.changeemail(res.data)
+                    console.log(res.data)
+                    this.changeemail()
                 })
                 .catch((err) => {
                     swal({
