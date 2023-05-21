@@ -1,11 +1,20 @@
 <template>
   <div>
-    <div class="flex ml-5">
-      <button class="ml-5" @click="toggleComponent('add')">Add</button>
-      <button class="ml-5" @click="toggleComponent('table')">Edit</button>
-      <button class="ml-5" @click="toggleComponent('slip')">Slip</button>
+    <div class="flex flex-wrap sm:items-center sm:justify-between p-4 bg-black">
+      <RouterLink class="flex flex-shrink-0 items-center" to="/">
+        <span class="block h-auto w-auto font-black text-white lg:block" alt="Your Company">MURAKI COMIC</span>
+      </RouterLink>
+      <div class="flex mt-4 sm:mt-0 sm:ml-auto">
+        <button class="ml-5 text-white font-bold py-2 px-4 rounded hover:bg-gray-700"
+          @click="toggleComponent('add')">Add</button>
+        <button class="ml-5 text-white font-bold py-2 px-4 rounded hover:bg-gray-700"
+          @click="toggleComponent('table')">Edit</button>
+        <button class="ml-5 text-white font-bold py-2 px-4 rounded hover:bg-gray-700"
+          @click="toggleComponent('slip')">Slip</button>
+      </div>
     </div>
-    <AddBook v-if="showAddBook"/>
+
+    <AddBook v-if="showAddBook" />
     <div v-if="showBookTable">
       <BookTable @button-clicked="bookFromEdit" :key="re" @book="save" />
       <EditForm v-if="bookEditing" :book="bookEditing" :key="bookEditing.isbn" @book="save" />
