@@ -4,7 +4,7 @@ const pool = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: 'root',
-  database: 'MURAKI_COMIC',
+  database: 'MURAKI_COMIC2',
   port:8889,
   waitForConnections: true,
   connectionLimit: 10,

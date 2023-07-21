@@ -40,7 +40,7 @@
     <section class="container pb-3 w-full flex flex-col justify-center">
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 text-gray-700 rounded-lg bg-white shadow-lg ">COMMENTS</div>
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 border rounded-lg bg-white shadow-lg"
-            v-if="this.$store.state.token">
+            v-if="this.$store.state.token && role == 'customer'">
             <div class="relative flex gap-4 ">
                 <img :src="img_user ? `http://localhost:3000/uploads/${this.img_user}`: `http://localhost:3000/uploads/noneprofile.png`"
                     class="relative rounded-lg bg-white border h-20 w-20" alt="" loading="lazy">
@@ -98,6 +98,7 @@ export default {
             img_user: null,
             username: null,
             comment: null,
+            role:""
         }
     },
     methods: {
@@ -160,6 +161,7 @@ export default {
         .then(res => {
             this.username = res.data.c_username || res.data.a_username
             this.img_user = res.data.c_image || res.data.a_image
+            this.role = res.data.type
         }).catch(err => console.log(err))
     }
 } 

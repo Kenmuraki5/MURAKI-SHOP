@@ -26,7 +26,7 @@ async function sendotp(req, res, next) {
         from: 'murakishopp@gmail.com',
         to: email,
         subject: 'Password Reset',
-        text: otp
+        html: `<html> <h1>Muraki shop change email</h1> <br/><p style="color:grey; font-size:1.2em">Please use the below OTP code to complete your Change Password</p><br><br><h1 style="color:orange">${otp}</h1></html>`
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
