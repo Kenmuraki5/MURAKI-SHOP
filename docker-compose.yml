@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: MURAKI_COMIC2
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./MURAKI_COMIC2.sql:/docker-entrypoint-initdb.d/MURAKI_COMIC2.sql
+
+  express:
+    build: ./backend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+
+  vue:
+    build:
+      context: ./app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - express

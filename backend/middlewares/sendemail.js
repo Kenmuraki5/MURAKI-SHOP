@@ -8,12 +8,12 @@ async function sendotp(req, res, next) {
     if(req.user.type == "customer"){
         email = req.user.c_email
         let otp2 = await argon2.hash(otp)
-        await pool.query("update customer set otp = ? where customer_id = ? ",[otp2, req.user.customer_id])
+        await pool.query("update Customer set otp = ? where customer_id = ? ",[otp2, req.user.customer_id])
     }
     if(req.user.type == "admin"){
         email = req.user.a_admin
         let otp2 = await argon2.hash(otp)
-        await pool.query("update admin set otp = ? where admin_id = ? ",[otp2, req.user.admin_id])
+        await pool.query("update Admin set otp = ? where admin_id = ? ",[otp2, req.user.admin_id])
     }
     const transporter = nodemailer.createTransport({
         service: 'gmail',

@@ -25,7 +25,8 @@ SET time_zone = "+00:00";
 
 --
 -- Table structure for table `Admin`
---
+
+
 
 CREATE TABLE `Admin` (
   `admin_id` int(20) NOT NULL,
@@ -44,7 +45,7 @@ CREATE TABLE `Admin` (
 --
 
 INSERT INTO `Admin` (`admin_id`, `a_username`, `a_password`, `a_first_name`, `a_last_name`, `a_address`, `a_email`, `a_phone`, `a_image`) VALUES
-(1, 'admin', '$argon2id$v=19$m=65536,t=3,p=4$ZE8IOFbjDnBFYGj0inkJyw$7JHJjZdwxv2lZ4Krk2AucICLl7KJ9esUSatbhgPCV7U', 'ad', 'min', '', '@mail', '0878888888', '');
+(1, 'admin', '$argon2id$v=19$m=65536,t=3,p=4$LAlOEKHjR3paHxiS+i6o6Q$dPgQBUUynSefTuqpxpNPEGx96xnhezcBn7+UB+dsh40', 'ad', 'min', '', '@mail', '0878888888', '');
 
 -- --------------------------------------------------------
 

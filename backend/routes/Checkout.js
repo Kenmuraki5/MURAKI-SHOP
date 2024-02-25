@@ -21,8 +21,8 @@ router.get("/CheckOut", async function (req, res, next) {
     // if(!req.query.cart){
     //   return res.status(400).send("None product in cart");
     // }
-    let result = await pool.query("SELECT * FROM `Shipping_Method`");
-    let instock = await pool.query('select isbn, in_stock from book')
+    let result = await pool.query("SELECT * FROM Shipping_Method");
+    let instock = await pool.query('SELECT isbn, in_stock from Book')
     for (let incart of req.query.cart) {
       let matchingBook = instock[0].find(book => book.isbn === incart.isbn);
       if (matchingBook && incart.quantity > matchingBook.in_stock) {
@@ -43,7 +43,7 @@ router.post("/addPayment", isLoggedIn, upload.single('image'), async function (r
       return res.status(400).send("None product in cart.")
     }
     for (const item of cart) {
-      const [checkstock] = await pool.query("SELECT in_stock, book_name FROM book WHERE isbn=?", [item.isbn])
+      const [checkstock] = await pool.query("SELECT in_stock, book_name FROM Book WHERE isbn=?", [item.isbn])
       if (item.quantity > checkstock[0].in_stock) {
         return res.status(409).send(`${item.book_name} is out of stock.`)
       }
@@ -51,18 +51,18 @@ router.post("/addPayment", isLoggedIn, upload.single('image'), async function (r
     await conn.beginTransaction();
 
     if (req.user.type == "customer") {
-      let addOrder = await conn.query("INSERT INTO cust_order \
+      let addOrder = await conn.query("INSERT INTO Cust_Order \
     (order_date, customer_id, shipping_id, address, total_price, status_value) value(current_timestamp(),?,?,?,?,'pending')",
         [req.user.customer_id, req.body.shipping, req.body.address, req.body.totalPrice]);
       cart.forEach(item => {
-        let addOrderLine = conn.query('insert into order_line (order_id, isbn, quantity, price, book_name, book_img) \
+        let addOrderLine = conn.query('INSERT into Order_Line (order_id, isbn, quantity, price, book_name, book_img) \
         value (?,?,?,?,?,?)',
           [addOrder[0].insertId, item.isbn, item.quantity, item.quantity * item.book_price, item.book_name, item.book_img])
-        let updateBook = conn.query('update book set in_stock = in_stock - ? where isbn = ?',
+        let updateBook = conn.query('update Book set in_stock = in_stock - ? where isbn = ?',
           [item.quantity, item.isbn])
       });
 
-      let addSlip = await conn.query('insert into payment (order_id, payment_status, slip_img) value (?,?,?)',
+      let addSlip = await conn.query('INSERT into Payment (order_id, payment_status, slip_img) value (?,?,?)',
         [addOrder[0].insertId, 'pending', req.file.filename])
     }
     else if(req.user.type == "admin"){

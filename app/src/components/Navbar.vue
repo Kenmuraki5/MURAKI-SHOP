@@ -85,9 +85,6 @@
                                   <h1 class="text-gray-900 font-bold text-2xl">
                                     {{ item.book_name }}
                                   </h1>
-                                  <p class="mt-2 text-gray-600 text-sm">
-                                    {{ item.book_description }}
-                                  </p>
                                   <div class="flex justify-between mt-3">
 
                                     <button @click="remove(item)"

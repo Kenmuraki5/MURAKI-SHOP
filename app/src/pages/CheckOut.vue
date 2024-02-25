@@ -63,7 +63,7 @@
                        </label>
                    </div> -->
                     <section class="flex flex-col">
-                        <img src="https://cdn.discordapp.com/attachments/399896332187336704/1098272137195831469/Moment_1681918864643.jpg"
+                        <img src="../assets/qrpayment.jpg"
                             alt="">
                         <br>
                         <div class="flex">

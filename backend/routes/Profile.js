@@ -72,13 +72,13 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
 
   try {
     if (req.body.username && req.user.type == "customer") {
-      const [check_customer] = await conn.query("select * from customer where customer_id = ? and c_username = ?", [req.user.customer_id, req.body.username])
+      const [check_customer] = await conn.query("select * from Customer where customer_id = ? and c_username = ?", [req.user.customer_id, req.body.username])
       if (check_customer[0]) {
         delete req.body.username
       }
     }
     else if (req.body.username && req.user.type == "admin") {
-      const [check_username] = await conn.query("select * from admin where admin_id = ? and a_username = ?", [req.user.admin_id, req.body.username])
+      const [check_username] = await conn.query("select * from Admin where admin_id = ? and a_username = ?", [req.user.admin_id, req.body.username])
       if (check_username[0]) {
         delete req.body.username
       }
@@ -97,14 +97,14 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
     let token
     if (req.user.type == 'customer') {
 
-      await conn.query(`UPDATE CUSTOMER SET c_first_name = ?, c_last_name = ?,\
+      await conn.query(`UPDATE Customer SET c_first_name = ?, c_last_name = ?,\
     c_address = ?, c_phone = ? where customer_id = ?`, [req.body.fname,
       req.body.lname, req.body.address, req.body.phonenumber, req.user.customer_id]);
 
       if (req.body.username) {
-        await conn.query(`UPDATE CUSTOMER SET c_username = ? where customer_id = ?`, [req.body.username, req.user.customer_id]);
+        await conn.query(`UPDATE Customer SET c_username = ? where customer_id = ?`, [req.body.username, req.user.customer_id]);
 
-        const [customer] = await conn.query(`select customer_id from customer  where customer_id = ?`,
+        const [customer] = await conn.query(`select customer_id from Customer  where customer_id = ?`,
           [req.user.customer_id])
         // customer[0].type = "customer"
         token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
@@ -119,14 +119,14 @@ router.put("/EditProfile", isLoggedIn, async function (req, res, next) {
     }
     else if (req.user.type == 'admin') {
       console.log()
-      await conn.query(`UPDATE admin SET a_first_name = ?, a_last_name = ?,\
+      await conn.query(`UPDATE Admin SET a_first_name = ?, a_last_name = ?,\
     a_address = ?, a_phone = ? where admin_id = ?`, [req.body.fname,
       req.body.lname, req.body.address, req.body.phonenumber, req.user.admin_id]);
 
       if (req.body.username) {
-        await conn.query(`UPDATE CUSTOMER SET a_username = ? where admin_id = ?`, [req.body.username, req.user.admin_id]);
+        await conn.query(`UPDATE Customer SET a_username = ? where admin_id = ?`, [req.body.username, req.user.admin_id]);
 
-        const [admin] = await conn.query(`select admin_id from admin  where admin_id = ?`,
+        const [admin] = await conn.query(`select admin_id from Admin  where admin_id = ?`,
           [req.user.admin_id])
         // admin[0].type = "admin"
         token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
@@ -154,14 +154,14 @@ router.put("/changepicture", isLoggedIn, upload.single('img'), async function (r
   try {
     const file = req.file;
     if (req.user.type == 'customer') {
-      await conn.query(`UPDATE CUSTOMER SET c_image = ? where customer_id = ?`, [file.filename, req.user.customer_id])
+      await conn.query(`UPDATE Customer SET c_image = ? where customer_id = ?`, [file.filename, req.user.customer_id])
 
       conn.commit()
       console.log("success")
       res.status(200).send("update success")
     }
     if (req.user.type == 'admin') {
-      await conn.query(`UPDATE admin SET a_image = ? where admin_id = ?`, [file.filename, req.user.admin_id])
+      await conn.query(`UPDATE Admin SET a_image = ? where admin_id = ?`, [file.filename, req.user.admin_id])
 
       conn.commit()
       console.log("success")
@@ -190,7 +190,7 @@ router.post("/verifyOtp", isLoggedIn, async function (req, res, next) {
   try {
     let checkuser
     if (req.user.type == "customer") {
-      [checkuser] = await pool.query("select otp from customer where customer_id = ?", [req.user.customer_id])
+      [checkuser] = await pool.query("select otp from Customer where customer_id = ?", [req.user.customer_id])
       if (await argon2.verify(checkuser[0].otp, req.body.otp)) {
         res.send('success')
       } else {
@@ -198,7 +198,7 @@ router.post("/verifyOtp", isLoggedIn, async function (req, res, next) {
       }
     }
     if (req.user.type == "admin") {
-      [checkuser] = await pool.query("select otp from admin where admin_id = ?", [req.user.admin_id])
+      [checkuser] = await pool.query("select otp from Admin where admin_id = ?", [req.user.admin_id])
       if (await argon2.verify(checkuser[0].otp, req.body.otp)) {
         res.send('success')
       } else {
@@ -223,8 +223,8 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
   await conn.beginTransaction()
   try {
     if (req.user.type == "customer") {
-      await conn.query("update customer set c_email = ? where customer_id = ?", [req.body.email, req.user.customer_id])
-      const [customer] = await conn.query(`select customer_id from customer  where customer_id = ?`,
+      await conn.query("update Customer set c_email = ? where customer_id = ?", [req.body.email, req.user.customer_id])
+      const [customer] = await conn.query(`select customer_id from Customer  where customer_id = ?`,
         [req.user.customer_id])
       customer[0].type = "customer"
       token = jwt.sign(customer[0], secretKey, { algorithm: 'HS256' });
@@ -233,13 +233,13 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
         [token, req.user.customer_id,]
       )
       await conn.query(
-        'update customer set otp = ? where user_id = ?',
+        'update Customer set otp = ? where user_id = ?',
         ["", req.user.customer_id,]
       )
     }
     else if (req.user.type == "admin") {
-      await conn.query("update admin set a_email = ? where admin_id = ?", [req.body.email, req.user.admin_id])
-      const [admin] = await conn.query(`select admin_id from admin  where admin_id = ?`,
+      await conn.query("update Admin set a_email = ? where admin_id = ?", [req.body.email, req.user.admin_id])
+      const [admin] = await conn.query(`select admin_id from Admin  where admin_id = ?`,
         [req.user.admin_id])
       admin[0].type = "admin"
       token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });

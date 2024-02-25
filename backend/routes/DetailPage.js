@@ -9,7 +9,7 @@ router.get("/DetailPage/:id", async function (req, res, next) {
     console.log(req.params.id)
     const results = []
     let bookDetail = await pool.query(`SELECT * FROM Book where isbn = ?` ,[req.params.id]);
-    let bookComment = await pool.query(`SELECT comment_id, c_username, comment, created_at, c_image  FROM comments join customer using(customer_id) where isbn = ? order by created_at;`,
+    let bookComment = await pool.query(`SELECT comment_id, c_username, comment, created_at, c_image  FROM comments join Customer using(customer_id) where isbn = ? order by created_at;`,
     [bookDetail[0][0].isbn])
     results.push(bookDetail[0][0])
     results.push(bookComment[0])
