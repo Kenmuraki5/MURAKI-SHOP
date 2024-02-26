@@ -248,7 +248,7 @@ export default {
             formData.append("phonenumber", this.pnum);
             formData.append("address", this.address + " " + this.postal_code);
             axios
-                .post("http://localhost/api/register", formData, {
+                .post("http://34.125.149.37/api/register", formData, {
                     headers: {
                         "Content-Type": "application/json",
                     },
