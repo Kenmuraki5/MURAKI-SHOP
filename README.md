@@ -23,4 +23,4 @@ npm run lint
 
 
 link deployment app
-[localhost](http://34.125.149.37/)http://34.125.149.37/
+http://34.125.149.37/
