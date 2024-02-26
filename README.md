@@ -20,5 +20,7 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
+
+link deployment app
+[localhost](http://34.125.149.37/)http://34.125.149.37/
