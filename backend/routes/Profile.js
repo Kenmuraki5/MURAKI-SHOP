@@ -238,19 +238,7 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
       )
     }
     else if (req.user.type == "admin") {
-      await conn.query("update Admin set a_email = ? where admin_id = ?", [req.body.email, req.user.admin_id])
-      const [admin] = await conn.query(`select admin_id from Admin  where admin_id = ?`,
-        [req.user.admin_id])
-      admin[0].type = "admin"
-      token = jwt.sign(admin[0], secretKey, { algorithm: 'HS256' });
-      await conn.query(
-        'update tokens_a set token = ? where user_id = ?',
-        [token, req.user.admin_id,]
-      )
-      await conn.query(
-        'update admin set otp = ? where user_id = ?',
-        ["", req.user.customer_id,]
-      )
+      res.send("cannot change email")
     }
     conn.commit()
     res.send(req.body.email)

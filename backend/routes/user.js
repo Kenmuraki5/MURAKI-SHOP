@@ -185,7 +185,7 @@ router.post("/verification", async function (req, res, next) {
 
   try {
     const [check_customer] = await pool.query("select customer_id from Customer where c_email = ?", [req.body.email])
-    const [check_admin] = await pool.query("select admin_id from admin where a_email = ?", [req.body.email])
+    const [check_admin] = await pool.query("select admin_id from Admin where a_email = ?", [req.body.email])
     if (!check_customer[0] && !check_admin[0]) {
       res.status(409).send("This email does not exist in the system.")
     }
@@ -203,7 +203,7 @@ router.post("/verification", async function (req, res, next) {
         from: 'murakishopp@gmail.com',
         to: req.body.email,
         subject: 'Password Reset',
-        text: "http://localhost:8080/ResetPassword/" + token
+        text: "http://localhost/ResetPassword/" + token
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -229,7 +229,7 @@ router.post("/verification", async function (req, res, next) {
         from: 'murakishopp@gmail.com',
         to: req.body.email,
         subject: 'Password Reset',
-        text: "http://localhost:8080/ResetPassword/" + token
+        text: "http://localhost/ResetPassword/" + token
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
