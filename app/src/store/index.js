@@ -33,7 +33,7 @@ export default createStore({
         router.push("/")
     },
     getprofileuser(state){
-      axios.get(`http://localhost:3000/user/me`)
+      axios.get(`http://localhost/api/user/me`)
       .then((res) => {
         state.image = res.data.c_image || res.data.a_image
       }).catch((err) => {

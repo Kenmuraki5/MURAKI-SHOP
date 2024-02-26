@@ -233,7 +233,7 @@ router.put("/changeemail", isLoggedIn, async function (req, res, next) {
         [token, req.user.customer_id,]
       )
       await conn.query(
-        'update Customer set otp = ? where user_id = ?',
+        'update Customer set otp = ? where customer_id = ?',
         ["", req.user.customer_id,]
       )
     }

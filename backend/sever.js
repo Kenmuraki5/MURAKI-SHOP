@@ -7,7 +7,7 @@ const app = express();
 // var corsOptions = {
 //   origin: "http://localhost:8081"
 // };
-app.use(express.static('static'))
+app.use("/images", express.static('static'))
 
 app.use(cors());
 
@@ -30,16 +30,16 @@ const Profile = require('./routes/Profile')
 const Orderdetail = require('./routes/Orderdetail')
 
 
-app.use(indexRouter.router)
-app.use(AllbookRouter.router)
-app.use(MangaRouter.router)
-app.use(NovelRouter.router)
-app.use(adminRouter.router)
-app.use(CheckoutRouter.router)
-app.use(DetailPage.router)
-app.use(user.router)
-app.use(Profile.router)
-app.use(Orderdetail.router)
+app.use("/api", indexRouter.router)
+app.use("/api", AllbookRouter.router)
+app.use("/api", MangaRouter.router)
+app.use("/api", NovelRouter.router)
+app.use("/api", adminRouter.router)
+app.use("/api", CheckoutRouter.router)
+app.use("/api", DetailPage.router)
+app.use("/api", user.router)
+app.use("/api", Profile.router)
+app.use("/api", Orderdetail.router)
 
 
 // set port, listen for requests

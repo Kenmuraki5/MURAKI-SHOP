@@ -43,7 +43,7 @@ export default {
             formData.append("image", book.file)
             formData.append("inStock", book.inStock)
 
-            axios.post('http://localhost:3000/addBook', formData, {
+            axios.post('http://localhost/api/addBook', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

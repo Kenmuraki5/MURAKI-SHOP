@@ -63,13 +63,13 @@ export default {
   },
   created() {
     this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-    axios.get(`http://localhost:3000/`)
+    axios.get(`http://localhost/api`)
       .then(res => this.$store.state.products = res.data)
       .catch(err => {
         console.log(err)
 
       })
-    axios.get(`http://localhost:3000/recommended`)
+    axios.get(`http://localhost/api/recommended`)
       .then((res) => {
         console.log(res.data)
         this.$store.state.recommended = res.data

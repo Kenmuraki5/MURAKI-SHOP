@@ -22,12 +22,12 @@
           </div>
         </div>
         <div class="carousel-item" style="max-height: 500px;" data-bs-interval="9000">
-          <img src="http://localhost:3000/uploads/event3.jpeg" class="d-block w-100" alt="...">
+          <img src="http://localhost/images/uploads/event3.jpeg" class="d-block w-100" alt="...">
           <div class="carousel-caption d-none d-md-block">
           </div>
         </div>
         <div class="carousel-item" style="max-height: 500px;" data-bs-interval="2000">
-          <img src="http://localhost:3000/uploads/event4.jpg" class="d-block w-100" alt="...">
+          <img src="http://localhost/images/uploads/event4.jpg" class="d-block w-100" alt="...">
           <div class="carousel-caption d-none d-md-block">
           </div>
         </div>

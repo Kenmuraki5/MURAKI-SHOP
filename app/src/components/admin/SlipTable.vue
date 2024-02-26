@@ -58,7 +58,7 @@
                     <div class="h-1/12">
                         <h2 class="text-2xl font-semibold mb-4">Detail</h2>
                     </div>
-                    <img class="max-h-[40rem]" :src='`http://localhost:3000/uploads/${selectedSlip.slip_img}`' alt="">
+                    <img class="max-h-[40rem]" :src='`http://localhost/images/uploads/${selectedSlip.slip_img}`' alt="">
                     <div class="h-3/12">
                         <p><strong>List:</strong></p>
                         <div v-for="(list, index) in selectedSlip.name.split(',')" :key="index">
@@ -100,7 +100,7 @@ export default {
         },
         approve(slip) {
             console.log(slip)
-            axios.put('http://localhost:3000/approve', slip).then(res => {
+            axios.put('http://localhost/api/approve', slip).then(res => {
                 console.log(res)
                 this.$emit('slip');
             }).catch(err => {
@@ -109,7 +109,7 @@ export default {
         },
         decline(slip) {
             console.log(slip)
-            axios.put('http://localhost:3000/decline', slip).then(res => {
+            axios.put('http://localhost/api/decline', slip).then(res => {
                 console.log(res)
                 this.$emit('slip');
             }).catch(err => {
@@ -118,7 +118,7 @@ export default {
         }
     },
     created() {
-        axios.get("http://localhost:3000/allSlip")
+        axios.get("http://localhost/api/allSlip")
             .then(res => {
                 this.allSlip = res.data
                 console.log(this.allSlip)

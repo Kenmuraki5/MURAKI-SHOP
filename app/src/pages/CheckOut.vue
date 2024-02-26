@@ -15,7 +15,7 @@
                                 <div class="row">
                                     <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                                         <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                                            <img :src="`http://localhost:3000/uploads/${product.book_img}`" class="w-100" />
+                                            <img :src="`http://localhost/images/uploads/${product.book_img}`" class="w-100" />
                                             <a href="#!">
                                                 <div class="hover-overlay">
                                                     <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
@@ -182,7 +182,7 @@ export default {
             form.append("totalPrice", this.totalPrice)
             form.append("image", this.file)
 
-            axios.post('http://localhost:3000/addPayment', form, {
+            axios.post('http://localhost/api/addPayment', form, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
@@ -232,10 +232,10 @@ export default {
     async created() {
         try {
             this.cart = JSON.parse(localStorage.cart == undefined ? [] : localStorage.cart);
-            const res = await axios.get("http://localhost:3000/CheckOut", { params: { cart: this.cart } })
+            const res = await axios.get("http://localhost/api/CheckOut", { params: { cart: this.cart } })
             this.shipping = res.data
 
-            const res1 = await axios.get("http://localhost:3000/")
+            const res1 = await axios.get("http://localhost/api")
             const result = this.cart.filter(val => res1.data.find(val2 => val.isbn == val2.isbn))
             console.log(result)
         } catch (error) {
@@ -243,7 +243,7 @@ export default {
             alert(error.response.data)
             this.$router.push("/")
         }
-        axios.get(`http://localhost:3000/user/me`)
+        axios.get(`http://localhost/api/user/me`)
             .then((res) => {
                 this.address = res.data.c_address || res.data.a_address
             })

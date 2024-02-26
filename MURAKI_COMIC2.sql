@@ -44,8 +44,8 @@ CREATE TABLE `Admin` (
 -- Dumping data for table `Admin`
 --
 
-INSERT INTO `Admin` (`admin_id`, `a_username`, `a_password`, `a_first_name`, `a_last_name`, `a_address`, `a_email`, `a_phone`, `a_image`) VALUES
-(1, 'admin', '$argon2id$v=19$m=65536,t=3,p=4$LAlOEKHjR3paHxiS+i6o6Q$dPgQBUUynSefTuqpxpNPEGx96xnhezcBn7+UB+dsh40', 'ad', 'min', '', '@mail', '0878888888', '');
+INSERT INTO `Admin` (`admin_id`, `a_username`, `a_password`, `a_first_name`, `a_last_name`, `a_address`, `a_email`, `a_phone`, `a_image`, `otp`) VALUES
+(1, 'admin', '$argon2id$v=19$m=65536,t=3,p=4$LAlOEKHjR3paHxiS+i6o6Q$dPgQBUUynSefTuqpxpNPEGx96xnhezcBn7+UB+dsh40', 'ad', 'min', '', '@mail', '0878888888', '', '');
 
 -- --------------------------------------------------------
 

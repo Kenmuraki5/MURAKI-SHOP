@@ -1,5 +1,5 @@
+# docker-compose.yml
 version: '3'
-
 services:
   mysql:
     image: mysql:latest
@@ -10,18 +10,18 @@ services:
       - "3307:3306"
     volumes:
       - ./MURAKI_COMIC2.sql:/docker-entrypoint-initdb.d/MURAKI_COMIC2.sql
+    restart: always
 
-  express:
-    build: ./backend
-    ports:
-      - "3000:3000"
-    depends_on:
-      - mysql
-
-  vue:
+  frontend:
     build:
       context: ./app
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     ports:
-      - "8080:8080"
-    depends_on:
-      - express
+      - "80:80"
+
+  backend:
+    build:
+      context: ./backend
+    restart: always
+

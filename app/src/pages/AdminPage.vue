@@ -94,7 +94,7 @@ export default {
     
   },
   created() {
-    axios.get(`http://localhost:3000/user/me`)
+    axios.get(`http://localhost/api/user/me`)
       .then((res) => {
         if (res.data.type != "admin") {
           this.$router.push("/")

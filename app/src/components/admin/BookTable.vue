@@ -58,7 +58,7 @@
                         {{ book.publisher_date.slice(0, 10) }}
                     </td>
                     <td class="px-6 py-4 ">
-                        <img class="w-20 h-30" :src="`http://localhost:3000/uploads/${book.book_img}`" alt="">
+                        <img class="w-20 h-30" :src="`http://localhost/images/uploads/${book.book_img}`" alt="">
                         {{ book.book_img }}
                     </td>
                     <td class="px-6 py-4 ">
@@ -91,7 +91,7 @@ export default {
             this.$emit('button-clicked', book)
         },
         delBook(book) {
-            axios.delete("http://localhost:3000/editBook/", { params: { isbn: book.isbn } }, {
+            axios.delete("http://localhost/api/editBook/", { params: { isbn: book.isbn } }, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -108,7 +108,7 @@ export default {
     },
     created() {
         console.log("create")
-        axios.get("http://localhost:3000/editBook")
+        axios.get("http://localhost/api/editBook")
             .then(res => {
                 this.allBook = res.data
                 console.log(this.allBook)
