@@ -166,7 +166,7 @@
                         <td class="px-5 py-5 border-b border-gray-200 text-sm">
                             <p class="text-gray-900 whitespace-no-wrap mt-3">
                                 <!-- order date -->
-                                <img class="w-20 h-30" :src="`http://localhost/images/uploads/${orderlines.book_img}`" alt="">
+                                <img class="w-20 h-30" :src="`http://34.125.149.37/images/uploads/${orderlines.book_img}`" alt="">
                                 {{ orderlines.isbn }}
                             </p>
                         </td>
@@ -223,7 +223,7 @@ export default {
             this.show = false
             var formData = new FormData()
             formData.append("order_id", order_id)
-            axios.post("http://localhost/api/orderline", formData, {
+            axios.post("http://34.125.149.37/api/orderline", formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }
@@ -237,7 +237,7 @@ export default {
         },
         sort(value){
             console.log(value)
-            axios.get(`http://localhost/api/orderDetails`, {params:{status:value}})
+            axios.get(`http://34.125.149.37/api/orderDetails`, {params:{status:value}})
             .then(res => {
                 this.orders = res.data
                 console.log(this.orders)
@@ -250,7 +250,7 @@ export default {
     },
     created() {
         this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-        axios.get(`http://localhost/api/orderDetails`)
+        axios.get(`http://34.125.149.37/api/orderDetails`)
             .then(res => {
                 this.orders = res.data
                 console.log(this.orders)

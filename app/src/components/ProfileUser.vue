@@ -4,7 +4,7 @@
             <div class="col-md-4 border-right">
                 <div class="relative flex flex-column align-items-center text-center p-3 lg:py-5">
                     <img class="rounded-full mt-5 w-56 h-56 lg:w-72 lg:h-72"
-                        :src="img_user ? `http://localhost/images/uploads/${this.img_user}` : `https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png`" />
+                        :src="img_user ? `http://34.125.149.37/images/uploads/${this.img_user}` : `https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png`" />
                     <div class="flex mt-3">
                         <div class="row">
                             <input type="file" id="file" ref="file" accept="image/png, image/jpeg"
@@ -100,7 +100,7 @@ export default {
         changepicture() {
             const formData = new FormData()
             formData.append("img", this.file);
-            axios.put(`http://localhost/api/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+            axios.put(`http://34.125.149.37/api/changepicture`, formData, { headers: { 'Content-Type': 'multipart/form-data' } })
                 .then((res) => {
                     console.log(res.data)
                     // this.$store.commit('login',[res.data])
@@ -114,7 +114,7 @@ export default {
                 buttons: true,
             })
                 .then((value) => {
-                    axios.get("http://localhost/api/verifyuser", { params: { password: value } })
+                    axios.get("http://34.125.149.37/api/verifyuser", { params: { password: value } })
                         .then((res) => {
                             if (res.data) {
                                 this.showsubmit = false
@@ -159,7 +159,7 @@ export default {
                 // formData.append("email", this.email)
                 formData.append("address", this.address)
                 formData.append("phonenumber", this.phonenumber)
-                axios.put(`http://localhost/api/EditProfile`, formData, { headers: { 'Content-Type': 'application/json' } })
+                axios.put(`http://34.125.149.37/api/EditProfile`, formData, { headers: { 'Content-Type': 'application/json' } })
                     .then((res) => {
                         alert("update success")
                         if (res.data.token) {
@@ -177,7 +177,7 @@ export default {
             })
                 .then((value) => {
                     if (value || value=="") {
-                        axios.post("http://localhost/api/verifyOtp/", { otp: value, })
+                        axios.post("http://34.125.149.37/api/verifyOtp/", { otp: value, })
                             .then((res) => {
                                 console.log(res.data)
                                 swal("Please new email:", {
@@ -191,7 +191,7 @@ export default {
                                             });
                                         }
                                         else {
-                                            axios.put(`http://localhost/api/changeemail/`, { email: value })
+                                            axios.put(`http://34.125.149.37/api/changeemail/`, { email: value })
                                                 .then((res) => {
                                                     this.email = res.data
                                                 })
@@ -224,7 +224,7 @@ export default {
                 text: "Please check your mail!",
                 icon: "success",
             });
-            axios.get(`http://localhost/api/sendOtp/`)
+            axios.get(`http://34.125.149.37/api/sendOtp/`)
                 .then((res) => {
                     console.log(res.data)
                     this.changeemail()
@@ -240,7 +240,7 @@ export default {
         }
     },
     created() {
-        axios.get(`http://localhost/api/user/me`)
+        axios.get(`http://34.125.149.37/api/user/me`)
             .then((res) => {
                 this.img_user = res.data.c_image || res.data.a_image
                 this.name = res.data.c_first_name || res.data.a_first_name

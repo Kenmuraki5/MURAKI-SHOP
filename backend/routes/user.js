@@ -203,7 +203,7 @@ router.post("/verification", async function (req, res, next) {
         from: 'murakishopp@gmail.com',
         to: req.body.email,
         subject: 'Password Reset',
-        text: "http://localhost/ResetPassword/" + token
+        text: "http://34.125.149.37/ResetPassword/" + token
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
@@ -229,7 +229,7 @@ router.post("/verification", async function (req, res, next) {
         from: 'murakishopp@gmail.com',
         to: req.body.email,
         subject: 'Password Reset',
-        text: "http://localhost/ResetPassword/" + token
+        text: "http://34.125.149.37/ResetPassword/" + token
       };
       transporter.sendMail(mailOptions, function (error, info) {
         if (error) {

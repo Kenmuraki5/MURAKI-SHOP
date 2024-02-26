@@ -53,7 +53,7 @@ export default {
             }
             formData.append("inStock", book.inStock)
             console.log(formData)
-            axios.put('http://localhost/api/editBook', formData, {
+            axios.put('http://34.125.149.37/api/editBook', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

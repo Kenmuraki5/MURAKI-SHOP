@@ -243,7 +243,7 @@ export default {
         }
     },
     created() {
-        axios.get("http://localhost/api/formBook")
+        axios.get("http://34.125.149.37/api/formBook")
             .then(res => {
                 this.publisherList = res.data[0]
                 this.authorList = res.data[1]
