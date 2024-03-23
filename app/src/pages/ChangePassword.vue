@@ -26,7 +26,7 @@ export default {
     methods: {
         changePassword() {
             if (this.password == this.conpassword) {
-                axios.put(`http://34.125.149.37/api/ResetPassword/${this.$route.params.token}`,
+                axios.put(`http://34.16.145.46/api/ResetPassword/${this.$route.params.token}`,
                     { password: this.password, confirm_password: this.conpassword })
                     .then((res) => {
                         alert(res.data)

@@ -6,7 +6,7 @@
         <div v-for="product in this.$store.state.products" :key="product.isbn" class="group relative grid justify-center">
           <RouterLink :to="`/DetailPage/${product.isbn}`"
             class="min-h-80 w-60 overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80 lg:w-60 z-50">
-            <img :src="`http://34.125.149.37/images/uploads/${product.book_img}`"
+            <img :src="`http://34.16.145.46/images/uploads/${product.book_img}`"
               :style="{ opacity: product.in_stock == 0 ? 0.25 : 1 }"
               class="h-full w-full object-cover object-center lg:h-full" />
           </RouterLink>
@@ -37,7 +37,7 @@
         <div v-for="product in this.$store.state.recommended" :key="product.isbn" class="group relative grid justify-center">
           <RouterLink :to="`/DetailPage/${product.isbn}`"
             class="min-h-80 w-52 overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80 lg:w-60 z-50">
-            <img :src="`http://34.125.149.37/images/uploads/${product.book_img}`"
+            <img :src="`http://34.16.145.46/images/uploads/${product.book_img}`"
               :style="{ opacity: product.in_stock == 0 ? 0.25 : 1 }"
               class="h-full w-full object-cover object-center lg:h-full" />
           </RouterLink>
