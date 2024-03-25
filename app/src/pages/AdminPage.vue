@@ -94,7 +94,7 @@ export default {
     
   },
   created() {
-    axios.get(`http://34.16.145.46/api/user/me`)
+    axios.get(`http://34.125.67.227/api/user/me`)
       .then((res) => {
         if (res.data.type != "admin") {
           this.$router.push("/")

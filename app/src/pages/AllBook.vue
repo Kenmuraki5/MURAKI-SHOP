@@ -60,7 +60,7 @@ export default {
   },
   created() {
     this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-    axios.get(`http://34.16.145.46/api/AllBook`)
+    axios.get(`http://34.125.67.227/api/AllBook`)
       .then(res => this.$store.state.products = res.data)
       .catch(err => console.log(err))
   }

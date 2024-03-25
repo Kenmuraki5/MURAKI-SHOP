@@ -89,7 +89,7 @@ export default {
             var formData = new FormData();
             formData.append("username", this.username);
             formData.append("password", this.password)
-            axios.post('http://34.16.145.46/api/signin', formData, {
+            axios.post('http://34.125.67.227/api/signin', formData, {
                 headers: {
                     'Content-Type': 'application/json'
                 }

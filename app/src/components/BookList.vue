@@ -202,7 +202,7 @@
                         <div
                           class="min-h-80 w-52 aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80
                           my-2">
-                          <img :src="`http://34.16.145.46/images/uploads/${product.book_img}`" :style="{opacity:product.in_stock == 0 ? 0.25 : 1 }"
+                          <img :src="`http://34.125.67.227/images/uploads/${product.book_img}`" :style="{opacity:product.in_stock == 0 ? 0.25 : 1 }"
                             class="h-full w-full object-cover object-center lg:h-full lg:w-full" />
                         </div>
                         <div class="mt-4 flex justify-between">

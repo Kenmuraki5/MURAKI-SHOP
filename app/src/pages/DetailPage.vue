@@ -6,7 +6,7 @@
             <div class="lg:w-4/5 mx-auto flex flex-wrap justify-center">
                 <div class="basis-1/2">
                     <img class="w-96 object-cover object-center rounded border border-gray-200" :style="{ opacity: products.in_stock == 0 ? 0.25 : 1 }"
-                        :src="products.book_img?`http://34.16.145.46/images/uploads/${products.book_img}`:'http://34.16.145.46/images/uploads/noneprofile.png'">
+                        :src="products.book_img?`http://34.125.67.227/images/uploads/${products.book_img}`:'http://34.125.67.227/images/uploads/noneprofile.png'">
                 </div>
                 <div class="lg:basis-1/2">
                     <div class="w-full lg:pl-10 py-6 mt-6 lg:mt-0">
@@ -42,7 +42,7 @@
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 border rounded-lg bg-white shadow-lg"
             v-if="this.$store.state.token && role == 'customer'">
             <div class="relative flex gap-4 ">
-                <img :src="img_user ? `http://34.16.145.46/images/uploads/${this.img_user}`: `http://34.16.145.46/images/uploads/noneprofile.png`"
+                <img :src="img_user ? `http://34.125.67.227/images/uploads/${this.img_user}`: `http://34.125.67.227/images/uploads/noneprofile.png`"
                     class="relative rounded-lg bg-white border h-20 w-20" alt="" loading="lazy">
                 <div class="flex flex-col w-full">
                     <div class="flex flex-row justify-between">
@@ -60,7 +60,7 @@
         <div class="relative grid grid-cols-1 gap-4 p-4 mb-2 border rounded-lg bg-white shadow-lg"
             v-for="comment in comments" :key="comment.comment_id">
             <div class="relative flex gap-4">
-                <img :src="`http://34.16.145.46/images/uploads/${comment.c_image}`"
+                <img :src="`http://34.125.67.227/images/uploads/${comment.c_image}`"
                     class="relative rounded-lg bg-white border h-20 w-20" alt="" loading="lazy">
                 <div class="flex flex-col w-full">
                     <div class="flex flex-row justify-between">
@@ -132,7 +132,7 @@ export default {
             const formData = {
                 comment: this.comment
             }
-            axios.post(`http://34.16.145.46/api/addComment/${this.$route.params.id}`, formData)
+            axios.post(`http://34.125.67.227/api/addComment/${this.$route.params.id}`, formData)
                 .then(res => {
                     console.log(res)
                     this.comments = res.data[1]
@@ -150,14 +150,14 @@ export default {
     },
     created() {
         this.cart = JSON.parse(localStorage.cart == undefined ? "[]" : localStorage.cart)
-        axios.get(`http://34.16.145.46/api/DetailPage/${this.$route.params.id}`)
+        axios.get(`http://34.125.67.227/api/DetailPage/${this.$route.params.id}`)
             .then(res => {
                 this.products = res.data[0]
                 this.comments = res.data[1]
             }
             )
             .catch(err => console.log(err))
-        axios.get(`http://34.16.145.46/api/user/me`)
+        axios.get(`http://34.125.67.227/api/user/me`)
         .then(res => {
             this.username = res.data.c_username || res.data.a_username
             this.img_user = res.data.c_image || res.data.a_image

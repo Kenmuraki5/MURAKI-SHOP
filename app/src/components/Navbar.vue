@@ -79,7 +79,7 @@
                             <div class="py-6 ">
                               <div class="flex  max-w-md bg-white shadow-lg rounded-lg overflow-hidden">
                                 <div class="w-1/3 grid items-center">
-                                  <img class="" :src="`http://34.16.145.46/images/uploads/${item.book_img}`" alt="">
+                                  <img class="" :src="`http://34.125.67.227/images/uploads/${item.book_img}`" alt="">
                                 </div>
                                 <div class="w-2/3 p-4">
                                   <h1 class="text-gray-900 font-bold text-2xl">
@@ -124,7 +124,7 @@
                 <RouterLink to="/LoginPage" v-if="$store.state.token == ''" class="text-gray-200 hover:text-gray-200">Log
                   in</RouterLink>
                 <img v-else class="h-8 w-8 rounded-full"
-                  :src="$store.state.image ? `http://34.16.145.46/images/uploads/${$store.state.image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
+                  :src="$store.state.image ? `http://34.125.67.227/images/uploads/${$store.state.image}` : 'https://upload.wikimedia.org/wikipedia/commons/8/89/Portrait_Placeholder.png'"
                   alt="Profile Image" />
               </MenuButton>
             </div>
@@ -232,7 +232,7 @@ export default {
     }
   },
   created() {
-    axios.get(`http://34.16.145.46/api/user/me`)
+    axios.get(`http://34.125.67.227/api/user/me`)
       .then((res) => {
         this.role = res.data.type
       })

@@ -52,7 +52,7 @@ import axios from 'axios';
         methods:{
             sendmail(){
                 this.show = "wait 1 minute";
-                axios.post("http://34.16.145.46/api/verification", {email:this.email})
+                axios.post("http://34.125.67.227/api/verification", {email:this.email})
                 .then((res) => {
                     alert(res.data)
                     this.show = "A link to change the password has been sent to your email."
